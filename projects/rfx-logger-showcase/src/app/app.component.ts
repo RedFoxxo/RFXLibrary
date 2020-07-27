@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RfxLoggerService } from '../../../rfx-logger/src/lib/rfx-logger.service';
+import { RfxLoggerService } from 'rfx-logger';
 
 @Component({
   selector: 'app-root',
