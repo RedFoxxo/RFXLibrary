@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { RfxLoggerService } from 'rfx-logger';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.less']
+  templateUrl: './rfx-logger.component.html',
+  styleUrls: ['./rfx-logger.component.less']
 })
-export class AppComponent {
+export class RfxLoggerComponent {
 
   public customMessage: string;
   public debugData: Array<string>;
