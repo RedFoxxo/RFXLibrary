@@ -12,6 +12,12 @@
     },
     {
       "path": "./projects/rfx-logger/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/rfx-logger-showcase/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/rfx-logger-showcase/tsconfig.spec.json"
     }
 ]
 }

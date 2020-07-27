@@ -42,6 +42,127 @@
           }
         }
       }
+    },
+    "rfx-logger-showcase": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "less"
+        }
+      },
+      "root": "projects/rfx-logger-showcase",
+      "sourceRoot": "projects/rfx-logger-showcase/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/rfx-logger-showcase",
+            "index": "projects/rfx-logger-showcase/src/index.html",
+            "main": "projects/rfx-logger-showcase/src/main.ts",
+            "polyfills": "projects/rfx-logger-showcase/src/polyfills.ts",
+            "tsConfig": "projects/rfx-logger-showcase/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "projects/rfx-logger-showcase/src/favicon.ico",
+              "projects/rfx-logger-showcase/src/assets"
+            ],
+            "styles": [
+              "projects/rfx-logger-showcase/src/styles.less"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/rfx-logger-showcase/src/environments/environment.ts",
+                  "with": "projects/rfx-logger-showcase/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "rfx-logger-showcase:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "rfx-logger-showcase:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "rfx-logger-showcase:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/rfx-logger-showcase/src/test.ts",
+            "polyfills": "projects/rfx-logger-showcase/src/polyfills.ts",
+            "tsConfig": "projects/rfx-logger-showcase/tsconfig.spec.json",
+            "karmaConfig": "projects/rfx-logger-showcase/karma.conf.js",
+            "assets": [
+              "projects/rfx-logger-showcase/src/favicon.ico",
+              "projects/rfx-logger-showcase/src/assets"
+            ],
+            "styles": [
+              "projects/rfx-logger-showcase/src/styles.less"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/rfx-logger-showcase/tsconfig.app.json",
+              "projects/rfx-logger-showcase/tsconfig.spec.json",
+              "projects/rfx-logger-showcase/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/rfx-logger-showcase/e2e/protractor.conf.js",
+            "devServerTarget": "rfx-logger-showcase:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "rfx-logger-showcase:serve:production"
+            }
+          }
+        }
+      }
     }},
   "defaultProject": "rfx-logger"
 }

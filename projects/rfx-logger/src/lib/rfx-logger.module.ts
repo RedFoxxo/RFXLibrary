@@ -3,7 +3,6 @@ import { RfxLoggerService } from './rfx-logger.service';
 
 
 @NgModule({
-  declarations: [RfxLoggerService],
   imports: [],
   exports: [RfxLoggerService],
   providers: [RfxLoggerService],
