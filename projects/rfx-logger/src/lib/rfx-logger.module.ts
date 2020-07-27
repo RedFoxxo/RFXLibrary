@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
-import { RfxLoggerComponent } from './rfx-logger.component';
-
+import { RfxLoggerService } from './rfx-logger.service';
 
 
 @NgModule({
-  declarations: [RfxLoggerComponent],
-  imports: [
-  ],
-  exports: [RfxLoggerComponent]
+  declarations: [RfxLoggerService],
+  imports: [],
+  exports: [RfxLoggerService],
+  providers: [RfxLoggerService],
 })
 export class RfxLoggerModule { }
