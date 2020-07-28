@@ -1,6 +1,6 @@
 {
   "name": "rfx-logger",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "RfxLogger - an upgrade for your console messages",
   "author": "RedFoxxo",
   "repository": {
@@ -10,7 +10,6 @@
   "bugs": {
     "url": "https://github.com/RedFoxxo/RFXLibrary/issues"
   },
-  "homepage": "https://github.com/RedFoxxo/RFXLibrary",
   "keywords": [
     "angular",
     "library",

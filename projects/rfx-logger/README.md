@@ -1,24 +1,63 @@
 # RfxLogger
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.0-next.2.
+An upgrade for your console messages
 
-## Code scaffolding
+![alt text](https://i.ibb.co/y59MBfV/rfx-logger-1.png)
 
-Run `ng generate component component-name --project rfx-logger` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project rfx-logger`.
-> Note: Don't forget to add `--project rfx-logger` or else it will be added to the default project in your `angular.json` file. 
+## Features
 
-## Build
+- One-line compact view
+- All messages have intuitive colors
+- ~~Message tag supports HTTP codes~~ (coming soon)
 
-Run `ng build rfx-logger` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Installation
 
-## Publishing
+Install the npm package:
+```bash
+npm install rfx-logger
+```
 
-After building your library with `ng build rfx-logger`, go to the dist folder `cd dist/rfx-logger` and run `npm publish`.
+Import module:
 
-## Running unit tests
+`config` is optional if you want to disable debug data. Default is `false`
+```typescript
+import { RfxLoggerModule } from 'rfx-logger';
 
-Run `ng test rfx-logger` to execute the unit tests via [Karma](https://karma-runner.github.io).
+@NgModule({
+    imports: [
+      RfxLoggerModule.config({
+        disableDebug: true        // true = disabled debug data (useful for production)
+      })
+    ]
+})
+```
 
-## Further help
+## Usage
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+```typescript
+  import { RfxLoggerService } from 'rfx-logger';
+
+  [...]
+
+  constructor(rfxLoggerService: RfxLoggerService) { }
+
+  [...]
+
+  this.rfxLoggerService.success(title, data);    // success - green message
+  this.rfxLoggerService.warning(title, data);    // warning - yellow message
+  this.rfxLoggerService.error(title, data);      // error   - red message
+```
+
+* __title__
+custom string *(eg. function name)*
+
+* __data__
+optional, any object you want to print with the debug message *(eg. backend data)*
+
+## Demo
+
+TODO
+
+## License
+
+This project is licensed under the [MIT](http://vjpr.mit-license.org) License
