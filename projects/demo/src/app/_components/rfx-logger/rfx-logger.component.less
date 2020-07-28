@@ -1,0 +1,18 @@
+.container {
+  display: flex;
+  width: 200px;
+  flex-wrap: wrap;
+
+  button {
+    flex: 1;
+
+    + button {
+      margin-left: 10px;
+    }
+  }
+
+  input {
+    flex: 1;
+    margin: 10px 0;
+  }
+}

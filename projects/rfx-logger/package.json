@@ -1,0 +1,30 @@
+{
+  "name": "rfx-logger",
+  "version": "1.0.0",
+  "description": "RfxLogger - an upgrade for your console messages",
+  "author": "RedFoxxo",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RedFoxxo/RFXLibrary.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RedFoxxo/RFXLibrary/issues"
+  },
+  "keywords": [
+    "angular",
+    "library",
+    "tools",
+    "typescript",
+    "javascript",
+    "console",
+    "logging"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@angular/common": "^10.1.0-next.2",
+    "@angular/core": "^10.1.0-next.2"
+  },
+  "dependencies": {
+    "tslib": "^2.0.0"
+  }
+}

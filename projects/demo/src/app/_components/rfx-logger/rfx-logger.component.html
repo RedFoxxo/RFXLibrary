@@ -1,0 +1,10 @@
+<div class="container">
+  <button (click)="rfxLoggerSuccess()">Success</button>
+  <button (click)="rfxLoggerWarning()">Warning</button>
+  <button (click)="rfxLoggerError()">Error</button>
+  <input type="text" [(ngModel)]="customMessage" placeholder="Inserisci un messaggio custom" />
+  <button (click)="toggleDebugData()">
+    <ng-container *ngIf="isDebugDataDisabled">Enable debug data</ng-container>
+    <ng-container *ngIf="!isDebugDataDisabled">Disable debug data</ng-container>
+  </button>
+</div>
