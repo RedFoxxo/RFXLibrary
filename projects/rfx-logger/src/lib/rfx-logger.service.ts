@@ -1,12 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ConfigurationModel } from './configuration.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RfxLoggerService {
 
-  private readonly showDebugInfo: boolean;
+  private showDebugInfo: boolean;
   private readonly successCssTag: string;
   private readonly successCss: string;
   private readonly warningCssTag: string;
@@ -14,8 +15,10 @@ export class RfxLoggerService {
   private readonly errorCssTag: string;
   private readonly errorCss: string;
 
-  constructor() {
-    this.showDebugInfo    = true;
+  constructor(
+    @Optional() configuration?: ConfigurationModel
+  ) {
+    this.showDebugInfo    = !configuration?.disableDebug;
     this.successCss       = 'color: #8BC34A; font-weight: bold; padding: 1px 0;';
     this.successCssTag    = 'color: #000000; font-weight: bold; background-color: #8BC34A; padding: 1px 5px;';
     this.warningCss       = 'color: #FFC107; font-weight: bold; padding: 1px 0;';
