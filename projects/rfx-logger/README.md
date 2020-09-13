@@ -8,7 +8,7 @@ An upgrade for your console messages
 
 - One-line compact view
 - All messages have intuitive colors
-- ~~Message tag supports HTTP codes~~ (coming soon)
+- Message tag supports HTTP codes
 
 ## Installation
 
