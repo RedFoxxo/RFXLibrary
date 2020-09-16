@@ -2,7 +2,7 @@
 
 An upgrade for your console messages
 
-![alt text](https://i.ibb.co/y59MBfV/rfx-logger-1.png)
+![rfx-logger](https://i.ibb.co/y59MBfV/rfx-logger-1.png)
 
 ## Features
 
