@@ -3,7 +3,6 @@
 An upgrade for your browser console messages
 
 <img src="https://i.ibb.co/y59MBfV/rfx-logger-1.png" width="350" />
-<br />
 <img src="https://i.ibb.co/6wZcg0x/rfx-http-logger.png" width="350" />
 
 ## Features
