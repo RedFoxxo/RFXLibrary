@@ -1,11 +1,11 @@
 {
   "name": "rfx-logger",
-  "version": "1.1.0",
-  "description": "RfxLogger - an upgrade for your console messages",
+  "version": "2.0.0",
+  "description": "RfxLogger - an upgrade for your browser console messages",
   "author": "RedFoxxo",
   "repository": {
     "type": "git",
-    "url": "https://github.com/RedFoxxo/RFXLibrary.git"
+    "url": "https://github.com/RedFoxxo/RFXLibrary/tree/master/projects/rfx-logger"
   },
   "bugs": {
     "url": "https://github.com/RedFoxxo/RFXLibrary/issues"
@@ -17,7 +17,10 @@
     "typescript",
     "javascript",
     "console",
-    "logging"
+    "logging",
+    "browser",
+    "interceptor",
+    "api"
   ],
   "license": "MIT",
   "peerDependencies": {

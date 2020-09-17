@@ -19,10 +19,6 @@
       "rfx-logger": [
         "dist/rfx-logger/rfx-logger",
         "dist/rfx-logger"
-      ],
-      "rfx-http-logger": [
-        "dist/rfx-http-logger/rfx-http-logger",
-        "dist/rfx-http-logger"
       ]
     }
   }
