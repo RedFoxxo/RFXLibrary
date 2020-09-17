@@ -1,14 +1,17 @@
 # RfxLogger
 
-An upgrade for your console messages
+An upgrade for your browser console messages
 
-![rfx-logger](https://i.ibb.co/y59MBfV/rfx-logger-1.png)
+<img src="https://i.ibb.co/y59MBfV/rfx-logger-1.png" width="350" />
+<br />
+<img src="https://i.ibb.co/6wZcg0x/rfx-http-logger.png" width="350" />
 
 ## Features
 
 - One-line compact view
 - All messages have intuitive colors
 - Message tag supports HTTP codes
+- Intercept HTTP calls and automatically prints message to the console
 
 ## Installation
 
@@ -17,42 +20,50 @@ Install the npm package:
 npm install rfx-logger
 ```
 
-Import module:
+### Import module and interceptor:
 
-`config` is optional if you want to disable debug data. Default is `false`
+- __interceptor__ is optional 
+- `.config` is optional if you want to disable debug data (useful for production). Default is `false`
 ```typescript
 import { RfxLoggerModule } from 'rfx-logger';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 @NgModule({
-    imports: [
-      RfxLoggerModule.config({
-        disableDebug: true        // true = disabled debug data (useful for production)
-      })
-    ]
+  imports: [
+    RfxLoggerModule.config({
+      disableDebug: true
+    })
+  ],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: RfxHttpLoggerInterceptor,
+      multi: true
+    }
+  ],
 })
 ```
 
 ## Usage
 
-```typescript
-  import { RfxLoggerService } from 'rfx-logger';
-
-  [...]
-
-  constructor(rfxLoggerService: RfxLoggerService) { }
-
-  [...]
-
-  this.rfxLoggerService.success(title, data);    // success - green message
-  this.rfxLoggerService.warning(title, data);    // warning - yellow message
-  this.rfxLoggerService.error(title, data);      // error   - red message
-```
-
-* __title__
+* __message__
 custom string *(eg. function name)*
-
 * __data__
 optional, any object you want to print with the debug message *(eg. backend data)*
+
+```typescript
+import { RfxLoggerService } from 'rfx-logger';
+
+[...]
+
+constructor(rfxLoggerService: RfxLoggerService) { }
+
+[...]
+
+this.rfxLoggerService.success(message, data);    // success - green message
+this.rfxLoggerService.warning(message, data);    // warning - yellow message
+this.rfxLoggerService.error(message, data);      // error   - red message
+```
 
 ## Demo
 
