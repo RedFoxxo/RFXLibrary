@@ -12,7 +12,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { RfxLoggerService } from './rfx-logger.service';
 
 @Injectable()
-export class RfxHttpLoggerInterceptor implements HttpInterceptor {
+export class RfxLoggerInterceptor implements HttpInterceptor {
   constructor(private rfxLoggerService: RfxLoggerService) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {

@@ -24,7 +24,7 @@ npm install rfx-logger
 - __interceptor__ is optional 
 - `.config` is optional if you want to disable debug data (useful for production). Default is `false`
 ```typescript
-import { RfxLoggerModule } from 'rfx-logger';
+import { RfxLoggerModule, RfxLoggerInterceptor } from 'rfx-logger';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 @NgModule({
@@ -36,7 +36,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: RfxHttpLoggerInterceptor,
+      useClass: RfxLoggerInterceptor,
       multi: true
     }
   ],
