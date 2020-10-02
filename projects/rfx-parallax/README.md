@@ -1,24 +1,64 @@
 # RfxParallax
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.0-next.2.
+Parallax made easy
 
-## Code scaffolding
+## Features
 
-Run `ng generate component component-name --project rfx-parallax` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project rfx-parallax`.
-> Note: Don't forget to add `--project rfx-parallax` or else it will be added to the default project in your `angular.json` file. 
+- Apply directive to your component and enjoy
+- Image automatically adapts into its container
+- Disable / enable **parallax**
+- Disable / enable parallax container **overflow**
+- Configurable image **scroll percentage** and **z-index**
 
-## Build
+## Installation
 
-Run `ng build rfx-parallax` to build the project. The build artifacts will be stored in the `dist/` directory.
+Install the npm package:
+```bash
+npm install rfx-parallax
+```
 
-## Publishing
+### Import module:
 
-After building your library with `ng build rfx-parallax`, go to the dist folder `cd dist/rfx-parallax` and run `npm publish`.
+```typescript
+import { RfxParallaxModule } from 'rfx-parallax';
 
-## Running unit tests
+@NgModule({
+  imports: [
+    RfxParallaxModule
+  ]
+})
+```
 
-Run `ng test rfx-parallax` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Usage
 
-## Further help
+just apply `libRfxParallax` to your container and pass the image url
+```html
+<div libRfxParallax imageUrl="<image-path>"></div>
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## Configuration
+
+### ``parallaxPercentage: number``
+*(default value: 20)*<br />
+percentage of image scrolling, e.g. 30% will scroll 30% of the image
+
+### ``imageZIndex: number``
+*(default value: -1)*<br />
+z-index property of the image
+
+### ``visibleOverflow: boolean``
+*(default value: false)*<br />
+container overflow
+
+### ``isDisabled: boolean``
+*(default value: false)*<br />
+is parallax disabled
+
+
+## Demo
+
+TODO
+
+## License
+
+This project is licensed under the [MIT](http://vjpr.mit-license.org) License
