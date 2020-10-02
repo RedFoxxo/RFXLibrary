@@ -29,6 +29,18 @@ import { RfxParallaxModule } from 'rfx-parallax';
 })
 ```
 
+### Initialize parallax
+
+In your *app.component.ts* initialize parallax listeners inside `ngOnInit`
+```typescript
+
+constructor(private rfxParallaxService: RfxParallaxService) {}
+
+public ngOnInit(): void {
+  this.rfxParallaxService.initListeners();
+}
+```
+
 ## Usage
 
 just apply `libRfxParallax` to your container and pass the image url
@@ -53,7 +65,6 @@ container overflow
 ### ``isDisabled: boolean``
 *(default value: false)*<br />
 is parallax disabled
-
 
 ## Demo
 
