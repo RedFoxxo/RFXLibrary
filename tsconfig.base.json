@@ -19,6 +19,10 @@
       "rfx-logger": [
         "dist/rfx-logger/rfx-logger",
         "dist/rfx-logger"
+      ],
+      "rfx-parallax": [
+        "dist/rfx-parallax/rfx-parallax",
+        "dist/rfx-parallax"
       ]
     }
   }

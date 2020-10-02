@@ -1,26 +1,22 @@
 {
-  "name": "rfx-logger",
-  "version": "2.0.0",
-  "description": "RfxLogger - an upgrade for your browser console messages",
+  "name": "rfx-parallax",
+  "version": "1.0.0",
+  "description": "RfxParallax - parallax made easy",
   "author": "RedFoxxo",
   "repository": {
     "type": "git",
-    "url": "https://github.com/RedFoxxo/RFXLibrary/tree/master/projects/rfx-logger"
+    "url": "https://github.com/RedFoxxo/RFXLibrary/tree/master/projects/rfx-parallax"
   },
   "bugs": {
     "url": "https://github.com/RedFoxxo/RFXLibrary/issues"
   },
   "keywords": [
+    "parallax",
+    "animation",
     "angular",
     "library",
-    "tools",
     "typescript",
-    "javascript",
-    "console",
-    "logging",
-    "browser",
-    "interceptor",
-    "api"
+    "javascript"
   ],
   "license": "MIT",
   "peerDependencies": {
