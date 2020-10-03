@@ -33,6 +33,7 @@ import { RfxParallaxModule } from 'rfx-parallax';
 
 In your *app.component.ts* initialize parallax listeners inside `ngOnInit`
 ```typescript
+import { RfxParallaxService } from 'rfx-parallax';
 
 constructor(private rfxParallaxService: RfxParallaxService) {}
 
