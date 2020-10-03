@@ -1,6 +1,6 @@
 {
   "name": "rfxlibrary",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "scripts": {
     "start": "ng serve demo"
   },
@@ -15,6 +15,7 @@
     "@angular/router": "^10.1.4",
     "rfx-logger": "file:dist/rfx-logger",
     "rfx-parallax": "file:dist/rfx-parallax",
+    "rfx-scroll-animation": "file:dist/rfx-scroll-animation",
     "rxjs": "^6.6.3",
     "tslib": "^2.0.1",
     "zone.js": "~0.10.2"

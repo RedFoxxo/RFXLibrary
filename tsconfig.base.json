@@ -23,6 +23,10 @@
       "rfx-parallax": [
         "dist/rfx-parallax/rfx-parallax",
         "dist/rfx-parallax"
+      ],
+      "rfx-scroll-animation": [
+        "dist/rfx-scroll-animation/rfx-scroll-animation",
+        "dist/rfx-scroll-animation"
       ]
     }
   }
