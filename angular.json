@@ -203,6 +203,46 @@
           }
         }
       }
+    },
+    "rfx-scroll-animation": {
+      "projectType": "library",
+      "root": "projects/rfx-scroll-animation",
+      "sourceRoot": "projects/rfx-scroll-animation/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/rfx-scroll-animation/tsconfig.lib.json",
+            "project": "projects/rfx-scroll-animation/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/rfx-scroll-animation/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/rfx-scroll-animation/src/test.ts",
+            "tsConfig": "projects/rfx-scroll-animation/tsconfig.spec.json",
+            "karmaConfig": "projects/rfx-scroll-animation/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/rfx-scroll-animation/tsconfig.lib.json",
+              "projects/rfx-scroll-animation/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "demo"

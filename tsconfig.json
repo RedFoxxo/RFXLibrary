@@ -24,6 +24,12 @@
     },
     {
       "path": "./projects/rfx-parallax/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/rfx-scroll-animation/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/rfx-scroll-animation/tsconfig.spec.json"
     }
   ]
 }
