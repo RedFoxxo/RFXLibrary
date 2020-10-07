@@ -46,7 +46,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    if (changes?.imageUrl.currentValue) {
+    if (changes.imageUrl?.currentValue) {
       this.loadImage(changes.imageUrl.currentValue);
     } else {
       this.setParallaxProperties();
