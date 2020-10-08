@@ -151,7 +151,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
    */
   private setImageLeft(containerWidth: number): void {
     const imageLeft: number = (containerWidth * (this.parallaxPercentage / 100) - containerWidth) / 2;
-    this.renderer.setStyle(this.image, 'left', `-${imageLeft}px`);
+    this.renderer.setStyle(this.image, 'left', `${imageLeft}px`);
   }
 
   /**
