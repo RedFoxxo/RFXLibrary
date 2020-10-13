@@ -67,7 +67,7 @@ this.rfxLoggerService.error(message, data);      // error   - red message
 
 ## Demo
 
-TODO
+https://demo.redfoxxo.dev/rfx-logger
 
 ## License
 
