@@ -16,6 +16,8 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
   private availablePixels: number;
   private startPoint: number;
   private endPoint: number;
+  private imageLeft: number;
+  private imageTop: number;
 
   private onScrollListener: Subscription;
   private onResizeListener: Subscription;
@@ -58,7 +60,8 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
    */
   private setListeners(): void {
     this.onScrollListener = this.rfxParallaxService.getMouseScroll().subscribe(() => {
-      this.setImageTop(window.scrollY);
+      this.imageTop = this.isDisabled ? (-this.availablePixels / 2) : this.getImageTop(window.scrollY);
+      this.setImageTransform(this.imageLeft, this.imageTop);
     });
 
     this.onResizeListener = this.rfxParallaxService.getWindowResize().subscribe(() => {
@@ -90,8 +93,9 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
     this.setStaticProperties();
     this.setImageSize();
     this.setParallaxValues(window.scrollY);
-    this.setImageLeft(this.htmlElement.nativeElement.clientWidth);
-    this.setImageTop(window.scrollY);
+    this.imageLeft = this.getImageLeft(this.htmlElement.nativeElement.clientWidth);
+    this.imageTop = this.isDisabled ? (-this.availablePixels / 2) : this.getImageTop(window.scrollY);
+    this.setImageTransform(this.imageLeft, this.imageTop);
   }
 
   /**
@@ -146,25 +150,24 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
   }
 
   /**
-   * Set image left property
+   * Set image transform property
+   * @param imageLeft image left shift in pixels
+   * @param imageTop imagetop shift in pixels
+   */
+  private setImageTransform(imageLeft: number, imageTop: number): void {
+    this.renderer.setStyle(this.image, 'transform', `translate(${imageLeft}px, ${imageTop}px)`);
+  }
+
+  /**
+   * Get image left shift in pixels
    * @param containerWidth container width in pixels
    */
-  private setImageLeft(containerWidth: number): void {
-    const imageLeft: number = -(this.image.width - containerWidth) / 2;
-    this.renderer.setStyle(this.image, 'left', `${imageLeft}px`);
+  private getImageLeft(containerWidth: number): number {
+    return -(this.image.width - containerWidth) / 2;
   }
 
   /**
-   * Set image top property
-   * @param scrollTop pixels from the top of the page to the current view
-   */
-  private setImageTop(scrollTop: number): void {
-    const imageTop: number = this.isDisabled ? (-this.availablePixels / 2) : this.getImageTop(scrollTop);
-    this.renderer.setStyle(this.image, 'top', `${imageTop}px`);
-  }
-
-  /**
-   * Get image top property
+   * Get image top shift in pixels
    * @param scrollTop pixels from the top of the page to the current view
    */
   private getImageTop(scrollTop: number): number {

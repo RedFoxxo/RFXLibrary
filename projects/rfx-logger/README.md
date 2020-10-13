@@ -1,6 +1,6 @@
 # RfxLogger
 
-An upgrade for your browser console messages
+Upgrade for browser console messages
 
 <img src="https://i.ibb.co/y59MBfV/rfx-logger-1.png" width="350" />
 <br />
