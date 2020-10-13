@@ -1,0 +1,23 @@
+.home-container {
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+
+  .project {
+    font-size: 20px;
+
+    a {
+      color: black;
+      text-decoration: none;
+
+      &:hover {
+        color: orange;
+        cursor: pointer;
+      }
+    }
+
+    + .project {
+      margin-top: 10px;
+    }
+  }
+}

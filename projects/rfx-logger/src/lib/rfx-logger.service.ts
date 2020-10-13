@@ -38,7 +38,7 @@ export class RfxLoggerService {
 
   public warning(message: string, data?: any): void {
     console.log(
-      `%cWARNING%c ${message}`,
+      `%c WARNING %c ${message}`,
       this.warningCssTag,
       this.warningCss,
       this.showDebugInfo && data ? Array(data) : ''

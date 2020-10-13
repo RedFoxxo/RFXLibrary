@@ -6,13 +6,13 @@ import { RfxLoggerService } from 'rfx-logger';
   styleUrls: ['./rfx-logger.component.less']
 })
 export class RfxLoggerComponent {
-
   public customMessage: string;
   public debugData: Array<string>;
   public isDebugDataDisabled: boolean;
+  public messageSent: boolean;
 
   constructor(private rfxLoggerService: RfxLoggerService) {
-    this.debugData = ['this', 'is', 'a', 'nice', 'test'];
+    this.debugData = ['example', 'data', 'in', 'array'];
   }
 
   private getCustomMessage(): string {
@@ -29,14 +29,17 @@ export class RfxLoggerComponent {
 
   public rfxLoggerSuccess(): void {
     this.rfxLoggerService.success(this.getCustomMessage(), this.getDebugData());
+    this.messageSent = true;
   }
 
   public rfxLoggerWarning(): void {
     this.rfxLoggerService.warning(this.getCustomMessage(), this.getDebugData());
+    this.messageSent = true;
   }
 
   public rfxLoggerError(): void {
     this.rfxLoggerService.error(this.getCustomMessage(), this.getDebugData());
+    this.messageSent = true;
   }
 
 }
