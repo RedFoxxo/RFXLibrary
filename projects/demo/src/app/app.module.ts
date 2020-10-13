@@ -5,20 +5,28 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RfxLoggerModule } from 'rfx-logger';
-import { RfxLoggerComponent } from './_components/rfx-logger/rfx-logger.component';
-import { HomeComponent } from './_components/home/home.component';
+import { RfxParallaxModule } from 'rfx-parallax';
+import { RfxScrollAnimationModule } from 'rfx-scroll-animation';
+
+import {
+  HomeComponent, RfxLoggerComponent, RfxParallaxComponent, RfxScrollAnimationComponent
+} from './_components';
 
 @NgModule({
   declarations: [
     AppComponent,
+    HomeComponent,
     RfxLoggerComponent,
-    HomeComponent
+    RfxParallaxComponent,
+    RfxScrollAnimationComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    RfxLoggerModule
+    RfxLoggerModule,
+    RfxParallaxModule,
+    RfxScrollAnimationModule
   ],
   providers: [],
   bootstrap: [AppComponent]

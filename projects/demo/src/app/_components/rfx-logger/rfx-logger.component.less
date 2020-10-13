@@ -1,18 +1,62 @@
 .container {
   display: flex;
-  width: 200px;
-  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  min-height: 300px;
 
-  button {
-    flex: 1;
+  .box {
+    display: flex;
+    flex-direction: column;
 
-    + button {
-      margin-left: 10px;
+    .buttons .button {
+      flex: 1;
+      border: 0;
+      outline: 0;
+      padding: 0 12px;
+      height: 32px;
+      font-weight: bold;
+      min-width: 80px;
+      cursor: pointer;
+
+      + .button {
+        margin-left: 10px;
+      }
+
+      &.button-success {
+        color: #000000;
+        background-color: #8BC34A
+      }
+
+      &.button-warning {
+        color: #000000;
+        background-color: #FFC107
+      }
+
+      &.button-error {
+        color: #FFFFFF;
+        background-color: #F44336;
+      }
+
+      &.button-debug {
+        color: #000000;
+        background-color: #E0E0E0;
+        width: 100%;
+      }
     }
-  }
 
-  input {
-    flex: 1;
-    margin: 10px 0;
+    input {
+      flex: 1;
+      padding: 10px;
+      margin: 10px 0;
+    }
+
+    .message {
+      width: 170px;
+      height: 40px;
+      text-align: center;
+      margin: 20px auto 0 auto;
+      font-style: italic;
+    }
   }
 }
