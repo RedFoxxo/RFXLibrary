@@ -1,1 +1,44 @@
-<p>rfx-parallax works!</p>
+<div class="container">
+  <div class="example1" libRfxParallax imageUrl="https://picsum.photos/1920/1080">
+    <div class="info">
+      <div class="info-content">
+        <span>Size: 1920x1080</span>
+        <span>Parallax percentage: 30%</span>
+        <span>Overflow: hidden</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="example2">
+    <div class="element" libRfxParallax imageUrl="https://picsum.photos/400" [visibleOverflow]="true"
+      [parallaxPercentage]="30" [imageZIndex]="0">
+      <div class="info">
+        <div class="info-content">
+          <span>Size: 400x400</span>
+          <span>Parallax percentage: 30%</span>
+          <span>Overflow: visible</span>
+        </div>
+      </div>
+    </div>
+    <div class="element" libRfxParallax imageUrl="https://picsum.photos/450" [visibleOverflow]="true"
+      [parallaxPercentage]="60" [imageZIndex]="0">
+      <div class="info">
+        <div class="info-content">
+          <span>Size: 450x450</span>
+          <span>Parallax percentage: 60%</span>
+          <span>Overflow: visible</span>
+        </div>
+      </div>
+    </div>
+    <div class="element" libRfxParallax imageUrl="https://picsum.photos/500" [visibleOverflow]="true"
+      [parallaxPercentage]="100" [imageZIndex]="0">
+      <div class="info">
+        <div class="info-content">
+          <span>Size: 500x500</span>
+          <span>Parallax percentage: 100%</span>
+          <span>Overflow: visible</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
