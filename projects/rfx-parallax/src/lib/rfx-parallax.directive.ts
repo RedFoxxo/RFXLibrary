@@ -109,6 +109,8 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
     this.renderer.setStyle(this.htmlElement.nativeElement, 'overflow', this.visibleOverflow ? 'visible' : 'hidden');
     this.renderer.setStyle(this.image, 'z-index', this.imageZIndex);
     this.renderer.setStyle(this.image, 'position', 'absolute');
+    this.renderer.setStyle(this.image, 'left', '0');
+    this.renderer.setStyle(this.image, 'top', '0');
   }
 
   /**
