@@ -4,4 +4,3 @@
 
 export * from './lib/rfx-parallax.service';
 export * from './lib/rfx-parallax.module';
-export * from './lib/image-position.model';

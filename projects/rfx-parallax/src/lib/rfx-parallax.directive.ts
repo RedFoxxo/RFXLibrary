@@ -1,14 +1,13 @@
 import { Directive, ElementRef, Input, OnChanges, OnDestroy, OnInit, Renderer2, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { RfxParallaxService } from './rfx-parallax.service';
-import { ImagePositionEnum } from './image-position.model';
 
 @Directive({
   selector: '[libRfxParallax]'
 })
 export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
   @Input() public parallaxPercentage: number;
-  @Input() public imagePosition: ImagePositionEnum;
+  @Input() public positionPercentage: number;
   @Input() public imageUrl: string;
   @Input() public imageZIndex: number;
   @Input() public visibleOverflow: boolean;
@@ -30,10 +29,10 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
     private rfxParallaxService: RfxParallaxService
   ) {
     this.parallaxPercentage = 20;
+    this.positionPercentage = 50;
     this.imageZIndex = -1;
     this.isDisabled = false;
     this.visibleOverflow = false;
-    this.imagePosition = ImagePositionEnum.CENTER;
   }
 
   public ngOnInit(): void {
@@ -168,14 +167,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
    * @param containerWidth container width in pixels
    */
   private getImageLeft(containerWidth: number): number {
-    switch (this.imagePosition) {
-      case ImagePositionEnum.LEFT:
-        return 0;
-      case ImagePositionEnum.CENTER:
-        return -(this.image.width - containerWidth) / 2;
-      case ImagePositionEnum.RIGHT:
-        return -(this.image.width - containerWidth);
-    }
+    return -((this.image.width - containerWidth) / 100 * this.positionPercentage);
   }
 
   /**
