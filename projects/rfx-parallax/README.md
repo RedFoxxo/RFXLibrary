@@ -55,6 +55,10 @@ just apply `libRfxParallax` to your container and pass the image url
 *(default value: 20)*<br />
 percentage of image scrolling, e.g. 30% will scroll 30% of the image
 
+### ``positionPercentage: number``
+*(default value: 50)*<br />
+image zoom position in percentage, e.g. 50% will zoom to the center
+
 ### ``imageZIndex: number``
 *(default value: -1)*<br />
 z-index property of the image
@@ -69,7 +73,7 @@ is parallax disabled
 
 ## Demo
 
-TODO
+TODO (Coming soon)
 
 ## License
 
