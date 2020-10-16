@@ -52,7 +52,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.imageUrl?.currentValue) {
       this.loadImage(changes.imageUrl.currentValue);
-    } else {
+    } else if (this.image) {
       this.setParallaxProperties();
     }
   }
@@ -63,11 +63,15 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
   private setListeners(): void {
     this.onScrollListener = this.rfxParallaxService.getMouseScroll().subscribe(() => {
       this.imageTop = this.getImageTop(window.scrollY);
-      this.setImageTransform(this.imageLeft, this.imageTop);
+      if (this.image) {
+        this.setImageTransform(this.imageLeft, this.imageTop);
+      }
     });
 
     this.onResizeListener = this.rfxParallaxService.getWindowResize().subscribe(() => {
-      this.setParallaxProperties();
+      if (this.image) {
+        this.setParallaxProperties();
+      }
     });
   }
 
