@@ -9,7 +9,7 @@ Parallax made easy
 - Compatible with custom scrollbars
 - Disable / enable **parallax**
 - Disable / enable parallax container **overflow**
-- Configurable image **scroll percentage** and **z-index**
+- Configurable image **scroll percentage**, **z-index** and **zoom position**
 
 ## Installation
 
