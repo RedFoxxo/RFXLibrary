@@ -1,33 +1,43 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { ElementRef, Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RfxParallaxService implements OnDestroy {
-  private mouseScroll: any;
-  private windowResize: any;
+  private renderer: Renderer2;
+
   private subjectScroll: BehaviorSubject<undefined>;
   private subjectResize: BehaviorSubject<undefined>;
 
-  constructor() {
+  private scrollEvent: () => void;
+  private resizeEvent: () => void;
+
+  constructor(
+    private rendererFactory: RendererFactory2
+  ) {
     this.subjectScroll = new BehaviorSubject<undefined>(undefined);
     this.subjectResize = new BehaviorSubject<undefined>(undefined);
+    this.renderer = this.rendererFactory.createRenderer(null, null);
   }
 
   public ngOnDestroy(): void {
-    document.removeEventListener('scroll', this.mouseScroll);
-    document.removeEventListener('resize', this.windowResize);
+    if (this.scrollEvent) {
+      this.scrollEvent();
+    }
+
+    if (this.resizeEvent) {
+      this.resizeEvent();
+    }
   }
 
   /**
    * Init listeners
    */
-  public initListeners(): void {
-    this.mouseScroll = this.onMouseScroll.bind(this);
-    this.windowResize = this.onWindowResize.bind(this);
-    document.addEventListener('scroll', this.mouseScroll, false);
-    window.addEventListener('resize', this.windowResize, false);
+  public initListeners(element?: ElementRef): void {
+    const scrollElement = element ?? document;
+    this.scrollEvent = this.renderer.listen(scrollElement, 'scroll', () => this.onMouseScroll());
+    this.resizeEvent = this.renderer.listen(window, 'resize', () => this.onWindowResize());
   }
 
   /**

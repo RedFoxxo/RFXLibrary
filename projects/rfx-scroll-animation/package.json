@@ -21,10 +21,10 @@
     "javascript"
   ],
   "peerDependencies": {
-    "@angular/common": "^10.1.4",
-    "@angular/core": "^10.1.4"
+    "@angular/common": "^10.1.6",
+    "@angular/core": "^10.1.6"
   },
   "dependencies": {
-    "tslib": "^2.0.1"
+    "tslib": "^2.0.3"
   }
 }

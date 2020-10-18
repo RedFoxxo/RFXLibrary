@@ -6,6 +6,7 @@ Parallax made easy
 
 - Apply directive to your component and enjoy
 - Image automatically adapts into its container
+- Compatible with custom scrollbars
 - Disable / enable **parallax**
 - Disable / enable parallax container **overflow**
 - Configurable image **scroll percentage** and **z-index**
@@ -39,6 +40,21 @@ constructor(private rfxParallaxService: RfxParallaxService) {}
 
 public ngOnInit(): void {
   this.rfxParallaxService.initListeners();
+}
+```
+
+and if you have a custom scrollbar component you can pass the nativeElement
+to the initListeners() function like this:
+```html
+<custom-scrollbar #scrollbar>
+  <!-- Your page here -->
+</custom-scrollbar>
+```
+```typescript
+@ViewChild('scrollbar') scrollBarElement: ElementRef;
+
+public ngOnInit(): void {
+  this.rfxParallaxService.initListeners(scrollbarElement.nativeElement);
 }
 ```
 
