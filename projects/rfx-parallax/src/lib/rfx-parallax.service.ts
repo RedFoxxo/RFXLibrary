@@ -1,4 +1,4 @@
-import { ElementRef, Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
+import { Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
@@ -34,7 +34,7 @@ export class RfxParallaxService implements OnDestroy {
   /**
    * Init listeners
    */
-  public initListeners(element?: ElementRef): void {
+  public initListeners(element?: HTMLElement): void {
     const scrollElement = element ?? document;
     this.scrollEvent = this.renderer.listen(scrollElement, 'scroll', () => this.onMouseScroll());
     this.resizeEvent = this.renderer.listen(window, 'resize', () => this.onWindowResize());

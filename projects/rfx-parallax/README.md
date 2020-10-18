@@ -51,7 +51,7 @@ to the initListeners() function like this:
 </custom-scrollbar>
 ```
 ```typescript
-@ViewChild('scrollbar') scrollBarElement: ElementRef;
+@ViewChild('scrollbar') public scrollbarElement: ElementRef;
 
 public ngOnInit(): void {
   this.rfxParallaxService.initListeners(this.scrollbarElement.nativeElement);
