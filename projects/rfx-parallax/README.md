@@ -45,7 +45,8 @@ public ngOnInit(): void {
 
 and if you have a custom scrollbar component you can pass the nativeElement
 to the initListeners() function like this:<br />
-**WARNING:** *use AfterViewInit instead of OnInit otherwise your nativeElement may not be defined*
+**WARNING:** *use `ngAfterViewInit` instead of `ngOnInit` otherwise your nativeElement
+may not be defined*
 ```html
 <custom-scrollbar #scrollbar>
   <!-- Your page here -->
@@ -90,7 +91,7 @@ is parallax disabled
 
 <br />
 
-***Missing configuration parameter?***<br />
+**_Missing configuration parameter?_**<br />
 *Request it here: https://github.com/RedFoxxo/RFXLibrary/issues*
 
 <br />
