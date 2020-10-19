@@ -88,6 +88,13 @@ container overflow
 *(default value: false)*<br />
 is parallax disabled
 
+<br />
+
+***Missing configuration parameter?***<br />
+*Request it here: https://github.com/RedFoxxo/RFXLibrary/issues*
+
+<br />
+
 ## Demo
 
 TODO (Coming soon)
