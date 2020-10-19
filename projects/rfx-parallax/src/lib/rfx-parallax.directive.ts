@@ -186,9 +186,10 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
     if (this.isDisabled) {
       return -this.availablePixels / 2;
     }
-
-    const parallaxPositionPixels = Math.min(this.endPoint - this.startPoint, Math.max(0, scrollTop - this.startPoint));
-    const imageTop = (this.availablePixels / 100) * (100 - (100 * parallaxPositionPixels) / (this.endPoint - this.startPoint));
+    const parallaxArea = this.endPoint - this.startPoint;
+    const parallaxPositionPixels = this.visibleOverflow ? scrollTop - this.startPoint : Math.min(
+      parallaxArea, Math.max(0, scrollTop - this.startPoint));
+    const imageTop = (this.availablePixels / 100) * (100 - (100 * parallaxPositionPixels) / parallaxArea);
     return -imageTop;
   }
 }
