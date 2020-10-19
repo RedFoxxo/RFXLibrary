@@ -44,7 +44,8 @@ public ngOnInit(): void {
 ```
 
 and if you have a custom scrollbar component you can pass the nativeElement
-to the initListeners() function like this:
+to the initListeners() function like this:<br />
+**WARNING:** *use AfterViewInit instead of OnInit otherwise your nativeElement may not be defined*
 ```html
 <custom-scrollbar #scrollbar>
   <!-- Your page here -->
@@ -53,7 +54,7 @@ to the initListeners() function like this:
 ```typescript
 @ViewChild('scrollbar') public scrollbarElement: ElementRef;
 
-public ngOnInit(): void {
+public ngAfterViewInit(): void {
   this.rfxParallaxService.initListeners(this.scrollbarElement.nativeElement);
 }
 ```

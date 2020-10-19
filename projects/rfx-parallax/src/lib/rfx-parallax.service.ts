@@ -7,8 +7,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class RfxParallaxService implements OnDestroy {
   private renderer: Renderer2;
 
-  private subjectScroll: BehaviorSubject<undefined>;
-  private subjectResize: BehaviorSubject<undefined>;
+  private subjectScroll: BehaviorSubject<number>;
+  private subjectResize: BehaviorSubject<number>;
 
   private scrollEvent: () => void;
   private resizeEvent: () => void;
@@ -16,8 +16,8 @@ export class RfxParallaxService implements OnDestroy {
   constructor(
     private rendererFactory: RendererFactory2
   ) {
-    this.subjectScroll = new BehaviorSubject<undefined>(undefined);
-    this.subjectResize = new BehaviorSubject<undefined>(undefined);
+    this.subjectScroll = new BehaviorSubject<number>(undefined);
+    this.subjectResize = new BehaviorSubject<number>(undefined);
     this.renderer = this.rendererFactory.createRenderer(null, null);
   }
 
@@ -36,35 +36,35 @@ export class RfxParallaxService implements OnDestroy {
    */
   public initListeners(element?: HTMLElement): void {
     const scrollElement = element ?? document;
-    this.scrollEvent = this.renderer.listen(scrollElement, 'scroll', () => this.onMouseScroll());
-    this.resizeEvent = this.renderer.listen(window, 'resize', () => this.onWindowResize());
+    this.scrollEvent = this.renderer.listen(scrollElement, 'scroll', (event) => this.onMouseScroll(event));
+    this.resizeEvent = this.renderer.listen(window, 'resize', (event) => this.onWindowResize(event));
   }
 
   /**
    * Mouse scroll event
    */
-  private onMouseScroll(): void {
-    this.subjectScroll.next(undefined);
+  private onMouseScroll(event: Event | any): void {
+    this.subjectScroll.next(event.target.scrollTop);
   }
 
   /**
    * Mouse scroll event observable
    */
-  public getMouseScroll(): Observable<undefined> {
+  public getMouseScroll(): Observable<number> {
     return this.subjectScroll.asObservable();
   }
 
   /**
    * Window resize event
    */
-  private onWindowResize(): void {
-    this.subjectResize.next(undefined);
+  private onWindowResize(event: Event | any): void {
+    this.subjectResize.next(event.target.innerWidth);
   }
 
   /**
    * Window resize event observable
    */
-  public getWindowResize(): Observable<undefined> {
+  public getWindowResize(): Observable<number> {
     return this.subjectResize.asObservable();
   }
 }
