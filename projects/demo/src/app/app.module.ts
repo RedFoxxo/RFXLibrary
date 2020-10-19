@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { RfxLoggerModule } from 'rfx-logger';
 import { RfxParallaxModule } from 'rfx-parallax';
 import { RfxScrollAnimationModule } from 'rfx-scroll-animation';
+import { NgScrollbarModule } from 'ngx-scrollbar';
 
 import {
   HomeComponent, RfxLoggerComponent, RfxParallaxComponent, RfxScrollAnimationComponent
@@ -26,7 +27,8 @@ import {
     FormsModule,
     RfxLoggerModule,
     RfxParallaxModule,
-    RfxScrollAnimationModule
+    RfxScrollAnimationModule,
+    NgScrollbarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -19,6 +19,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
   private endPoint: number;
   private imageLeft: number;
   private imageTop: number;
+  private scrollTop: number;
 
   private onScrollListener: Subscription;
   private onResizeListener: Subscription;
@@ -33,6 +34,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
     this.imageZIndex = -1;
     this.isDisabled = false;
     this.visibleOverflow = false;
+    this.scrollTop = 0;
   }
 
   public ngOnInit(): void {
@@ -53,7 +55,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
     if (changes.imageUrl?.currentValue) {
       this.loadImage(changes.imageUrl.currentValue);
     } else if (this.image) {
-      this.setParallaxProperties();
+      this.setParallaxProperties(this.scrollTop);
     }
   }
 
@@ -61,16 +63,17 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
    * Subscribe to scroll and resize listeners
    */
   private setListeners(): void {
-    this.onScrollListener = this.rfxParallaxService.getMouseScroll().subscribe(() => {
-      this.imageTop = this.getImageTop(window.scrollY);
-      if (this.image) {
+    this.onScrollListener = this.rfxParallaxService.getMouseScroll().subscribe((scroll: number) => {
+      if (scroll !== undefined && this.image) {
+        this.scrollTop = scroll;
+        this.imageTop = this.getImageTop(scroll);
         this.setImageTransform(this.imageLeft, this.imageTop);
       }
     });
 
-    this.onResizeListener = this.rfxParallaxService.getWindowResize().subscribe(() => {
-      if (this.image) {
-        this.setParallaxProperties();
+    this.onResizeListener = this.rfxParallaxService.getWindowResize().subscribe((width: number) => {
+      if (width && this.image) {
+        this.setParallaxProperties(this.scrollTop);
       }
     });
   }
@@ -87,20 +90,21 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
     this.htmlElement.nativeElement.appendChild(this.image);
 
     this.image.onload = () => {
-      this.setParallaxProperties();
+      this.setParallaxProperties(this.scrollTop);
       this.renderer.setStyle(this.image, 'visibility', 'visible');
     };
   }
 
   /**
    * Set parallax properties and position
+   * @param scrollTop page container pixels from the top of the page
    */
-  private setParallaxProperties(): void {
+  private setParallaxProperties(scrollTop: number): void {
     this.setStaticProperties();
     this.setImageSize();
-    this.setParallaxValues(window.scrollY);
+    this.setParallaxValues(scrollTop);
     this.imageLeft = this.getImageLeft(this.htmlElement.nativeElement.clientWidth);
-    this.imageTop = this.getImageTop(window.scrollY);
+    this.imageTop = this.getImageTop(scrollTop);
     this.setImageTransform(this.imageLeft, this.imageTop);
   }
 

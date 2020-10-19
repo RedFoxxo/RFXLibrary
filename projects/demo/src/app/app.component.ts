@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { NgScrollbar } from 'ngx-scrollbar';
 import { RfxParallaxService } from 'rfx-parallax';
 
 @Component({
@@ -6,12 +7,15 @@ import { RfxParallaxService } from 'rfx-parallax';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.less']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements AfterViewInit {
+  @ViewChild('scrollbar')
+  public scrollbarElement: NgScrollbar;
+
   constructor(
     private rfxParallaxService: RfxParallaxService
   ) {}
 
-  public ngOnInit(): void {
-    this.rfxParallaxService.initListeners();
+  public ngAfterViewInit(): void {
+    this.rfxParallaxService.initListeners(this.scrollbarElement.viewport.nativeElement);
   }
 }

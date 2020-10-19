@@ -1,11 +1,12 @@
 {
   "name": "rfxlibrary",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "scripts": {
     "start": "ng serve demo"
   },
   "dependencies": {
     "@angular/animations": "^10.1.6",
+    "@angular/cdk": "^10.2.5",
     "@angular/common": "^10.1.6",
     "@angular/compiler": "^10.1.6",
     "@angular/core": "^10.1.6",
@@ -13,6 +14,7 @@
     "@angular/platform-browser": "^10.1.6",
     "@angular/platform-browser-dynamic": "^10.1.6",
     "@angular/router": "^10.1.6",
+    "ngx-scrollbar": "^7.3.0",
     "rfx-logger": "file:dist/rfx-logger",
     "rfx-parallax": "file:dist/rfx-parallax",
     "rfx-scroll-animation": "file:dist/rfx-scroll-animation",
