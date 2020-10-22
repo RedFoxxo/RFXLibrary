@@ -18,13 +18,10 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
 
   private image: HTMLImageElement;
   private imageLeft: number;
-  private imageTop: number;
   private scrollTop: number;
 
-  private ignoredPixels: number;
-  private availablePixels: number;
-  private startPoint: number;
-  private endPoint: number;
+  private parallaxSpace: RfxParallaxSpacesModel;
+  private parallaxBoundaries: RfxParallaxBoundariesModel;
 
   private onScrollListener: Subscription;
   private onResizeListener: Subscription;
@@ -68,19 +65,30 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
    * Subscribe to scroll and resize listeners
    */
   private setListeners(): void {
-    this.onScrollListener = this.rfxParallaxService.getMouseScroll().subscribe((scroll: number) => {
-      if (scroll !== undefined && this.image) {
-        this.scrollTop = scroll;
-        this.imageTop = this.getImageTop(scroll);
-        this.setImageTransform(this.imageLeft, this.imageTop);
-      }
-    });
+    this.onScrollListener = this.rfxParallaxService.getMouseScroll().subscribe((scroll: number) => this.onMouseScroll(scroll));
+    this.onResizeListener = this.rfxParallaxService.getWindowResize().subscribe((width: number) => this.onWindowResize(width));
+  }
 
-    this.onResizeListener = this.rfxParallaxService.getWindowResize().subscribe((width: number) => {
-      if (width && this.image) {
-        this.setParallaxProperties(this.scrollTop);
-      }
-    });
+  /**
+   * Set transform property based on the new scroll value
+   * @param scroll new element scroll value
+   */
+  private onMouseScroll(scroll: number): void {
+    if (scroll !== undefined && this.image) {
+      // this.scrollTop = scroll;
+      this.getImageTop(scroll, this.parallaxBoundaries);
+      // this.setImageTransform(this.imageLeft, this.imageTop);
+    }
+  }
+
+  /**
+   * Reset parallax properties according to new window size
+   * @param width window new width value
+   */
+  private onWindowResize(width: number): void {
+    if (width !== undefined && this.image) {
+      this.setParallaxProperties(this.scrollTop);
+    }
   }
 
   /**
@@ -106,11 +114,15 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
    */
   private setParallaxProperties(scrollTop: number): void {
     this.setStaticProperties();
-    this.setImageSize();
-    this.setParallaxValues(scrollTop);
-    this.imageLeft = this.getImageLeft(this.htmlElement.nativeElement.clientWidth);
-    this.imageTop = this.getImageTop(scrollTop);
-    this.setImageTransform(this.imageLeft, this.imageTop);
+    this.setImageSize(this.htmlElement.nativeElement, this.image, this.parallaxPercentage);
+
+    const containerRect = this.htmlElement.nativeElement.getBoundingClientRect();
+    this.parallaxSpace = this.getParallaxSpace(this.htmlElement.nativeElement.clientHeight, this.image.height, this.parallaxPercentage);
+    this.parallaxBoundaries = this.getParallaxBoundaries(containerRect, scrollTop, this.parallaxSpace, this.visibleOverflow);
+    const imageLeft = this.getImageLeft(this.htmlElement.nativeElement.clientWidth, this.image.width, this.positionPercentage);
+    const imageTop = this.getImageTop(scrollTop, this.parallaxBoundaries);
+
+    this.setImageTransform(this.image, imageLeft, imageTop);
   }
 
   /**
@@ -139,17 +151,17 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
   /**
    * Set default image size that match properties
    */
-  private setImageSize(): void {
-    const minHeight = (this.htmlElement.nativeElement.clientHeight * (100 + this.parallaxPercentage)) / 100;
-    const ratio = this.image.naturalHeight / this.image.naturalWidth;
-    const minRatio = minHeight / this.htmlElement.nativeElement.clientWidth;
+  private setImageSize(container: HTMLElement, image: HTMLImageElement, parallaxPercentage: number): void {
+    const minHeight = (container.clientHeight * (100 + parallaxPercentage)) / 100;
+    const ratio = image.naturalHeight / image.naturalWidth;
+    const minRatio = minHeight / container.clientWidth;
 
     if (ratio > minRatio) {
-      this.renderer.setStyle(this.image, 'width', `${this.htmlElement.nativeElement.clientWidth}px`);
-      this.renderer.setStyle(this.image, 'height', 'auto');
+      this.image.setAttribute('width', `${container.clientWidth}px`);
+      this.image.setAttribute('height', `auto`);
     } else {
-      this.renderer.setStyle(this.image, 'height', `${minHeight}px`);
-      this.renderer.setStyle(this.image, 'width', 'auto');
+      this.image.setAttribute('height', `${minHeight}px`);
+      this.image.setAttribute('width', `auto`);
     }
   }
 
@@ -158,11 +170,22 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
    * Use this when container overflow is hidden for better page performance
    * @param element main container DOMRect
    * @param scrollTop pixels from the top of the page to the current view
+   * @param availableSpace available space outside main container
    */
-  private getParallaxBoundaries(element: DOMRect, scrollTop: number): RfxParallaxBoundariesModel {
-    const startPoint = element.top + scrollTop - window.innerHeight;
-    const endPoint = element.top + scrollTop + element.height;
-    return new RfxParallaxBoundariesModel(startPoint, endPoint);
+  private getParallaxBoundaries(
+    element: DOMRect,
+    scrollTop: number,
+    space: RfxParallaxSpacesModel,
+    overflow: boolean
+  ): RfxParallaxBoundariesModel {
+    const elementTop = element.top + scrollTop;
+    const startPoint = elementTop - space.available;
+    const endPoint = elementTop + element.height + space.available;
+    const startPointUsable = elementTop - space.usable;
+    const endPointUsable = elementTop + element.height + space.usable;
+    const startPointVisible = overflow ? startPoint : elementTop;
+    const endPointVisible = overflow ? endPoint : elementTop + element.height;
+    return new RfxParallaxBoundariesModel(startPoint, endPoint, startPointUsable, endPointUsable, startPointVisible, endPointVisible);
   }
 
   /**
@@ -172,43 +195,68 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
    * @param image parallax html image
    * @param usablePercentage parallax scrol percentage
    */
-  private getParallaxSpace(element: DOMRect, image: HTMLImageElement, usablePercentage: number): RfxParallaxSpacesModel {
-    const availableSpace = image.height - element.height;
-    const usableSpace = element.height / 100 * usablePercentage;
+  private getParallaxSpace(elementHeight: number, imageHeight: number, usablePercentage: number): RfxParallaxSpacesModel {
+    const availableSpace = imageHeight - elementHeight;
+    const usableSpace = elementHeight / 100 * usablePercentage;
     const unusableSpace = availableSpace - usableSpace;
     return new RfxParallaxSpacesModel(availableSpace, usableSpace, unusableSpace);
   }
 
   /**
    * Set image transform property
+   * @param image image HTMLImageElement element
    * @param imageLeft image left shift in pixels
-   * @param imageTop imagetop shift in pixels
+   * @param imageTop image top shift in pixels
    */
-  private setImageTransform(imageLeft: number, imageTop: number): void {
-    this.renderer.setStyle(this.image, 'transform', `translate(${imageLeft}px, ${imageTop}px)`);
+  private setImageTransform(image: HTMLImageElement, imageLeft: number, imageTop: number): void {
+    this.renderer.setStyle(image, 'transform', `translate(${imageLeft}px, ${imageTop}px)`);
   }
 
   /**
-   * Get image left shift in pixels
-   * @param containerWidth container width in pixels
+   * Get image left property based on positionPercentage in pixels
+   * @param containerWidth main container width
+   * @param imageWidth image width
+   * @param positionPercentage image position percentage
    */
-  private getImageLeft(containerWidth: number): number {
-    return -((this.image.width - containerWidth) / 100 * this.positionPercentage);
+  private getImageLeft(containerWidth: number, imageWidth: number, positionPercentage: number): number {
+    return (containerWidth - imageWidth) / 100 * positionPercentage;
   }
 
   /**
    * Get image top shift in pixels
    * @param scrollTop pixels from the top of the page to the current view
    */
-  private getImageTop(scrollTop: number): number {
-    if (this.isDisabled) {
-      return -this.availablePixels / 2;
+  private getImageTop(scrollTop: number, boundaries: RfxParallaxBoundariesModel): number {
+    if (this.test) {
+
+
+      if (scrollTop + window.innerHeight >= boundaries.startPointVisible && scrollTop <= boundaries.endPointVisible) {
+        const usableSpace = Math.abs(boundaries.startPointUsable) + boundaries.endPointUsable;
+
+        console.warn(boundaries);
+        console.warn(usableSpace, scrollTop, boundaries.startPointUsable, boundaries.endPointUsable);
+
+        const onePixel = 960 / 100;
+        //   960 / 30 = 32 ->
+        const top = 960 / 30;
+        //console.warn(top);
+      }
+
+
     }
 
-    const parallaxArea = this.endPoint - this.startPoint;
-    const parallaxPositionPixels = this.visibleOverflow ? scrollTop - this.startPoint : Math.min(
-      parallaxArea, Math.max(0, scrollTop - this.startPoint));
-    const imageTop = (this.availablePixels / 100) * (100 - (100 * parallaxPositionPixels) / parallaxArea);
-    return -imageTop;
+    return 0;
+
+    // const parallaxScrollArea =
+
+
+    // const parallaxPositionPixels = this.visibleOverflow ? scrollTop - this.startPoint : Math.min(
+    //   this.parallaxArea, Math.max(0, scrollTop - this.startPoint));
+
+    // const imageTop = (this.availablePixels / 100) * (100 - (100 * parallaxPositionPixels) / this.parallaxArea);
+
+    // return -imageTop;
   }
+
+  // const parallaxArea = boundaries.endPoint - boundaries.startPoint; // MOVE UPPER
 }
