@@ -15,9 +15,6 @@
     "@angular/platform-browser-dynamic": "^10.1.6",
     "@angular/router": "^10.1.6",
     "ngx-scrollbar": "^7.3.0",
-    "rfx-logger": "file:dist/rfx-logger",
-    "rfx-parallax": "file:dist/rfx-parallax",
-    "rfx-scroll-animation": "file:dist/rfx-scroll-animation",
     "rxjs": "^6.6.3",
     "tslib": "^2.0.3",
     "zone.js": "~0.10.2"
