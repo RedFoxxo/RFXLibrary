@@ -31,7 +31,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
     private renderer: Renderer2,
     private rfxParallaxService: RfxParallaxService
   ) {
-    this.parallaxPercentage = 30;
+    this.parallaxPercentage = 10;
     this.positionPercentage = 50;
     this.imageZIndex = -1;
     this.isDisabled = false;
@@ -129,7 +129,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
    * Set default properties for container and image
    */
   private setStaticProperties(): void {
-    if (!this.isAlreadyPositionAbsRel(this.htmlElement.nativeElement)) {
+    if (!this.isAlreadyPositioned(this.htmlElement.nativeElement)) {
       this.renderer.setStyle(this.htmlElement.nativeElement, 'position', 'relative');
     }
 
@@ -144,7 +144,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
    * Check if element has position absolute or relative
    * @param element html element
    */
-  private isAlreadyPositionAbsRel(element: Element): boolean {
+  private isAlreadyPositioned(element: Element): boolean {
     return ['absolute', 'relative'].includes(window.getComputedStyle(element).position);
   }
 
@@ -152,7 +152,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
    * Set default image size that match properties
    */
   private setImageSize(container: HTMLElement, image: HTMLImageElement, parallaxPercentage: number): void {
-    const minHeight = (container.clientHeight * (100 + parallaxPercentage)) / 100;
+    const minHeight = (container.clientHeight * (100 + parallaxPercentage * 2)) / 100;
     const ratio = image.naturalHeight / image.naturalWidth;
     const minRatio = minHeight / container.clientWidth;
 
@@ -229,18 +229,20 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
   private getImageTop(scrollTop: number, boundaries: RfxParallaxBoundariesModel): number {
     if (this.test) {
 
+      const usableSpace = boundaries.endPointUsable - Math.abs(boundaries.startPointUsable);
+      const onePixel = usableSpace / (100 + this.parallaxPercentage);
+      const position = scrollTop + window.innerHeight - boundaries.startPointUsable;
 
-      if (scrollTop + window.innerHeight >= boundaries.startPointVisible && scrollTop <= boundaries.endPointVisible) {
-        const usableSpace = Math.abs(boundaries.startPointUsable) + boundaries.endPointUsable;
+      const percentage = Math.max(0, Math.min(usableSpace, position));
+      const top = onePixel * percentage;
 
-        console.warn(boundaries);
-        console.warn(usableSpace, scrollTop, boundaries.startPointUsable, boundaries.endPointUsable);
+      // console.warn(usableSpace, onePixel, position, percentage, top);
 
-        const onePixel = 960 / 100;
-        //   960 / 30 = 32 ->
-        const top = 960 / 30;
-        //console.warn(top);
-      }
+      console.warn(top - usableSpace / 2);
+
+      // if (scrollTop + window.innerHeight >= boundaries.startPointVisible && scrollTop <= boundaries.endPointVisible) {
+
+      // }
 
 
     }
