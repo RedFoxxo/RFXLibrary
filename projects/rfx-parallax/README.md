@@ -10,7 +10,7 @@ Parallax made easy
 - Disable / enable **parallax**
 - Disable / enable parallax container **overflow**
 - Configurable image **scroll percentage**, **z-index** and **zoom position**
-- ~~Best performance with `translate3d`~~ (Coming soon)
+- Best performance with `translate3d`
 - ~~Asynchronous browser scrolling disabled for better performance~~ (Coming soon)
 
 ## Installation
