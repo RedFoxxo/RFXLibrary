@@ -29,7 +29,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
     private renderer: Renderer2,
     private rfxParallaxService: RfxParallaxService
   ) {
-    this.parallaxPercentage = 10;
+    this.parallaxPercentage = 40;
     this.positionPercentage = 50;
     this.imageZIndex = -1;
     this.isDisabled = false;

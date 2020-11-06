@@ -7,6 +7,7 @@
 <br />
 
 ### **RfxParallax - parallax directive**
+#### [rfx-parallax demo](https://demo.redfoxxo.dev/rfx-parallax)
 #### [rfx-parallax on github](https://github.com/RedFoxxo/RFXLibrary/tree/master/projects/rfx-parallax)
 #### [rfx-parallax on npm](https://www.npmjs.com/package/rfx-parallax)
 <br />

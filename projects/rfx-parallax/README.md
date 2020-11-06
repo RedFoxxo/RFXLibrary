@@ -10,6 +10,8 @@ Parallax made easy
 - Disable / enable **parallax**
 - Disable / enable parallax container **overflow**
 - Configurable image **scroll percentage**, **z-index** and **zoom position**
+- ~~Best performance with `translate3d`~~ (Coming soon)
+- ~~Asynchronous browser scrolling disabled for better performance~~ (Coming soon)
 
 ## Installation
 
@@ -70,8 +72,8 @@ just apply `libRfxParallax` to your container and pass the image url
 ## Configuration
 
 ### ``parallaxPercentage: number``
-*(default value: 20)*<br />
-percentage of image scrolling, e.g. 30% will scroll 30% of the image
+*(default value: 40)*<br />
+percentage of image scrolling, e.g. 40% will scroll 40% of the image
 
 ### ``positionPercentage: number``
 *(default value: 50)*<br />
@@ -98,7 +100,7 @@ is parallax disabled
 
 ## Demo
 
-TODO (Coming soon)
+https://demo.redfoxxo.dev/rfx-parallax
 
 ## License
 
