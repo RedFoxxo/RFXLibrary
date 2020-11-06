@@ -72,7 +72,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
    * @param scroll new element scroll value
    */
   private onMouseScroll(scroll: number): void {
-    if (scroll !== undefined && this.image) {
+    if (scroll !== undefined && this.image.complete) {
       const imageTop = this.getImageTop(scroll, this.parallaxBoundaries);
       this.setImageTransform(this.image, this.imageLeft, imageTop);
     }
@@ -83,7 +83,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
    * @param width window new width value
    */
   private onWindowResize(width: number): void {
-    if (width !== undefined && this.image) {
+    if (width !== undefined && this.image.complete) {
       this.setParallaxProperties(this.scrollTop);
     }
   }
