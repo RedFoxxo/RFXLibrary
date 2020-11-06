@@ -208,6 +208,6 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
   private getImageTop(scrollTop: number, boundaries: RfxParallaxBoundariesModel): number {
     const parallaxArea: number = Math.max(0, Math.min(scrollTop - boundaries.startPoint, boundaries.totalPixels));
     const parallaxAreaPercentage: number = 100 / boundaries.totalPixels * parallaxArea;
-    return -boundaries.usablePixels / 100 * parallaxAreaPercentage; // ERROR HERE -> TODO: Invert function
+    return -boundaries.usablePixels * (1 - parallaxAreaPercentage / 100);
   }
 }
