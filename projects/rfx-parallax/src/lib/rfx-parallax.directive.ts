@@ -14,7 +14,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
   @Input() public visibleOverflow: boolean;
   @Input() public isDisabled: boolean;
 
-  @Input() public test: boolean; // TODO!: remove
+  // @Input() public test: boolean; // TODO!: remove
 
   private image: HTMLImageElement;
   private imageLeft: number;
