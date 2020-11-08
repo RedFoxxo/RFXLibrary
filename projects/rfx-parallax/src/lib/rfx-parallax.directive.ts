@@ -34,6 +34,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
     this.isDisabled = false;
     this.visibleOverflow = false;
     this.scrollTop = 0;
+    this.imageLeft = 0;
   }
 
   public ngOnInit(): void {
@@ -84,6 +85,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
   private onWindowResize(width: number): void {
     if (width !== undefined && this.imageLoaded) {
       const imagePosition: RfxParallaxPositionModel = this.setParallaxPosition(this.htmlElement.nativeElement, this.image);
+      this.imageLeft = imagePosition.left;
       this.setImageTransform(this.image, imagePosition.left, imagePosition.top);
     }
   }

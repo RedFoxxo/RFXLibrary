@@ -42,10 +42,12 @@ export class RfxParallaxService implements OnDestroy {
    * @param scrollElement main element with scroll property
    */
   public initListeners(scrollElement?: HTMLElement): void {
-    const element: HTMLElement = scrollElement ?? document.body;
-    this.elementScrollEvent = this.renderer.listen(element, 'scroll', (event) => this.onMouseScroll(event));
+    this.elementScrollEvent = this.renderer.listen(scrollElement ?? window, 'scroll', (event) => this.onMouseScroll(event));
     this.windowResizeEvent = this.renderer.listen(window, 'resize', (event) => this.onWindowResize(event));
-    this.setElementResizeEvent(element);
+
+    if (scrollElement) {
+      this.setElementResizeEvent(scrollElement);
+    }
   }
 
   /**
@@ -66,7 +68,7 @@ export class RfxParallaxService implements OnDestroy {
    * Mouse scroll event
    */
   private onMouseScroll(event: Event | any): void {
-    this.subjectScroll.next(event.target.scrollTop);
+    this.subjectScroll.next(event.target.scrollTop ?? event.target.documentElement.scrollTop);
   }
 
   /**
