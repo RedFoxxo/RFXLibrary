@@ -1,6 +1,6 @@
 {
   "name": "rfx-parallax",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "description": "RfxParallax - parallax made easy",
   "author": "RedFoxxo",
   "repository": {
@@ -20,10 +20,11 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@angular/common": "^10.2.0",
-    "@angular/core": "^10.2.0"
+    "@angular/common": ">=8.0.0",
+    "@angular/core": ">=8.0.0"
   },
   "dependencies": {
-    "tslib": "^2.0.3"
+    "tslib": "^2.0.0",
+    "resize-observer-polyfill": "^1.5.1"
   }
 }
