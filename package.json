@@ -1,7 +1,8 @@
 {
   "name": "rfxlibrary",
-  "version": "0.9.3",
+  "version": "0.10.0",
   "scripts": {
+    "ng": "ng",
     "start": "ng serve demo"
   },
   "private": true,
@@ -30,6 +31,7 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.19.3",
     "codelyzer": "^6.0.1",
+    "gzipper": "^4.3.0",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~5.0.0",
