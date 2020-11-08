@@ -1,7 +1,7 @@
 import { Directive, ElementRef, Input, OnChanges, OnDestroy, OnInit, Renderer2, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { RfxParallaxService } from './rfx-parallax.service';
-import { RfxParallaxBoundariesModel } from './rfx-parallax-boundaries.model';
+import { RfxParallaxBoundariesModel, RfxParallaxPositionModel } from './_models';
 
 @Directive({
   selector: '[libRfxParallax]'
@@ -14,8 +14,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
   @Input() public visibleOverflow: boolean;
   @Input() public isDisabled: boolean;
 
-  // @Input() public test: boolean; // TODO!: remove
-
+  private imageLoaded: boolean;
   private image: HTMLImageElement;
   private imageLeft: number;
   private scrollTop: number;
@@ -54,8 +53,6 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.imageUrl?.currentValue) {
       this.loadImage(changes.imageUrl.currentValue);
-    } else if (this.image) {
-      this.setParallaxProperties(this.scrollTop);
     }
   }
 
@@ -72,7 +69,9 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
    * @param scroll new element scroll value
    */
   private onMouseScroll(scroll: number): void {
-    if (scroll !== undefined && this.image) {
+    this.scrollTop = scroll ?? 0;
+
+    if (this.imageLoaded) {
       const imageTop = this.getImageTop(scroll, this.parallaxBoundaries);
       this.setImageTransform(this.image, this.imageLeft, imageTop);
     }
@@ -83,8 +82,9 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
    * @param width window new width value
    */
   private onWindowResize(width: number): void {
-    if (width !== undefined && this.image) {
-      this.setParallaxProperties(this.scrollTop);
+    if (width !== undefined && this.imageLoaded) {
+      const imagePosition: RfxParallaxPositionModel = this.setParallaxPosition(this.htmlElement.nativeElement, this.image);
+      this.setImageTransform(this.image, imagePosition.left, imagePosition.top);
     }
   }
 
@@ -100,63 +100,68 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
     this.htmlElement.nativeElement.appendChild(this.image);
 
     this.image.onload = () => {
-      this.setParallaxProperties(this.scrollTop);
+      this.setStaticProperties(this.htmlElement.nativeElement, this.image);
+      const imagePosition: RfxParallaxPositionModel = this.setParallaxPosition(this.htmlElement.nativeElement, this.image);
+      this.setImageTransform(this.image, imagePosition.left, imagePosition.top);
       this.renderer.setStyle(this.image, 'visiblity', 'visible');
+      this.imageLeft = imagePosition.left;
+      this.imageLoaded = true;
     };
   }
 
   /**
-   * Set parallax properties and position
-   * @param scrollTop page container pixels from the top of the page to the current view
+   * Set default image size and return new parallax position
+   * @param container main container HTMLElement
+   * @param image main image HTMLElement
    */
-  private setParallaxProperties(scrollTop: number): void {
-    const containerElement = this.htmlElement.nativeElement;
-    const containerRect = this.htmlElement.nativeElement.getBoundingClientRect();
-    const elementTop = containerRect.top + scrollTop;
-    this.setStaticProperties();
-    this.setImageSize(containerElement, this.image, this.parallaxPercentage);
-    this.parallaxBoundaries = this.getParallaxBoundaries(elementTop, containerElement.clientHeight, this.parallaxPercentage);
-    this.imageLeft = this.getImageLeft(this.htmlElement.nativeElement.clientWidth, this.image.width, this.positionPercentage);
-    const imageTop = this.getImageTop(scrollTop, this.parallaxBoundaries);
-    this.setImageTransform(this.image, this.imageLeft, imageTop);
+  private setParallaxPosition(container: HTMLElement, image: HTMLImageElement): RfxParallaxPositionModel {
+    this.setImageSize(container.clientWidth, container.clientHeight, image, this.parallaxPercentage);
+    const elementTop = container.getBoundingClientRect().top + this.scrollTop;
+    this.parallaxBoundaries = this.getParallaxBoundaries(elementTop, container.clientHeight, this.parallaxPercentage);
+    const imageLeft = this.getImageLeft(container.clientWidth, image.width, this.positionPercentage);
+    const imageTop = this.getImageTop(this.scrollTop, this.parallaxBoundaries);
+    return new RfxParallaxPositionModel(imageLeft, imageTop);
   }
 
   /**
    * Set default properties for container and image
+   * @param container main container HTMLElement
+   * @param image main image HTMLElement
    */
-  private setStaticProperties(): void {
-    if (!this.isAlreadyPositioned(this.htmlElement.nativeElement)) {
-      this.renderer.setStyle(this.htmlElement.nativeElement, 'position', 'relative');
+  private setStaticProperties(container: HTMLElement, image: HTMLImageElement): void {
+    if (!this.isAlreadyPositioned(container)) {
+      this.renderer.setStyle(container, 'position', 'relative');
     }
 
-    this.renderer.setStyle(this.htmlElement.nativeElement, 'overflow', this.visibleOverflow ? 'visible' : 'hidden');
-    this.renderer.setStyle(this.image, 'z-index', this.imageZIndex);
-    this.renderer.setStyle(this.image, 'position', 'absolute');
-    this.renderer.setStyle(this.image, 'left', '0');
-    this.renderer.setStyle(this.image, 'top', '0');
+    this.renderer.setStyle(container, 'overflow', this.visibleOverflow ? 'visible' : 'hidden');
+    this.renderer.setStyle(image, 'z-index', this.imageZIndex);
+    this.renderer.setStyle(image, 'position', 'absolute');
+    this.renderer.setStyle(image, 'left', '0');
+    this.renderer.setStyle(image, 'top', '0');
   }
 
   /**
    * Check if element has position absolute or relative
    * @param element html element
    */
-  private isAlreadyPositioned(element: Element): boolean {
+  private isAlreadyPositioned(element: HTMLElement): boolean {
     return ['absolute', 'relative'].includes(window.getComputedStyle(element).position);
   }
 
   /**
    * Set default image size that match properties
-   * @param container main container HTMLElement
+   * @param containerWidth main container HTMLElement width
+   * @param containerHeight main container HTMLElement height
    * @param image main image HTMLElement
    * @param parallaxPercentage parallax scroll percentage
    */
-  private setImageSize(container: HTMLElement, image: HTMLImageElement, parallaxPercentage: number): void {
-    const minHeight = (container.clientHeight * (100 + parallaxPercentage)) / 100;
+  private setImageSize(containerWidth: number, containerHeight: number, image: HTMLImageElement, parallaxPercentage: number): void {
+    const minHeight = (containerHeight * (100 + parallaxPercentage)) / 100;
     const ratio = image.naturalHeight / image.naturalWidth;
-    const minRatio = minHeight / container.clientWidth;
+    const minRatio = minHeight / containerWidth;
 
     if (ratio > minRatio) {
-      this.image.setAttribute('width', `${container.clientWidth}px`);
+      this.image.setAttribute('width', `${containerWidth}px`);
       this.image.setAttribute('height', `auto`);
     } else {
       this.image.setAttribute('height', `${minHeight}px`);

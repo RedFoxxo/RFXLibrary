@@ -1,5 +1,6 @@
 import { Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import ResizeObserver from 'resize-observer-polyfill';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +11,9 @@ export class RfxParallaxService implements OnDestroy {
   private subjectScroll: BehaviorSubject<number>;
   private subjectResize: BehaviorSubject<number>;
 
-  private scrollEvent: () => void;
-  private resizeEvent: () => void;
+  private elementHeightEvent: ResizeObserver;
+  private elementScrollEvent: () => void;
+  private windowResizeEvent: () => void;
 
   constructor(
     private rendererFactory: RendererFactory2
@@ -22,22 +24,42 @@ export class RfxParallaxService implements OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    if (this.scrollEvent) {
-      this.scrollEvent();
+    if (this.elementScrollEvent) {
+      this.elementScrollEvent();
     }
 
-    if (this.resizeEvent) {
-      this.resizeEvent();
+    if (this.windowResizeEvent) {
+      this.windowResizeEvent();
+    }
+
+    if (this.elementHeightEvent) {
+      this.elementHeightEvent.disconnect();
     }
   }
 
   /**
-   * Init listeners
+   * Start element scroll event, window resize event and element resize event listeners
+   * @param scrollElement main element with scroll property
    */
-  public initListeners(element?: HTMLElement): void {
-    const scrollElement = element ?? document;
-    this.scrollEvent = this.renderer.listen(scrollElement, 'scroll', (event) => this.onMouseScroll(event));
-    this.resizeEvent = this.renderer.listen(window, 'resize', (event) => this.onWindowResize(event));
+  public initListeners(scrollElement?: HTMLElement): void {
+    const element: HTMLElement = scrollElement ?? document.body;
+    this.elementScrollEvent = this.renderer.listen(element, 'scroll', (event) => this.onMouseScroll(event));
+    this.windowResizeEvent = this.renderer.listen(window, 'resize', (event) => this.onWindowResize(event));
+    this.setElementResizeEvent(element);
+  }
+
+  /**
+   * Observe scrollElement 'scrollHeight' property change
+   * @param scrollElement main element with scroll property
+   */
+  private setElementResizeEvent(scrollElement: HTMLElement): void {
+    this.elementHeightEvent = new ResizeObserver(() => this.onWindowResize(
+      { target: { innerWidth: scrollElement.clientWidth }}
+    ));
+    const elementChildrenList: Element[] = Array.from(scrollElement.children);
+    for (const children of elementChildrenList) {
+      this.elementHeightEvent.observe(children);
+    }
   }
 
   /**

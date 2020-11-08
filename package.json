@@ -1,6 +1,6 @@
 {
   "name": "rfxlibrary",
-  "version": "0.9.1",
+  "version": "0.9.3",
   "scripts": {
     "start": "ng serve demo"
   },
@@ -16,6 +16,7 @@
     "@angular/platform-browser-dynamic": "^10.2.2",
     "@angular/router": "^10.2.2",
     "ngx-scrollbar": "^7.3.0",
+    "resize-observer-polyfill": "^1.5.1",
     "rxjs": "^6.6.3",
     "tslib": "^2.0.3",
     "zone.js": "~0.10.2"
