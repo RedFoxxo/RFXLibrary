@@ -53,8 +53,6 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.imageUrl?.currentValue) {
       this.loadImage(changes.imageUrl.currentValue);
-    } else if (this.imageLoaded) {
-      // this.setParallaxProperties(this.scrollTop);
     }
   }
 
@@ -111,6 +109,11 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
     };
   }
 
+  /**
+   * Set default image size and return new parallax position
+   * @param container main container HTMLElement
+   * @param image main image HTMLElement
+   */
   private setParallaxPosition(container: HTMLElement, image: HTMLImageElement): RfxParallaxPositionModel {
     this.setImageSize(container.clientWidth, container.clientHeight, image, this.parallaxPercentage);
     const elementTop = container.getBoundingClientRect().top + this.scrollTop;
@@ -122,6 +125,8 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
 
   /**
    * Set default properties for container and image
+   * @param container main container HTMLElement
+   * @param image main image HTMLElement
    */
   private setStaticProperties(container: HTMLElement, image: HTMLImageElement): void {
     if (!this.isAlreadyPositioned(container)) {
