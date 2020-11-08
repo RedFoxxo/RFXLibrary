@@ -72,9 +72,13 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
    * @param scroll new element scroll value
    */
   private onMouseScroll(scroll: number): void {
-    if (scroll !== undefined && this.image.complete) {
-      const imageTop = this.getImageTop(scroll, this.parallaxBoundaries);
-      this.setImageTransform(this.image, this.imageLeft, imageTop);
+    if (scroll !== undefined) {
+      this.scrollTop = scroll;
+
+      if (this.image.complete) {
+        const imageTop = this.getImageTop(scroll, this.parallaxBoundaries);
+        this.setImageTransform(this.image, this.imageLeft, imageTop);
+      }
     }
   }
 
