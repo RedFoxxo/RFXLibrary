@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Directive, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, Renderer2 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AnimationTypeEnum } from './animation-type.enum';
-import { RendererStyleModel } from './render-style.model';
+import { AnimationTypeEnum, RendererStyleModel } from './_models';
 import { RfxScrollAnimationService } from './rfx-scroll-animation.service';
 
 @Directive({
