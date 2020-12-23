@@ -98,9 +98,9 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
     this.image = new Image();
     this.image.src = imageUrl;
     this.image.setAttribute('class', 'parallax-image');
-    this.setStaticProperties(this.htmlElement.nativeElement, this.image);
     this.renderer.setStyle(this.image, 'visiblity', 'hidden');
     this.htmlElement.nativeElement.appendChild(this.image);
+    this.setStaticProperties(this.htmlElement.nativeElement, this.image);
 
     this.image.onload = () => {
       const imagePosition: RfxParallaxPositionModel = this.setParallaxPosition(this.htmlElement.nativeElement, this.image);
@@ -119,7 +119,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
   private setParallaxPosition(container: HTMLElement, image: HTMLImageElement): RfxParallaxPositionModel {
     this.setImageSize(container.clientWidth, container.clientHeight, image, this.parallaxPercentage);
     const elementTop = container.getBoundingClientRect().top + this.scrollTop;
-    this.parallaxBoundaries = this.getParallaxBoundaries(elementTop, container.clientHeight, this.parallaxPercentage);
+    this.parallaxBoundaries = this.getParallaxBoundaries(elementTop, container.clientHeight, this.image.height, this.parallaxPercentage);
     const imageLeft = this.getImageLeft(container.clientWidth, image.width, this.positionPercentage);
     const imageTop = this.getImageTop(this.scrollTop, this.parallaxBoundaries);
     return new RfxParallaxPositionModel(imageLeft, imageTop);
@@ -176,14 +176,21 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
    * Use this when container overflow is hidden for better page performance
    * @param elementTop main container position from the top of the document in pixels
    * @param elementHeight main container height in pixels
+   * @param imageHeight parallax image height in pixels
    * @param parallaxPercentage parallax scroll percentage
    */
-  private getParallaxBoundaries(elementTop: number, elementHeight: number, parallaxPercentage: number): RfxParallaxBoundariesModel {
+  private getParallaxBoundaries(
+    elementTop: number,
+    elementHeight: number,
+    imageHeight: number,
+    parallaxPercentage: number
+  ): RfxParallaxBoundariesModel {
     const usablePixels = elementHeight / 100 * parallaxPercentage;
+    const unusablePixels = imageHeight - elementHeight - usablePixels;
     const startPoint = elementTop - usablePixels - window.innerHeight;
     const endPoint = elementTop + elementHeight + usablePixels;
     const totalPixels = endPoint - startPoint;
-    return new RfxParallaxBoundariesModel(startPoint, endPoint, totalPixels, usablePixels);
+    return new RfxParallaxBoundariesModel(startPoint, endPoint, totalPixels, usablePixels, unusablePixels);
   }
 
   /**
@@ -214,6 +221,6 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
   private getImageTop(scrollTop: number, boundaries: RfxParallaxBoundariesModel): number {
     const parallaxArea: number = Math.max(0, Math.min(scrollTop - boundaries.startPoint, boundaries.totalPixels));
     const parallaxAreaPercentage: number = 100 / boundaries.totalPixels * parallaxArea;
-    return -boundaries.usablePixels * (1 - parallaxAreaPercentage / 100);
+    return -boundaries.usablePixels * (1 - parallaxAreaPercentage / 100) - boundaries.unusablePixels / 2;
   }
 }
