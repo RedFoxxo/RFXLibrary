@@ -1,8 +1,11 @@
 {
   "name": "rfx-logger",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "RfxLogger - upgrade your browser console messages",
-  "author": "RedFoxxo",
+  "author": {
+    "name": "RedFoxxo",
+    "url": "https://github.com/RedFoxxo"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/RedFoxxo/RFXLibrary/tree/master/projects/rfx-logger"
@@ -25,7 +28,8 @@
   "license": "MIT",
   "peerDependencies": {
     "@angular/common": ">=8.0.0",
-    "@angular/core": ">=8.0.0"
+    "@angular/core": ">=8.0.0",
+    "rxjs": ">=6.0.0"
   },
   "dependencies": {
     "tslib": "^2.0.0"
