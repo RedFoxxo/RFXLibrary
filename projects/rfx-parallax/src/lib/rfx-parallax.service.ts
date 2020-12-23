@@ -1,6 +1,6 @@
+/// <reference types="resize-observer-browser" />
 import { Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import ResizeObserver from 'resize-observer-polyfill';
 
 @Injectable({
   providedIn: 'root'
