@@ -99,6 +99,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
     this.image.src = imageUrl;
     this.image.setAttribute('class', 'parallax-image');
     this.renderer.setStyle(this.image, 'visiblity', 'hidden');
+    this.removePreviousImages(this.htmlElement.nativeElement);
     this.htmlElement.nativeElement.appendChild(this.image);
     this.setStaticProperties(this.htmlElement.nativeElement, this.image);
 
@@ -109,6 +110,20 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
       this.imageLeft = imagePosition.left;
       this.imageLoaded = true;
     };
+  }
+
+  /**
+   * Remove other / old parallax images
+   * @param container main container HTMLElement
+   */
+  private removePreviousImages(container: HTMLElement): void {
+    const images = Array.from(container.getElementsByClassName('parallax-image'));
+
+    for (const element of images) {
+      if (element.classList.contains('parallax-image')) {
+        this.renderer.removeChild(container, element);
+      }
+    }
   }
 
   /**
