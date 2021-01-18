@@ -94,7 +94,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
     this.image = new Image();
     this.image.src = imageUrl;
     this.image.setAttribute('class', 'parallax-image');
-    this.renderer.setStyle(this.image, 'visiblity', 'hidden');
+    this.renderer.setStyle(this.image, 'visibility', 'hidden');
     this.removePreviousImages(this.htmlElement.nativeElement);
     this.htmlElement.nativeElement.appendChild(this.image);
     this.setStaticProperties(this.htmlElement.nativeElement, this.image);
