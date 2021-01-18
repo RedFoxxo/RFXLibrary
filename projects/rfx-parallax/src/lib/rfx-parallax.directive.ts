@@ -102,7 +102,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
     this.image.onload = () => {
       const imagePosition: IRfxParallaxPosition = this.setParallaxPosition(this.htmlElement.nativeElement, this.image);
       this.setImageTransform(this.image, imagePosition.left, imagePosition.top);
-      this.renderer.setStyle(this.image, 'visiblity', 'visible');
+      this.renderer.setStyle(this.image, 'visibility', 'visible');
       this.imageLeft = imagePosition.left;
       this.imageLoaded = true;
     };
