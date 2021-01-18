@@ -7,19 +7,22 @@ import { RfxLoggerService } from 'rfx-logger';
 })
 export class RfxLoggerComponent {
   public customMessage: string;
-  public debugData: Array<string>;
+  public debugData: string[];
   public isDebugDataDisabled: boolean;
   public messageSent: boolean;
 
   constructor(private rfxLoggerService: RfxLoggerService) {
     this.debugData = ['example', 'data', 'in', 'array'];
+    this.customMessage = '';
+    this.isDebugDataDisabled = false;
+    this.messageSent = false;
   }
 
   private getCustomMessage(): string {
     return this.customMessage ? this.customMessage : 'your message';
   }
 
-  private getDebugData(): Array<string> {
+  private getDebugData(): string[] | undefined {
     return this.isDebugDataDisabled ? undefined : this.debugData;
   }
 

@@ -3,6 +3,46 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
+    "rfx-parallax": {
+      "projectType": "library",
+      "root": "projects/rfx-parallax",
+      "sourceRoot": "projects/rfx-parallax/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/rfx-parallax/tsconfig.lib.json",
+            "project": "projects/rfx-parallax/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/rfx-parallax/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/rfx-parallax/src/test.ts",
+            "tsConfig": "projects/rfx-parallax/tsconfig.spec.json",
+            "karmaConfig": "projects/rfx-parallax/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/rfx-parallax/tsconfig.lib.json",
+              "projects/rfx-parallax/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
     "rfx-logger": {
       "projectType": "library",
       "root": "projects/rfx-logger",
@@ -35,6 +75,46 @@
             "tsConfig": [
               "projects/rfx-logger/tsconfig.lib.json",
               "projects/rfx-logger/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "rfx-scroll-animation": {
+      "projectType": "library",
+      "root": "projects/rfx-scroll-animation",
+      "sourceRoot": "projects/rfx-scroll-animation/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/rfx-scroll-animation/tsconfig.lib.json",
+            "project": "projects/rfx-scroll-animation/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/rfx-scroll-animation/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/rfx-scroll-animation/src/test.ts",
+            "tsConfig": "projects/rfx-scroll-animation/tsconfig.spec.json",
+            "karmaConfig": "projects/rfx-scroll-animation/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/rfx-scroll-animation/tsconfig.lib.json",
+              "projects/rfx-scroll-animation/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -159,86 +239,6 @@
             "production": {
               "devServerTarget": "demo:serve:production"
             }
-          }
-        }
-      }
-    },
-    "rfx-parallax": {
-      "projectType": "library",
-      "root": "projects/rfx-parallax",
-      "sourceRoot": "projects/rfx-parallax/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/rfx-parallax/tsconfig.lib.json",
-            "project": "projects/rfx-parallax/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/rfx-parallax/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/rfx-parallax/src/test.ts",
-            "tsConfig": "projects/rfx-parallax/tsconfig.spec.json",
-            "karmaConfig": "projects/rfx-parallax/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/rfx-parallax/tsconfig.lib.json",
-              "projects/rfx-parallax/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
-    "rfx-scroll-animation": {
-      "projectType": "library",
-      "root": "projects/rfx-scroll-animation",
-      "sourceRoot": "projects/rfx-scroll-animation/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/rfx-scroll-animation/tsconfig.lib.json",
-            "project": "projects/rfx-scroll-animation/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/rfx-scroll-animation/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/rfx-scroll-animation/src/test.ts",
-            "tsConfig": "projects/rfx-scroll-animation/tsconfig.spec.json",
-            "karmaConfig": "projects/rfx-scroll-animation/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/rfx-scroll-animation/tsconfig.lib.json",
-              "projects/rfx-scroll-animation/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
           }
         }
       }

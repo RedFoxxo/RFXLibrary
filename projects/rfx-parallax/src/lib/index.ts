@@ -1,4 +1,4 @@
-export * from './_models';
+export * from './_interfaces';
 export * from './rfx-parallax.service';
 export * from './rfx-parallax.module';
 export * from './rfx-parallax.directive';

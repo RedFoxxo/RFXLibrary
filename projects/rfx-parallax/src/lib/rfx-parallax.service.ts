@@ -1,6 +1,13 @@
-/// <reference types="resize-observer-browser" />
 import { Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { IResizeObserverEntry, IResizeObserverOptions } from './_interfaces';
+
+declare class ResizeObserver {
+  constructor(callback: (entries: ReadonlyArray<IResizeObserverEntry>, observer: ResizeObserver) => void);
+  disconnect(): void;
+  observe(target: Element, options?: IResizeObserverOptions): void;
+  unobserve(target: Element): void;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -8,18 +15,18 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class RfxParallaxService implements OnDestroy {
   private renderer: Renderer2;
 
-  private subjectScroll: BehaviorSubject<number>;
-  private subjectResize: BehaviorSubject<number>;
+  private subjectScroll: BehaviorSubject<number | undefined>;
+  private subjectResize: BehaviorSubject<number | undefined>;
 
-  private elementHeightEvent: ResizeObserver;
-  private elementScrollEvent: () => void;
-  private windowResizeEvent: () => void;
+  private elementHeightEvent!: ResizeObserver;
+  private elementScrollEvent!: () => void;
+  private windowResizeEvent!: () => void;
 
   constructor(
     private rendererFactory: RendererFactory2
   ) {
-    this.subjectScroll = new BehaviorSubject<number>(undefined);
-    this.subjectResize = new BehaviorSubject<number>(undefined);
+    this.subjectScroll = new BehaviorSubject<number | undefined>(undefined);
+    this.subjectResize = new BehaviorSubject<number | undefined>(undefined);
     this.renderer = this.rendererFactory.createRenderer(null, null);
   }
 
@@ -32,9 +39,7 @@ export class RfxParallaxService implements OnDestroy {
       this.windowResizeEvent();
     }
 
-    if (this.elementHeightEvent) {
-      this.elementHeightEvent.disconnect();
-    }
+    this.elementHeightEvent?.disconnect();
   }
 
   /**
@@ -74,7 +79,7 @@ export class RfxParallaxService implements OnDestroy {
   /**
    * Mouse scroll event observable
    */
-  public getMouseScroll(): Observable<number> {
+  public getMouseScroll(): Observable<number | undefined> {
     return this.subjectScroll.asObservable();
   }
 
@@ -88,7 +93,7 @@ export class RfxParallaxService implements OnDestroy {
   /**
    * Window resize event observable
    */
-  public getWindowResize(): Observable<number> {
+  public getWindowResize(): Observable<number | undefined> {
     return this.subjectResize.asObservable();
   }
 }
