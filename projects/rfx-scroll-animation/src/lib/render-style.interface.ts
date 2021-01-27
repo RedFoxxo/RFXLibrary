@@ -1,4 +1,4 @@
-export class IRendererStyle {
-  name!: string;
+export interface IRendererStyle {
+  name: string;
   value?: string;
 }
