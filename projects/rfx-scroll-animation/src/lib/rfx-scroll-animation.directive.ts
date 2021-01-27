@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Directive, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, Renderer2 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AnimationTypeEnum, RendererStyleModel } from './_models';
+import { AnimationTypeEnum } from './animation-type.enum';
+import { IRendererStyle } from './render-style.interface';
 import { RfxScrollAnimationService } from './rfx-scroll-animation.service';
 
 @Directive({
@@ -18,7 +19,7 @@ export class RfxScrollAnimationDirective implements OnInit, OnDestroy, OnChanges
   @Output() public elementVisibleChange: EventEmitter<boolean>;
 
   private elementVisible: boolean;
-  private onScrollListener: Subscription;
+  private onScrollListener!: Subscription;
 
   constructor(
     private htmlElement: ElementRef,
@@ -33,6 +34,8 @@ export class RfxScrollAnimationDirective implements OnInit, OnDestroy, OnChanges
     this.transitionTimingFunction = 'cubic-bezier(0.4, 0.0, 0.2, 1)';
     this.scaleRatio = 1.5;
     this.isOnlyFirstTime = true;
+    this.elementVisible = false;
+    this.animationType = AnimationTypeEnum.NONE;
   }
 
   public ngOnChanges(): void {
@@ -83,9 +86,9 @@ export class RfxScrollAnimationDirective implements OnInit, OnDestroy, OnChanges
   private setInitialElementStyle(): void {
     this.setElementStyle(
       this.htmlElement.nativeElement,
-      new RendererStyleModel('transition-timing-function', this.transitionTimingFunction),
-      new RendererStyleModel('transition-duration', `${this.transitionDurationMs}ms`),
-      new RendererStyleModel('transition-property', 'opacity, transform')
+      { name: 'transition-timing-function', value: this.transitionTimingFunction },
+      { name: 'transition-duration', value: `${this.transitionDurationMs}ms` },
+      { name: 'transition-property', value: 'opacity, transform' }
     );
   }
 
@@ -116,7 +119,7 @@ export class RfxScrollAnimationDirective implements OnInit, OnDestroy, OnChanges
    * @param element html element
    * @param styles single or multiple style models
    */
-  private setElementStyle(element: Element, ...styles: RendererStyleModel[]): void {
+  private setElementStyle(element: Element, ...styles: IRendererStyle[]): void {
     styles.forEach((style) => {
       this.renderer.setStyle(element, style.name, style.value);
     });
@@ -127,7 +130,7 @@ export class RfxScrollAnimationDirective implements OnInit, OnDestroy, OnChanges
    * @param element html element
    * @param styles single or multiple style models (only style name is required)
    */
-  private removeElementStyle(element: Element, ...styles: RendererStyleModel[]): void {
+  private removeElementStyle(element: Element, ...styles: IRendererStyle[]): void {
     styles.forEach((style) => {
       this.renderer.removeStyle(element, style.name);
     });
@@ -136,14 +139,14 @@ export class RfxScrollAnimationDirective implements OnInit, OnDestroy, OnChanges
   /**
    * Show / hide element from page
    */
-  private toggleElement(visible: boolean): void {
+  public toggleElement(visible: boolean): void {
     this.elementVisible = visible;
     this.elementVisibleChange.emit(visible);
 
     this.setElementStyle(
       this.htmlElement.nativeElement,
-      new RendererStyleModel('opacity', String(+visible)),
-      new RendererStyleModel('transform', this.getElementTransform(visible, this.animationType))
+      { name: 'opacity', value: String(+visible) },
+      { name: 'transform', value: this.getElementTransform(visible, this.animationType) }
     );
   }
 
@@ -185,9 +188,15 @@ export class RfxScrollAnimationDirective implements OnInit, OnDestroy, OnChanges
    */
   private toggleTransition(enabled: boolean): void {
     if (enabled) {
-      this.setElementStyle(this.htmlElement.nativeElement, new RendererStyleModel('transition-duration', `${this.transitionDurationMs}ms`));
+      this.setElementStyle(
+        this.htmlElement.nativeElement,
+        { name: 'transition-duration', value: `${this.transitionDurationMs}ms` }
+      );
     } else {
-      this.removeElementStyle(this.htmlElement.nativeElement, new RendererStyleModel('transition-duration'));
+      this.removeElementStyle(
+        this.htmlElement.nativeElement,
+        { name: 'transition-duration' }
+      );
     }
   }
 

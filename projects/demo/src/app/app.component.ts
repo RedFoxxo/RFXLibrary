@@ -9,7 +9,7 @@ import { RfxParallaxService } from 'rfx-parallax';
 })
 export class AppComponent implements AfterViewInit {
   @ViewChild('scrollbar')
-  public scrollbarElement: NgScrollbar;
+  public scrollbarElement!: NgScrollbar;
 
   constructor(
     private rfxParallaxService: RfxParallaxService

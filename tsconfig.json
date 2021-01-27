@@ -1,35 +1,45 @@
-/*
-  This is a "Solution Style" tsconfig.json file, and is used by editors and TypeScript’s language server to improve development experience.
-  It is not intended to be used to perform a compilation.
-
-  To learn more about this file see: https://angular.io/config/solution-tsconfig.
-*/
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./projects/rfx-logger/tsconfig.lib.json"
-    },
-    {
-      "path": "./projects/rfx-logger/tsconfig.spec.json"
-    },
-    {
-      "path": "./projects/demo/tsconfig.app.json"
-    },
-    {
-      "path": "./projects/demo/tsconfig.spec.json"
-    },
-    {
-      "path": "./projects/rfx-parallax/tsconfig.lib.json"
-    },
-    {
-      "path": "./projects/rfx-parallax/tsconfig.spec.json"
-    },
-    {
-      "path": "./projects/rfx-scroll-animation/tsconfig.lib.json"
-    },
-    {
-      "path": "./projects/rfx-scroll-animation/tsconfig.spec.json"
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "es2020",
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "rfx-parallax": [
+        "projects/rfx-parallax/src/lib",
+        "dist/rfx-parallax/rfx-parallax",
+        "dist/rfx-parallax"
+      ],
+      "rfx-logger": [
+        "projects/rfx-logger/src/lib",
+        "dist/rfx-logger/rfx-logger",
+        "dist/rfx-logger"
+      ],
+      "rfx-scroll-animation": [
+        "projects/rfx-scroll-animation/src/lib",
+        "dist/rfx-scroll-animation/rfx-scroll-animation",
+        "dist/rfx-scroll-animation"
+      ]
     }
-  ]
+  },
+  "angularCompilerOptions": {
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  }
 }
