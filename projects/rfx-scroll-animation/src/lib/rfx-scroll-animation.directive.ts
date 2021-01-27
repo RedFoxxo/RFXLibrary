@@ -139,7 +139,7 @@ export class RfxScrollAnimationDirective implements OnInit, OnDestroy, OnChanges
   /**
    * Show / hide element from page
    */
-  private toggleElement(visible: boolean): void {
+  public toggleElement(visible: boolean): void {
     this.elementVisible = visible;
     this.elementVisibleChange.emit(visible);
 
