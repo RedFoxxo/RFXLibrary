@@ -143,7 +143,7 @@ export class RfxScrollAnimationDirective implements OnInit, OnDestroy, OnChanges
   /**
    * Show / hide element from page
    */
-  public toggleElement(visible: boolean): void {
+  public toggleElement(visible: boolean, restoreListener: boolean = false): void {
     this.elementVisible = visible;
     this.elementVisibleChange.emit(visible);
 
@@ -153,7 +153,7 @@ export class RfxScrollAnimationDirective implements OnInit, OnDestroy, OnChanges
       { name: 'transform', value: this.getElementTransform(visible, this.animationType) }
     );
 
-    if (this.isOnlyFirstTime && !visible) {
+    if (restoreListener) {
       this.subscribeToMouseScroll();
     }
   }
