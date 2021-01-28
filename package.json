@@ -1,6 +1,6 @@
 {
   "name": "rfxlibrary",
-  "version": "0.12.2",
+  "version": "0.12.4",
   "scripts": {
     "ng": "ng",
     "start": "ng serve demo"

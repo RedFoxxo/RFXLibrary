@@ -52,11 +52,15 @@ export class RfxScrollAnimationDirective implements OnInit, OnDestroy, OnChanges
         this.initElement();
 
         if (!this.isOnlyFirstTime || !this.elementVisible) {
-          this.onScrollListener = this.rfxScrollAnimationService.getMouseScroll().subscribe(() => {
-            this.onMouseScroll();
-          });
+          this.subscribeToMouseScroll();
         }
       }
+    });
+  }
+
+  private subscribeToMouseScroll(): void {
+    this.onScrollListener = this.rfxScrollAnimationService.getMouseScroll().subscribe(() => {
+      this.onMouseScroll();
     });
   }
 
@@ -139,7 +143,7 @@ export class RfxScrollAnimationDirective implements OnInit, OnDestroy, OnChanges
   /**
    * Show / hide element from page
    */
-  public toggleElement(visible: boolean): void {
+  public toggleElement(visible: boolean, restoreListener: boolean = false): void {
     this.elementVisible = visible;
     this.elementVisibleChange.emit(visible);
 
@@ -148,6 +152,10 @@ export class RfxScrollAnimationDirective implements OnInit, OnDestroy, OnChanges
       { name: 'opacity', value: String(+visible) },
       { name: 'transform', value: this.getElementTransform(visible, this.animationType) }
     );
+
+    if (restoreListener) {
+      this.subscribeToMouseScroll();
+    }
   }
 
   /**
