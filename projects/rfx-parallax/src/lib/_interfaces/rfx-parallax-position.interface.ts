@@ -1,4 +1,4 @@
-export class IRfxParallaxPosition {
-  left!: number;
-  top!: number;
+export interface IRfxParallaxPosition {
+  left: number;
+  top: number;
 }

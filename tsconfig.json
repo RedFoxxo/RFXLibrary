@@ -25,15 +25,15 @@
         "dist/rfx-parallax/rfx-parallax",
         "dist/rfx-parallax"
       ],
-      "rfx-logger": [
-        "projects/rfx-logger/src/lib",
-        "dist/rfx-logger/rfx-logger",
-        "dist/rfx-logger"
-      ],
       "rfx-scroll-animation": [
         "projects/rfx-scroll-animation/src/lib",
         "dist/rfx-scroll-animation/rfx-scroll-animation",
         "dist/rfx-scroll-animation"
+      ],
+      "rfx-logger": [
+        "projects/rfx-logger/src/lib",
+        "dist/rfx-logger/rfx-logger",
+        "dist/rfx-logger"
       ]
     }
   },

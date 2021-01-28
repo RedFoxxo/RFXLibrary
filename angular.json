@@ -43,46 +43,6 @@
         }
       }
     },
-    "rfx-logger": {
-      "projectType": "library",
-      "root": "projects/rfx-logger",
-      "sourceRoot": "projects/rfx-logger/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/rfx-logger/tsconfig.lib.json",
-            "project": "projects/rfx-logger/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/rfx-logger/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/rfx-logger/src/test.ts",
-            "tsConfig": "projects/rfx-logger/tsconfig.spec.json",
-            "karmaConfig": "projects/rfx-logger/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/rfx-logger/tsconfig.lib.json",
-              "projects/rfx-logger/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
     "rfx-scroll-animation": {
       "projectType": "library",
       "root": "projects/rfx-scroll-animation",
@@ -115,6 +75,46 @@
             "tsConfig": [
               "projects/rfx-scroll-animation/tsconfig.lib.json",
               "projects/rfx-scroll-animation/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "rfx-logger": {
+      "projectType": "library",
+      "root": "projects/rfx-logger",
+      "sourceRoot": "projects/rfx-logger/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/rfx-logger/tsconfig.lib.json",
+            "project": "projects/rfx-logger/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/rfx-logger/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/rfx-logger/src/test.ts",
+            "tsConfig": "projects/rfx-logger/tsconfig.spec.json",
+            "karmaConfig": "projects/rfx-logger/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/rfx-logger/tsconfig.lib.json",
+              "projects/rfx-logger/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"

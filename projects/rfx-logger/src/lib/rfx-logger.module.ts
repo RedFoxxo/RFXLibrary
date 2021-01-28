@@ -1,17 +1,17 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
-import { IConfiguration } from './configuration.interface';
+import { ConfigurationModel } from './configuration.model';
 
 @NgModule({
   imports: [],
   exports: []
 })
 export class RfxLoggerModule {
-  public static config(configuration: IConfiguration): ModuleWithProviders<RfxLoggerModule> {
+  public static config(configuration: ConfigurationModel): ModuleWithProviders<RfxLoggerModule> {
     return {
       ngModule: RfxLoggerModule,
       providers: [
         {
-          provide: IConfiguration,
+          provide: ConfigurationModel,
           useValue: configuration
         }
       ]
