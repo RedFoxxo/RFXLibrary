@@ -4,14 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { RfxLoggerModule } from 'rfx-logger';
-import { RfxParallaxModule } from 'rfx-parallax';
-import { RfxScrollAnimationModule } from 'rfx-scroll-animation';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 
 import {
-  HomeComponent, RfxLoggerComponent, RfxParallaxComponent, RfxScrollAnimationComponent
+  HomeComponent, RfxLoggerComponent, RfxParallaxComponent, RfxScrollAnimationComponent,
+  RfxImageLoaderComponent
 } from './_components';
+
+import { RfxImageLoaderModule } from 'rfx-image-loader';
+import { RfxLoggerModule } from 'rfx-logger';
+import { RfxParallaxModule } from 'rfx-parallax';
+import { RfxScrollAnimationModule } from 'rfx-scroll-animation';
 
 @NgModule({
   declarations: [
@@ -19,7 +22,8 @@ import {
     HomeComponent,
     RfxLoggerComponent,
     RfxParallaxComponent,
-    RfxScrollAnimationComponent
+    RfxScrollAnimationComponent,
+    RfxImageLoaderComponent
   ],
   imports: [
     BrowserModule,
@@ -28,6 +32,7 @@ import {
     RfxLoggerModule,
     RfxParallaxModule,
     RfxScrollAnimationModule,
+    RfxImageLoaderModule,
     NgScrollbarModule
   ],
   providers: [],

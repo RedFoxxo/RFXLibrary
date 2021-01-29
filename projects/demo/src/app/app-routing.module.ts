@@ -4,7 +4,8 @@ import {
   RfxLoggerComponent,
   HomeComponent,
   RfxParallaxComponent,
-  RfxScrollAnimationComponent
+  RfxScrollAnimationComponent,
+  RfxImageLoaderComponent
 } from './_components';
 
 const routes: Routes = [
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path: 'rfx-logger', component: RfxLoggerComponent },
   { path: 'rfx-parallax', component: RfxParallaxComponent },
   { path: 'rfx-scroll-animation', component: RfxScrollAnimationComponent },
+  { path: 'rfx-image-loader', component: RfxImageLoaderComponent },
 
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' }

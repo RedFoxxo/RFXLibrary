@@ -20,6 +20,11 @@
       "dom"
     ],
     "paths": {
+      "rfx-image-loader": [
+        "projects/rfx-image-loader/src/lib",
+        "dist/rfx-image-loader/rfx-image-loader",
+        "dist/rfx-image-loader"
+      ],
       "rfx-parallax": [
         "projects/rfx-parallax/src/lib",
         "dist/rfx-parallax/rfx-parallax",
