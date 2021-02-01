@@ -176,13 +176,13 @@ export class RfxScrollAnimationDirective implements OnInit, OnDestroy, OnChanges
   private getElementTransform(isElementVisible: boolean, animationType: AnimationTypeEnum): string {
     switch (animationType) {
       case AnimationTypeEnum.TOP:
-        return isElementVisible ? 'translateY(0)' : `translateY(-${this.animationDistancePx}px)`;
+        return isElementVisible ? 'translate3d(0, 0, 0)' : `translate3d(0, -${this.animationDistancePx}px, 0)`;
       case AnimationTypeEnum.BOTTOM:
-        return isElementVisible ? 'translateY(0)' : `translateY(${this.animationDistancePx}px)`;
+        return isElementVisible ? 'translate3d(0, 0, 0)' : `translate3d(0, ${this.animationDistancePx}px, 0)`;
       case AnimationTypeEnum.LEFT:
-        return isElementVisible ? 'translateX(0)' : `translateX(-${this.animationDistancePx}px)`;
+        return isElementVisible ? 'translate3d(0, 0, 0)' : `translate3d(-${this.animationDistancePx}px, 0, 0)`;
       case AnimationTypeEnum.RIGHT:
-        return isElementVisible ? 'translateX(0)' : `translateX(${this.animationDistancePx}px)`;
+        return isElementVisible ? 'translate3d(0, 0, 0)' : `translate3d(${this.animationDistancePx}px, 0, 0)`;
       case AnimationTypeEnum.ZOOM:
         return isElementVisible ? 'scale(1)' : `scale(${this.scaleRatio})`;
       default:
