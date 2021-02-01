@@ -1,4 +1,6 @@
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RfxScrollAnimationComponent } from './rfx-scroll-animation/rfx-scroll-animation.component';
 
 @NgModule({
@@ -6,6 +8,8 @@ import { RfxScrollAnimationComponent } from './rfx-scroll-animation/rfx-scroll-a
     RfxScrollAnimationComponent
   ],
   imports: [
+    BrowserModule,
+    BrowserAnimationsModule
   ],
   exports: [
     RfxScrollAnimationComponent

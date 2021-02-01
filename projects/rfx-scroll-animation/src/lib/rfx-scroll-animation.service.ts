@@ -1,66 +1,42 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RfxScrollAnimationService implements OnDestroy {
-  private mouseScroll: any;
-  private subjectScroll: BehaviorSubject<undefined>;
-  private subjectNavigation: BehaviorSubject<boolean>;
+  private subjectScroll: Subject<undefined>;
+
+  private renderer: Renderer2;
+  private mouseScrollEvent!: () => void;
 
   constructor(
-    private router: Router
+    private rendererFactory: RendererFactory2
   ) {
-    this.subjectScroll = new BehaviorSubject<undefined>(undefined);
-    this.subjectNavigation = new BehaviorSubject<boolean>(false);
+    this.subjectScroll = new Subject<undefined>();
+    this.renderer = this.rendererFactory.createRenderer(null, null);
   }
 
   public ngOnDestroy(): void {
-    document.removeEventListener('scroll', this.mouseScroll);
+    this.destroyListeners();
   }
 
-  /**
-   * Init listeners
-   */
-  public initListeners(): void {
-    this.mouseScroll = this.onMouseScroll.bind(this);
-    document.addEventListener('scroll', this.mouseScroll, false);
-
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
-      this.subjectNavigation.next(true);
-    });
+  private destroyListeners(): void {
+    if (this.mouseScrollEvent) {
+      this.mouseScrollEvent();
+    }
   }
 
-  /**
-   * Mouse scroll event
-   */
+  public initListeners(scrollElement?: HTMLElement): void {
+    this.destroyListeners();
+    this.mouseScrollEvent = this.renderer.listen(scrollElement ?? document, 'scroll', () => this.onMouseScroll());
+  }
+
   private onMouseScroll(): void {
-    this.subjectScroll.next(undefined);
+    this.subjectScroll.next();
   }
 
-  /**
-   * Mouse scroll event observable
-   */
   public getMouseScroll(): Observable<undefined> {
     return this.subjectScroll.asObservable();
-  }
-
-  /**
-   * NavigationEnd event
-   */
-  public getNavigationEndValue(): boolean {
-    return this.subjectNavigation.value;
-  }
-
-  /**
-   * NavigationEnd event observable
-   */
-  public getNavigationEnd(): Observable<boolean> {
-    return this.subjectNavigation.asObservable();
   }
 }

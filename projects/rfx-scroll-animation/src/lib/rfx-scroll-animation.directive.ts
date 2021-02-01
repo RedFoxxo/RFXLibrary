@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Directive, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, Renderer2 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AnimationTypeEnum } from './animation-type.enum';
+import { AnimationTypeEnum } from './animation/animation-type.enum';
 import { IRendererStyle } from './render-style.interface';
 import { RfxScrollAnimationService } from './rfx-scroll-animation.service';
 
 @Directive({
-  selector: '[libRfxScrollAnimation]'
+  selector: '[libRfxScrollAnimationLegacy]'
 })
 export class RfxScrollAnimationDirective implements OnInit, OnDestroy, OnChanges {
   @Input() public distanceFromPageBottomPercentage: number;
@@ -47,15 +47,15 @@ export class RfxScrollAnimationDirective implements OnInit, OnDestroy, OnChanges
   public ngOnInit(): void {
     this.toggleElementInstantly(false);
 
-    this.rfxScrollAnimationService.getNavigationEnd().subscribe((value: boolean) => {
-      if (value) {
-        this.initElement();
+    // this.rfxScrollAnimationService.getNavigationEnd().subscribe((value: boolean) => {
+    //   if (value) {
+    //     this.initElement();
 
-        if (!this.isOnlyFirstTime || !this.elementVisible) {
-          this.subscribeToMouseScroll();
-        }
-      }
-    });
+    //     if (!this.isOnlyFirstTime || !this.elementVisible) {
+    //       this.subscribeToMouseScroll();
+    //     }
+    //   }
+    // });
   }
 
   private subscribeToMouseScroll(): void {
