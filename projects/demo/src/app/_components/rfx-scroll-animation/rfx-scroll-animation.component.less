@@ -1,0 +1,20 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 50px;
+
+  .element {
+    width: 250px;
+    height: 250px;
+    background-color: green;
+
+    + .element {
+      margin-top: 100px;
+    }
+
+    &:nth-child(2n) {
+      background-color: blue;
+      align-self: flex-end;
+    }
+  }
+}

@@ -1,10 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RfxScrollAnimationDirective } from './rfx-scroll-animation.directive';
+import { RfxScrollAnimationComponent } from './rfx-scroll-animation/rfx-scroll-animation.component';
 
 @NgModule({
-  declarations: [RfxScrollAnimationDirective],
+  declarations: [
+    RfxScrollAnimationComponent
+  ],
   imports: [
   ],
-  exports: [RfxScrollAnimationDirective]
+  exports: [
+    RfxScrollAnimationComponent
+  ]
 })
 export class RfxScrollAnimationModule { }

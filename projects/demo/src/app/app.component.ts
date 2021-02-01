@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { RfxParallaxService } from 'rfx-parallax';
+import { RfxScrollAnimationService } from 'rfx-scroll-animation';
 
 @Component({
   selector: 'app-root',
@@ -12,10 +13,12 @@ export class AppComponent implements AfterViewInit {
   public scrollbarElement!: NgScrollbar;
 
   constructor(
-    private rfxParallaxService: RfxParallaxService
+    private rfxParallaxService: RfxParallaxService,
+    private rfxScrollAnimationService: RfxScrollAnimationService
   ) {}
 
   public ngAfterViewInit(): void {
-    this.rfxParallaxService.initListeners(this.scrollbarElement.viewport.nativeElement);
+    this.rfxParallaxService.initListeners(); // this.scrollbarElement.viewport.nativeElement
+    this.rfxScrollAnimationService.initListeners();
   }
 }
