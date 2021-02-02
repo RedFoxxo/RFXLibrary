@@ -76,10 +76,7 @@ export class RfxScrollAnimationComponent implements OnChanges, OnInit, OnDestroy
 
   public ngOnInit(): void {
     this.subscribeToScrollEvent();
-
-    setTimeout(() => {
-      this.onMouseScroll();
-    });
+    this.subscribeToRouterEvent();
   }
 
   public ngOnDestroy(): void {
@@ -105,9 +102,9 @@ export class RfxScrollAnimationComponent implements OnChanges, OnInit, OnDestroy
     this.scrollListenerSubscription = this.rfxScrollAnimationService.getMouseScroll().subscribe(() => this.onMouseScroll());
   }
 
-  // private subscribeToRouterEvent(): void {
-  //   this.routerListenerSubscription = this.rfxScrollAnimationService.getNavigationEnd().subscribe(() => this.onRouterNavigationEnd());
-  // }
+  private subscribeToRouterEvent(): void {
+    this.routerListenerSubscription = this.rfxScrollAnimationService.getRouterEvent().subscribe((isReady: boolean) => this.onRouterEvent(isReady));
+  }
 
   private getCurrentTransition(animationType: AnimationTypeEnum, animationDistancePx: number = 0, scaleRatio: number = 1): string {
     switch (animationType) {
@@ -132,6 +129,12 @@ export class RfxScrollAnimationComponent implements OnChanges, OnInit, OnDestroy
     const rect: DOMRect = element.getBoundingClientRect();
     const scrollBottomWithDistance: number = rect.top + window.pageYOffset - document.documentElement.clientTop + distanceInPx; // TODO: check if its working with custom scrollbar
     return scrollBottom >= scrollBottomWithDistance;
+  }
+
+  private onRouterEvent(isReady: boolean): void {
+    if (isReady) {
+      setTimeout(() => { this.onMouseScroll() })
+    }
   }
 
   private onMouseScroll(): void {
