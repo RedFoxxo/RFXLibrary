@@ -1,13 +1,13 @@
 import { Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RfxScrollAnimationService implements OnDestroy {
   private subjectScroll: Subject<undefined>;
-  private subjectNavigation: Subject<boolean>;
+  private subjectNavigation: BehaviorSubject<boolean>;
 
   private renderer: Renderer2;
   private mouseScrollEvent!: () => void;
@@ -18,7 +18,7 @@ export class RfxScrollAnimationService implements OnDestroy {
     private router: Router
   ) {
     this.subjectScroll = new Subject<undefined>();
-    this.subjectNavigation = new Subject<boolean>();
+    this.subjectNavigation = new BehaviorSubject<boolean>(false);
     this.renderer = this.rendererFactory.createRenderer(null, null);
   }
 
@@ -65,5 +65,9 @@ export class RfxScrollAnimationService implements OnDestroy {
 
   public getRouterEvent(): Observable<boolean> {
     return this.subjectNavigation.asObservable();
+  }
+
+  public getRouterEventValue(): boolean {
+    return this.subjectNavigation.value;
   }
 }

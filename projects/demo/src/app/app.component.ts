@@ -18,7 +18,7 @@ export class AppComponent implements AfterViewInit {
   ) {}
 
   public ngAfterViewInit(): void {
-    this.rfxParallaxService.initListeners(); // this.scrollbarElement.viewport.nativeElement
-    this.rfxScrollAnimationService.initListeners();
+    this.rfxParallaxService.initListeners(this.scrollbarElement.viewport.nativeElement);
+    this.rfxScrollAnimationService.initListeners(this.scrollbarElement.viewport.nativeElement);
   }
 }

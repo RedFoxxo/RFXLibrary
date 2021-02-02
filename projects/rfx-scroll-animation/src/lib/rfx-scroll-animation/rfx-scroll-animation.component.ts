@@ -75,6 +75,7 @@ export class RfxScrollAnimationComponent implements OnChanges, OnInit, OnDestroy
   }
 
   public ngOnInit(): void {
+    this.onRouterEvent(this.rfxScrollAnimationService.getRouterEventValue());
     this.subscribeToScrollEvent();
     this.subscribeToRouterEvent();
   }
@@ -127,7 +128,7 @@ export class RfxScrollAnimationComponent implements OnChanges, OnInit, OnDestroy
     const scrollBottom: number = window.scrollY + window.innerHeight;
     const distanceInPx: number = (window.innerHeight / 100) * distanceFromPageBottomPercentage;
     const rect: DOMRect = element.getBoundingClientRect();
-    const scrollBottomWithDistance: number = rect.top + window.pageYOffset - document.documentElement.clientTop + distanceInPx; // TODO: check if its working with custom scrollbar
+    const scrollBottomWithDistance: number = rect.top + window.pageYOffset - document.documentElement.clientTop + distanceInPx;
     return scrollBottom >= scrollBottomWithDistance;
   }
 
