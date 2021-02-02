@@ -44,8 +44,8 @@ export class RfxScrollAnimationComponent implements OnChanges, OnInit, OnDestroy
   public currentTransition: string;
 
   @HostBinding('@visibility')
-  get visibility(): AnimationExpInterface {
-    return {
+  get visibility(): AnimationExpInterface | null {
+    return this.animationType === AnimationTypeEnum.NONE ? null : {
       value: this.animationVisibility,
       params: {
         currentTransition: this.currentTransition,
