@@ -5,7 +5,9 @@ Animate your page elements on scroll
 
 - Animate your component on scroll
 - Multiple animations
+- Apply directly on your element
 - Add your own custom animation
+- Best performance with `translate3d`
 
 ## Installation
 
@@ -39,6 +41,22 @@ public ngOnInit(): void {
 }
 ```
 
+and if you have a custom scrollbar component you can pass the nativeElement
+to the initListeners() function like this:<br />
+**WARNING:** *use `ngAfterViewInit` instead of `ngOnInit` otherwise your nativeElement
+may not be defined*
+```html
+<custom-scrollbar #scrollbar>
+  <!-- Your page here -->
+</custom-scrollbar>
+```
+```typescript
+@ViewChild('scrollbar') public scrollbarElement: ElementRef;
+
+public ngAfterViewInit(): void {
+  this.rfxParallaxService.initListeners(this.scrollbarElement.nativeElement);
+}
+```
 ## Usage
 
 just apply `libRfxScrollAnimation` to your container and pass animation type
@@ -57,7 +75,7 @@ when element should appear - in percentage from the bottom of the page (e.g. 30 
 ### `animationType: AnimationTypeEnum`
 *(default value: 'none')*<br />
 Available animation types:
-  - `none` use this if you want to implement a custom animation
+  - `none` - use this if you want to implement a custom animation
   - `top` - fade in from top
   - `bottom` - fade in from bottom
   - `right` - fade in from right
@@ -72,6 +90,10 @@ from how far the animation should fade in - shift value
 *(default value: 500)*<br />
 animation duration in milliseconds
 
+### `transitionDelayMs: number`
+*(default value: 0)*<br />
+animation delay in milliseconds
+
 ### `transitionTimingFunction: string`
 *(default value: 'cubic-bezier(0.4, 0.0, 0.2, 1)')*<br />
 transition timing function (for more info see https://www.w3schools.com/cssref/css3_pr_transition-timing-function.asp)
@@ -81,6 +103,10 @@ transition timing function (for more info see https://www.w3schools.com/cssref/c
 **ONLY FOR 'zoom' ANIMATION TYPE!**<br />
 scale value (eg. scale from `value` to 1)
 
+### `isOnlyFirstTime: boolean`
+*(default value: true)*<br />
+animate only on first scroll (true) or always (false)
+
 ### `elementVisibleChange: EventEmitter<boolean>`
 listen to show / hide element events and create your own custom animation
 ```html
@@ -88,11 +114,6 @@ listen to show / hide element events and create your own custom animation
   [...]
 </div>
 ```
-
-### ~~`transitionDelayMs: number`~~ (coming soon)
-
-### ~~`isOnlyFirstTime: boolean`~~ (coming soon)
-
 
 ## Demo
 
