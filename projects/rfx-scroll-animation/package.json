@@ -1,6 +1,6 @@
 {
   "name": "rfx-scroll-animation",
-  "version": "2.0.0-beta.2",
+  "version": "2.0.0",
   "description": "RfxScrollAnimation - animate your page elements on scroll",
   "author": {
     "name": "RedFoxxo",
