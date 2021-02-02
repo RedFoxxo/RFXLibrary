@@ -12,10 +12,6 @@ import { RfxScrollAnimationService } from '../rfx-scroll-animation.service';
   styleUrls: ['./rfx-scroll-animation.component.less'],
   animations: [
     trigger('visibility', [
-      state('enter', style({
-        opacity: 1,
-        transform: 'translate3d(0, 0, 0)'
-      })),
       state('visible', style({
         opacity: 1,
         transform: 'translate3d(0, 0, 0)'
@@ -154,6 +150,7 @@ export class RfxScrollAnimationComponent implements OnChanges, OnInit, OnDestroy
 
   private setVisibility(visible: AnimationVisibilityEnum): void {
     this.animationVisibility = visible;
+    this.elementVisibleChange.emit(visible === AnimationVisibilityEnum.VISIBLE);
   }
 
   public hideElement(): void {
