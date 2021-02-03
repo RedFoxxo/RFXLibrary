@@ -1,11 +1,11 @@
 import { Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { IResizeObserverEntry, IResizeObserverOptions } from './_interfaces';
+import { ResizeObserverEntryInterface, ResizeObserverOptionsInterface } from './_interfaces';
 
 declare class ResizeObserver {
-  constructor(callback: (entries: ReadonlyArray<IResizeObserverEntry>, observer: ResizeObserver) => void);
+  constructor(callback: (entries: ReadonlyArray<ResizeObserverEntryInterface>, observer: ResizeObserver) => void);
   disconnect(): void;
-  observe(target: Element, options?: IResizeObserverOptions): void;
+  observe(target: Element, options?: ResizeObserverOptionsInterface): void;
   unobserve(target: Element): void;
 }
 

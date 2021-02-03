@@ -1,7 +1,7 @@
-export class IRfxParallaxBoundaries {
-  public startPoint!: number;
-  public endPoint!: number;
-  public totalPixels!: number;
-  public usablePixels!: number;
-  public unusablePixels!: number;
+export interface RfxParallaxBoundariesInterface {
+  startPoint: number;
+  endPoint: number;
+  totalPixels: number;
+  usablePixels: number;
+  unusablePixels: number;
 }

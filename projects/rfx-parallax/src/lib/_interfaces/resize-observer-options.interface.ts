@@ -1,3 +1,3 @@
-export interface IResizeObserverOptions {
+export interface ResizeObserverOptionsInterface {
   box?: 'content-box' | 'border-box';
 }

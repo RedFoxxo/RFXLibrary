@@ -1,9 +1,9 @@
-import { IResizeObserverSize } from './resize-observer-size.interface';
+import { ResizeObserverSizeInterface } from './resize-observer-size.interface';
 
-export interface IResizeObserverEntry {
+export interface ResizeObserverEntryInterface {
   readonly target: Element;
   readonly contentRect: DOMRectReadOnly;
-  readonly borderBoxSize?: ReadonlyArray<IResizeObserverSize>;
-  readonly contentBoxSize?: ReadonlyArray<IResizeObserverSize>;
-  readonly devicePixelContentBoxSize?: ReadonlyArray<IResizeObserverSize>;
+  readonly borderBoxSize?: ReadonlyArray<ResizeObserverSizeInterface>;
+  readonly contentBoxSize?: ReadonlyArray<ResizeObserverSizeInterface>;
+  readonly devicePixelContentBoxSize?: ReadonlyArray<ResizeObserverSizeInterface>;
 }
