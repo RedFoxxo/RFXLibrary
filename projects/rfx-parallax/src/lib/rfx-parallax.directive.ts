@@ -215,7 +215,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
    * @param imageTop image top shift in pixels
    */
   private setImageTransform(image: HTMLImageElement, imageLeft: number, imageTop: number): void {
-    this.renderer.setStyle(image, 'transform', `translate(${imageLeft}px, ${imageTop}px)`);
+    this.renderer.setStyle(image, 'transform', `translate3d(${imageLeft}px, ${imageTop}px, 0)`);
   }
 
   /**
