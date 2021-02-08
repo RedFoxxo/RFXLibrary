@@ -7,7 +7,7 @@ Animate your page elements on scroll
 - Multiple animations
 - Apply directly on your element
 - Add your own custom animation
-- Best performance with `translate3d`
+- Best performance with `will-change`
 
 ## Installation
 

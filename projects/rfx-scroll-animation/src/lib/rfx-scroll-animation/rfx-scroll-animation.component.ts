@@ -14,12 +14,12 @@ import { RfxScrollAnimationService } from '../rfx-scroll-animation.service';
     trigger('visibility', [
       state('visible', style({
         opacity: 1,
-        transform: 'translate3d(0, 0, 0)'
+        transform: 'translate(0, 0)'
       })),
       state('hidden', style({
         opacity: 0,
         transform: '{{ currentTransition }}'
-      }), { params: { currentTransition: 'translate3d(0, 0, 0) scale(1)' }}),
+      }), { params: { currentTransition: 'translate(0, 0) scale(1)' }}),
       transition('visible <=> hidden', [
         animate('{{ transitionDurationMs }}ms {{ transitionDelayMs }}ms {{ transitionTimingFunction }}')
       ], { params: { transitionDurationMs: 0, transitionDelayMs: 0, transitionTimingFunction: 'ease' }})
@@ -70,7 +70,7 @@ export class RfxScrollAnimationComponent implements OnChanges, OnInit, OnDestroy
     this.scaleRatio = 1.5;
     this.isOnlyFirstTime = true;
     this.elementVisibleChange = new EventEmitter<boolean>();
-    this.currentTransition = 'translate3d(0, 0, 0) scale(1)';
+    this.currentTransition = 'translate(0, 0) scale(1)';
     this.animationVisibility = AnimationVisibilityEnum.HIDDEN;
   }
 
@@ -110,17 +110,17 @@ export class RfxScrollAnimationComponent implements OnChanges, OnInit, OnDestroy
   private getCurrentTransition(animationType: AnimationTypeEnum, animationDistancePx: number = 0, scaleRatio: number = 1): string {
     switch (animationType) {
       case AnimationTypeEnum.TOP:
-        return `translate3d(0, -${animationDistancePx}px, 0) scale(1)`;
+        return `translate(0, -${animationDistancePx}px) scale(1)`;
       case AnimationTypeEnum.BOTTOM:
-        return `translate3d(0, ${animationDistancePx}px, 0) scale(1)`;
+        return `translate(0, ${animationDistancePx}px) scale(1)`;
       case AnimationTypeEnum.LEFT:
-        return `translate3d(-${animationDistancePx}px, 0, 0) scale(1)`;
+        return `translate(-${animationDistancePx}px, 0) scale(1)`;
       case AnimationTypeEnum.RIGHT:
-        return `translate3d(${animationDistancePx}px, 0, 0) scale(1)`;
+        return `translate(${animationDistancePx}px, 0) scale(1)`;
       case AnimationTypeEnum.ZOOM:
-        return `translate3d(0, 0, 0) scale(${scaleRatio})`;
+        return `translate(0, 0) scale(${scaleRatio})`;
       default:
-        return 'translate3d(0, 0, 0) scale(1)';
+        return 'translate(0, 0) scale(1)';
     }
   }
 
