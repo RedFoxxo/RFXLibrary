@@ -1,18 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { RfxImageInterface } from 'rfx-image-loader';
 
 @Component({
   templateUrl: './rfx-image-loader.component.html',
   styleUrls: ['./rfx-image-loader.component.less']
 })
-export class RfxImageLoaderComponent implements OnInit {
+export class RfxImageLoaderComponent {
+  public images: RfxImageInterface[];
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor() {
+    this.images = [
+      { imageUrl: './assets/image.jpg', priority: 1 },
+      { imageUrl: './assets/placeholder.jpg', priority: 0 }
+    ];
   }
-
-  yeet(): void {
-    console.warn('yeet')
-  }
-
 }

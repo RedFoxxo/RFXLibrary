@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { NgScrollbar } from 'ngx-scrollbar';
-import { RfxImageLoaderService } from 'rfx-image-loader';
 import { RfxParallaxService } from 'rfx-parallax';
 
 @Component({

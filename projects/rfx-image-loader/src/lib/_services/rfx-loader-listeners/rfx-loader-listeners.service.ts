@@ -4,7 +4,7 @@ import { Observable, Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class RfxImageLoaderService {
+export class RfxLoaderListenersService {
   private renderer: Renderer2;
   private subjectResize: Subject<number>;
   private windowResizeEvent!: () => void;

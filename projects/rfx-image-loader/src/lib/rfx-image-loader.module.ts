@@ -1,17 +1,26 @@
 import { NgModule } from '@angular/core';
-import { RfxImageLoaderDirective } from './rfx-image-loader.directive';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 
+import { RfxImageLoaderComponent } from './_components';
+import { SortImagesByPriorityPipe } from './_pipes';
 
 @NgModule({
   declarations: [
-    RfxImageLoaderDirective
+    RfxImageLoaderComponent,
+    SortImagesByPriorityPipe
   ],
   imports: [
+    BrowserModule,
+    HttpClientModule,
     BrowserAnimationsModule
   ],
   exports: [
-    RfxImageLoaderDirective
+    RfxImageLoaderComponent
+  ],
+  providers: [
+    SortImagesByPriorityPipe
   ]
 })
 export class RfxImageLoaderModule { }

@@ -1,0 +1,9 @@
+<div class="image"
+    *ngFor="let image of imageData"
+    [style.zIndex]="image.priority"
+    [@image]="{ value: true, params: { duration: animationDurationMs, timingFunction: animationTimingFunction }}"
+    (@image.done)="imageAnimationEnd(image)">
+  <img [src]="image.data" />
+</div>
+
+<ng-content></ng-content>
