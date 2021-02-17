@@ -45,7 +45,7 @@ export class RfxImageLoaderComponent implements OnInit, OnChanges, OnDestroy {
     private renderer: Renderer2
   ) {
     this.placeholderColor = 'transparent';
-    this.animationDurationMs = 1000;
+    this.animationDurationMs = 300;
     this.animationTimingFunction = 'cubic-bezier(0.4, 0.0, 0.2, 1)';
     this.imageUrls = new Array<RfxImageInterface>();
     this.imageData = new Array<RfxImageDataInterface>();
@@ -102,7 +102,8 @@ export class RfxImageLoaderComponent implements OnInit, OnChanges, OnDestroy {
 
   private subscribeToWindowResize(): void {
     this.windowResizeSubscription = this.rfxLoaderListenersService.getWindowResize().subscribe(() => {
-      // TODO: UPDATE HEIGHT / WIDTH OF CONTAINER
+      const containerHeight: number = this.getContainerHeight(this.elementRef.nativeElement.clientWidth);
+      this.setContainerHeight(this.elementRef.nativeElement, containerHeight);
     });
   }
 

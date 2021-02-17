@@ -1,24 +1,102 @@
 # RfxImageLoader
+Better image loading
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.1.0.
+## Features
 
-## Code scaffolding
+- Customize fade-in duration
+- Customize fade-in timing function
+- ~~add your content to image (eg. loader)~~
 
-Run `ng generate component component-name --project rfx-image-loader` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project rfx-image-loader`.
-> Note: Don't forget to add `--project rfx-image-loader` or else it will be added to the default project in your `angular.json` file. 
+## Installation
 
-## Build
+Install the npm package:
+```bash
+npm install rfx-image-loader
+```
 
-Run `ng build rfx-image-loader` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Import module:
 
-## Publishing
+```typescript
+import { RfxImageLoaderModule } from 'rfx-image-loader';
 
-After building your library with `ng build rfx-image-loader`, go to the dist folder `cd dist/rfx-image-loader` and run `npm publish`.
+@NgModule({
+  imports: [
+    RfxImageLoaderModule
+  ]
+})
+```
 
-## Running unit tests
+## Usage
 
-Run `ng test rfx-image-loader` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### 1. add `libRfxImageLoader` to your container
+```html
+<div libRfxImageLoader></div>
+```
 
-## Further help
+### 2. pass array of images (RfxImageInterface) to `[imageUrls]`
+```typescript
+public images: RfxImageInterface[];
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+[...]
+
+this.images = [
+  { imageUrl: './assets/image.jpg', priority: 2 },
+  { imageUrl: './assets/placeholder_super_low_quality.jpg', priority: 0 }
+  { imageUrl: './assets/placeholder_low_quality.jpg', priority: 1 }
+];
+```
+```html
+<div libRfxImageLoader [imageUrls]="images"></div>
+```
+### 3. pass **ORIGINAL** image width and height to the component
+_(eg. width: `8480px`, height: `5600px`)_
+```html
+<div libRfxImageLoader [imageUrls]="images" [imageWidthPx]="8480" [imageHeightPx]="5600"></div>
+```
+### 4. set image placeholder color (optional)
+```html
+<div libRfxImageLoader [imageUrls]="images" [imageWidthPx]="8480" [imageHeightPx]="5600" placeholderColor="#fafafa"></div>
+```
+
+## Configuration
+
+### ``imageUrls: RfxImageInterface[]``
+- array of image urls with priority;
+- lower priority = lower quality image;
+- the highest priority is the main image.
+
+#### **RfxImageInterface:**
+```typescript
+interface RfxImageInterface {
+  imageUrl: string;
+  priority: number;
+}
+```
+
+### ``placeholderColor: string``
+_(default value: "transparent")_
+
+### ``imageWidthPx: number``
+**ORIGINAL** image width in pixels
+
+### ``imageHeightPx: number``
+**ORIGINAL** image height in pixels
+
+### ``animationDurationMs: number``
+_(default value: 300)_
+animation duration in milliseconds
+
+### ``animationTimingFunction: string``
+_(default value: "cubic-bezier(0.4, 0.0, 0.2, 1)")_
+animation timing function
+
+### ~~``onImageLoaded: EventEmitter<boolean>``~~
+
+## Demo
+
+TODO
+
+## License
+
+This project is licensed under the [MIT](http://vjpr.mit-license.org) License
+out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
