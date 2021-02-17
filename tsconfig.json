@@ -20,20 +20,25 @@
       "dom"
     ],
     "paths": {
+      "rfx-image-loader": [
+        "projects/rfx-image-loader/src/lib",
+        "dist/rfx-image-loader/rfx-image-loader",
+        "dist/rfx-image-loader"
+      ],
       "rfx-parallax": [
         "projects/rfx-parallax/src/lib",
         "dist/rfx-parallax/rfx-parallax",
         "dist/rfx-parallax"
       ],
-      "rfx-logger": [
-        "projects/rfx-logger/src/lib",
-        "dist/rfx-logger/rfx-logger",
-        "dist/rfx-logger"
-      ],
       "rfx-scroll-animation": [
         "projects/rfx-scroll-animation/src/lib",
         "dist/rfx-scroll-animation/rfx-scroll-animation",
         "dist/rfx-scroll-animation"
+      ],
+      "rfx-logger": [
+        "projects/rfx-logger/src/lib",
+        "dist/rfx-logger/rfx-logger",
+        "dist/rfx-logger"
       ]
     }
   },

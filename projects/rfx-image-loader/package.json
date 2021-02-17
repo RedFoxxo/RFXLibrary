@@ -1,0 +1,35 @@
+{
+  "name": "rfx-image-loader",
+  "version": "1.0.0-beta.1",
+  "description": "RfxImageLoader - better image loading",
+  "author": {
+    "name": "RedFoxxo",
+    "url": "https://github.com/RedFoxxo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RedFoxxo/RFXLibrary/tree/master/projects/rfx-image-loader"
+  },
+  "bugs": {
+    "url": "https://github.com/RedFoxxo/RFXLibrary/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "images",
+    "loading",
+    "loader",
+    "html",
+    "angular",
+    "library",
+    "typescript",
+    "javascript"
+  ],
+  "peerDependencies": {
+    "@angular/common": "^8.0.0",
+    "@angular/core": "^8.0.0",
+    "rxjs": ">=6.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.0.0"
+  }
+}
