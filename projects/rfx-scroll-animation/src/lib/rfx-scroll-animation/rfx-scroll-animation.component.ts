@@ -27,7 +27,7 @@ import { RfxScrollAnimationService } from '../rfx-scroll-animation.service';
   ]
 })
 export class RfxScrollAnimationComponent implements OnChanges, OnInit, OnDestroy {
-  @Input() public animationType: AnimationTypeEnum;
+  @Input() public animationType: AnimationTypeEnum | string;
   @Input() public animationDistancePx: number;
   @Input() public distanceFromPageBottomPercentage: number;
   @Input() public transitionDurationMs: number;
@@ -107,7 +107,7 @@ export class RfxScrollAnimationComponent implements OnChanges, OnInit, OnDestroy
     this.routerListenerSubscription = this.rfxScrollAnimationService.getRouterEvent().subscribe((isReady: boolean) => this.onRouterEvent(isReady));
   }
 
-  private getCurrentTransition(animationType: AnimationTypeEnum, animationDistancePx: number = 0, scaleRatio: number = 1): string {
+  private getCurrentTransition(animationType: AnimationTypeEnum | string, animationDistancePx: number = 0, scaleRatio: number = 1): string {
     switch (animationType) {
       case AnimationTypeEnum.TOP:
         return `translate(0, -${animationDistancePx}px) scale(1)`;
