@@ -29,33 +29,45 @@ export class RfxLoggerService {
   public success(message: string, data?: any): void {
     const isHttpResponse: boolean = data instanceof HttpResponse;
     const messageTag: string = isHttpResponse && data?.status ? ` ${data.status} ` : 'SUCCESS';
-    const messageData: any = isHttpResponse && data?.body ? data.body : data;
+    const messageData: any = this.parseMessage(data, isHttpResponse);
     console.log(
       `%c ${messageTag} %c ${message}`,
       this.successCssTag,
       this.successCss,
-      this.showDebugInfo && messageData ? Array(messageData) : ''
+      this.showDebugInfo && data ? messageData : ''
     );
   }
 
   public warning(message: string, data?: any): void {
+    const messageData: any = this.parseMessage(data);
     console.log(
       `%c WARNING %c ${message}`,
       this.warningCssTag,
       this.warningCss,
-      this.showDebugInfo && data ? Array(data) : ''
+      this.showDebugInfo && data ? messageData : ''
     );
   }
 
   public error(message: string, data?: any): void {
     const isHttpResponse: boolean = data instanceof HttpErrorResponse;
     const messageTag: string = isHttpResponse && data?.status ? ` ${data.status} ` : 'ERROR';
-    const messageData: any = isHttpResponse && data?.error ? data.error : data;
+    const messageData: any = this.parseMessage(data, isHttpResponse);
     console.log(
       `%c ${messageTag} %c ${message}`,
       this.errorCssTag,
       this.errorCss,
-      this.showDebugInfo && messageData ? Array(messageData) : ''
+      this.showDebugInfo && data ? messageData : ''
     );
+  }
+
+  public parseMessage(data: any, isHttpResponse: boolean = false): any {
+    if (isHttpResponse && (data?.body || data?.error)) {
+      return this.isPrimitive(data.body ?? data.error) ? (data.body ?? data.error) : Array(data.body ?? data.error);
+    }
+    return this.isPrimitive(data) ? data : Array(data);
+  }
+
+  public isPrimitive(value: any): boolean {
+    return value !== Object(value);
   }
 }
