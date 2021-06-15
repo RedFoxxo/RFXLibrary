@@ -62,9 +62,9 @@ export class RfxLoggerService {
 
   public parseMessage(data: any, isHttpResponse: boolean = false): any {
     if (isHttpResponse && (data?.body || data?.error)) {
-      return this.isPrimitive(data.body ?? data.error) ? (data.body ?? data.error) : Array(data.body ?? data.error);
+      return Array(this.isPrimitive(data.body ?? data.error) ? (data.body ?? data.error) : Array(data.body ?? data.error));
     }
-    return this.isPrimitive(data) ? data : Array(data);
+    return Array(this.isPrimitive(data) ? Array(data) : data);
   }
 
   public isPrimitive(value: any): boolean {
