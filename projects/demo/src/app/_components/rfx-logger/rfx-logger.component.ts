@@ -7,7 +7,7 @@ import { RfxLoggerService } from 'rfx-logger';
 })
 export class RfxLoggerComponent {
   public customMessage: string;
-  public debugData: string[];
+  public debugData: any;
   public isDebugDataDisabled: boolean;
   public messageSent: boolean;
 
