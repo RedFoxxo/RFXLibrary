@@ -30,6 +30,11 @@ export class RfxLoggerComponent {
     this.isDebugDataDisabled = !this.isDebugDataDisabled;
   }
 
+  public rfxLoggerTrace(): void {
+    this.rfxLoggerService.trace(this.getCustomMessage(), this.getDebugData());
+    this.messageSent = true;
+  }
+
   public rfxLoggerSuccess(): void {
     this.rfxLoggerService.success(this.getCustomMessage(), this.getDebugData());
     this.messageSent = true;

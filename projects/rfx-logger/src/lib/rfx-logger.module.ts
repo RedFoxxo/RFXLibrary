@@ -1,5 +1,5 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
-import { ConfigurationModel } from './configuration.model';
+import { ConfigurationModel } from './models';
 
 @NgModule({
   imports: [],
