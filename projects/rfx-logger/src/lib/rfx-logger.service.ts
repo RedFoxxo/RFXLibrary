@@ -20,73 +20,102 @@ export class RfxLoggerService {
 
     this.successStyle = {
       style: 'color: #8BC34A; font-weight: bold; padding: 1px 0;',
-      tagStyle: 'color: #000000; font-weight: bold; background-color: #8BC34A; padding: 1px 5px;'
+      tagStyle: 'color: #000000; font-weight: bold; background-color: #8BC34A; padding: 1px 5px;',
+      dateStyle: 'color: #9E9E9E; padding: 1px 0;'
     };
 
     this.warningStyle = {
       style: 'color: #FFC107; font-weight: bold; padding: 1px 0;',
-      tagStyle: 'color: #000000; font-weight: bold; background-color: #FFC107; padding: 1px 5px;'
+      tagStyle: 'color: #000000; font-weight: bold; background-color: #FFC107; padding: 1px 5px;',
+      dateStyle: 'color: #9E9E9E; padding: 1px 0;'
     };
 
     this.errorStyle = {
       style: 'color: #F44336; font-weight: bold; padding: 1px 0;',
-      tagStyle: 'color: #FFFFFF; font-weight: bold; background-color: #F44336; padding: 1px 5px;'
+      tagStyle: 'color: #FFFFFF; font-weight: bold; background-color: #F44336; padding: 1px 5px;',
+      dateStyle: 'color: #9E9E9E; padding: 1px 0;'
     };
 
     this.traceStyle = {
       style: 'color: #FFFFFF; font-weight: bold; padding: 1px 0;',
-      tagStyle: 'color: #FFFFFF; font-weight: bold; background-color: #757575; padding: 1px 5px;'
+      tagStyle: 'color: #FFFFFF; font-weight: bold; background-color: #757575; padding: 1px 5px;',
+      dateStyle: 'color: #9E9E9E; padding: 1px 0;'
     }
   }
 
   public success(message: string, data?: any): void {
-    const isHttpResponse: boolean = data instanceof HttpResponse;
-    const messageTag: string = isHttpResponse && data?.status ? ` ${data.status} ` : 'SUCCESS';
-    const messageData: any = this.parseMessage(data, isHttpResponse);
-    console.log(
-      `%c ${messageTag} %c ${message}`,
+    const isHttpResponse: boolean = data instanceof HttpErrorResponse;
+    const isHttpStatusValid: boolean = isHttpResponse && this.isHttpStatusValid(data?.status);
+    const messageTag: string = isHttpStatusValid ? `  ${data.status}  ` : 'SUCCESS';
+    const formattedMessage: string[] = [
+      `%c ${messageTag} %c ${this.getCurrentDate()} - %c${message}`,
       this.successStyle.tagStyle,
-      this.successStyle.style,
-      this.showDebugInfo && data ? messageData : ''
-    );
+      this.successStyle.dateStyle,
+      this.successStyle.style
+    ];
+
+    if (this.showDebugInfo && data !== undefined) {
+      console.groupCollapsed(...formattedMessage);
+      console.log(data);
+      console.groupEnd();
+    } else {
+      console.log(...formattedMessage);
+    }
   }
 
   public warning(message: string, data?: any): void {
-    const messageData: any = this.parseMessage(data);
-
-    console.log(
-      `%c WARNING %c ${message}`,
+    const formattedMessage: string[] = [
+      `%c WARNING %c ${this.getCurrentDate()} - %c${message}`,
       this.warningStyle.tagStyle,
-      this.warningStyle.style,
-      this.showDebugInfo && data ? messageData : ''
-    );
+      this.warningStyle.dateStyle,
+      this.warningStyle.style
+    ];
+
+    if (this.showDebugInfo && data !== undefined) {
+      console.groupCollapsed(...formattedMessage);
+      console.log(data);
+      console.groupEnd();
+    } else {
+      console.log(...formattedMessage);
+    }
   }
 
   public error(message: string, data?: any): void {
     const isHttpResponse: boolean = data instanceof HttpErrorResponse;
-    const messageTag: string = isHttpResponse && data?.status ? ` ${data.status} ` : 'ERROR';
-    const messageData: any = this.parseMessage(data, isHttpResponse);
-
-    console.log(
-      `%c  ${messageTag}  %c ${message}`,
+    const isHttpStatusValid: boolean = isHttpResponse && this.isHttpStatusValid(data?.status);
+    const messageTag: string = isHttpStatusValid ? `  ${data.status}  ` : ' ERROR ';
+    const formattedMessage: string[] = [
+      `%c ${messageTag} %c ${this.getCurrentDate()} - %c${message}`,
       this.errorStyle.tagStyle,
-      this.errorStyle.style,
-      this.showDebugInfo && data ? messageData : ''
-    );
+      this.errorStyle.dateStyle,
+      this.errorStyle.style
+    ];
+
+    if (this.showDebugInfo && data !== undefined) {
+      console.groupCollapsed(...formattedMessage);
+      console.log(data);
+      console.groupEnd();
+    } else {
+      console.log(...formattedMessage);
+    }
   }
 
   public trace(message: string, data?: any): void {
     if (this.showDebugInfo) {
-      const messageData: any = this.parseMessage(data);
-
-      console.log(
-        `%c  TRACE  %c ${message}`,
+      const formattedMessage: string[] = [
+        `%c  TRACE  %c ${this.getCurrentDate()} - %c${message}`,
         this.traceStyle.tagStyle,
-        this.traceStyle.style,
-        data ? messageData : ''
-      )
+        this.traceStyle.dateStyle,
+        this.traceStyle.style
+      ];
 
-      // console.log('%c trace ', 'background-color: #c6d1d3; color: #000', `[${this.getDate()}]: ${JSON.stringify(message)}`, data);
+      if (data !== undefined) {
+        console.groupCollapsed(...formattedMessage);
+        console.log(data);
+        console.groupEnd();
+      } else {
+        console.log(...formattedMessage);
+      }
     }
   }
 
@@ -95,14 +124,7 @@ export class RfxLoggerService {
     return date.toLocaleTimeString();
   }
 
-  private parseMessage(data: any, isHttpResponse: boolean = false): any {
-    if (isHttpResponse && (data?.body || data?.error)) {
-      return Array(this.isPrimitive(data.body ?? data.error) ? (data.body ?? data.error) : Array(data.body ?? data.error));
-    }
-    return Array(this.isPrimitive(data) ? Array(data) : data);
-  }
-
-  private isPrimitive(value: any): boolean {
-    return value !== Object(value);
+  private isHttpStatusValid(status: number | undefined): boolean {
+    return !!status && status.toString().length === 3;
   }
 }
