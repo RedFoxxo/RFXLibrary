@@ -5,7 +5,8 @@
     "declarationMap": false
   },
   "angularCompilerOptions": {
-    "enableIvy": true,
-    "compilationMode": "partial"
+    // "enableIvy": true,
+    // "compilationMode": "partial"
+    "enableIvy": false
   }
 }
