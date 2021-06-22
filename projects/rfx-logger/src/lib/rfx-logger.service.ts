@@ -1,5 +1,5 @@
 import { Injectable, Optional } from '@angular/core';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ConfigurationModel, MessageStyleModel } from './models';
 
 @Injectable({
@@ -120,8 +120,7 @@ export class RfxLoggerService {
   }
 
   private getCurrentDate() {
-    const date = new Date();
-    return date.toLocaleTimeString();
+    return new Date().toLocaleTimeString(undefined, { hour12: false });
   }
 
   private isHttpStatusValid(status: number | undefined): boolean {
