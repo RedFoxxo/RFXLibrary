@@ -19,20 +19,20 @@ export class RfxLoggerService {
     this.showDebugInfo = !configuration?.disableDebug;
 
     this.successStyle = {
-      style: 'color: #8BC34A; font-weight: bold; padding: 1px 0;',
-      tagStyle: 'color: #000000; font-weight: bold; background-color: #8BC34A; padding: 1px 5px;',
+      style: 'color: #64DD17; font-weight: bold; padding: 1px 0;',
+      tagStyle: 'color: #000000; font-weight: bold; background-color: #64DD17; padding: 1px 5px;',
       dateStyle: 'color: #9E9E9E; padding: 1px 0;'
     };
 
     this.warningStyle = {
-      style: 'color: #FFC107; font-weight: bold; padding: 1px 0;',
-      tagStyle: 'color: #000000; font-weight: bold; background-color: #FFC107; padding: 1px 5px;',
+      style: 'color: #FFC400; font-weight: bold; padding: 1px 0;',
+      tagStyle: 'color: #000000; font-weight: bold; background-color: #FFC400; padding: 1px 5px;',
       dateStyle: 'color: #9E9E9E; padding: 1px 0;'
     };
 
     this.errorStyle = {
       style: 'color: #F44336; font-weight: bold; padding: 1px 0;',
-      tagStyle: 'color: #FFFFFF; font-weight: bold; background-color: #F44336; padding: 1px 5px;',
+      tagStyle: 'color: #FFFFFF; font-weight: bold; background-color: #D32F2F; padding: 1px 5px;',
       dateStyle: 'color: #9E9E9E; padding: 1px 0;'
     };
 
