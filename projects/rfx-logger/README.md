@@ -2,7 +2,7 @@
 
 Upgrade for browser console messages
 
-<img src="https://i.ibb.co/y59MBfV/rfx-logger-1.png" width="350" />
+<img src="https://i.ibb.co/L6MSKnB/nice.png" width="350" />
 <br />
 <img src="https://i.ibb.co/6wZcg0x/rfx-http-logger.png" width="350" />
 
@@ -63,6 +63,7 @@ constructor(rfxLoggerService: RfxLoggerService) { }
 this.rfxLoggerService.success(message, data);    // success - green message
 this.rfxLoggerService.warning(message, data);    // warning - yellow message
 this.rfxLoggerService.error(message, data);      // error   - red message
+this.rfxLoggerService.trace(message, data);      // trace   - gray message
 ```
 
 ## Demo
