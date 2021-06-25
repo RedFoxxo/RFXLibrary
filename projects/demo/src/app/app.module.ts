@@ -29,7 +29,9 @@ import { RfxScrollAnimationModule } from 'rfx-scroll-animation';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    RfxLoggerModule,
+    RfxLoggerModule.config({
+      disableVerbose: true
+    }),
     RfxParallaxModule,
     RfxScrollAnimationModule,
     RfxImageLoaderModule,
