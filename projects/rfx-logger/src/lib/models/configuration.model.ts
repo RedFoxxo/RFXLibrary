@@ -6,7 +6,7 @@ export class ConfigurationModel {
   disableVerbose?: boolean;
   // disableHttpCodes?: boolean;
   // disableHttpCallDuration?: boolean;
-  // disableTime?: boolean;
+  disableTime?: boolean;
   // devEnabledLogs?: (LogTypeEnum | string)[];
   // prodEnabledLogs?: (LogTypeEnum | string)[];
   colorsConfig?: MessageStyleModel[];

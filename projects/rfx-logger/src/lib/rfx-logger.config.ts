@@ -13,7 +13,7 @@ export class RfxLoggerConfig {
     disableVerbose: false,
     // disableHttpCodes: false,
     // disableHttpCallDuration: false,
-    // disableTime: false,
+    disableTime: false,
     // devEnabledLogs: [
     //   LogTypeEnum.SUCCESS,
     //   LogTypeEnum.WARNING,

@@ -75,7 +75,7 @@ export class RfxLoggerService {
 
   private getFormattedMessage(messageTag: string, message: string, messageStyle: MessageStyleModel): string[] {
     return [
-      `%c ${messageTag} %c ${this.getCurrentDate()} - %c${message}`,
+      `%c ${messageTag} %c ${this.configuration?.disableTime ? '' : `${this.getCurrentDate()} - `}%c${message}`,
       messageStyle.tagStyle,
       messageStyle.timeStyle,
       messageStyle.textStyle
