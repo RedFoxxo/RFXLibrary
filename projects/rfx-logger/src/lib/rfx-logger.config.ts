@@ -27,29 +27,29 @@ export class RfxLoggerConfig {
     colorsConfig: [
       {
         logType: LogTypeEnum.SUCCESS,
-        textStyle: 'color: #64DD17; font-weight: bold; padding: 1px 0;',
-        tagStyle: 'color: #000000; font-weight: bold; background-color: #64DD17; padding: 1px 5px;',
+        textStyle: 'color: #8BC34A; font-weight: bold; padding: 1px 0;',
+        tagStyle: 'color: #000000; font-weight: bold; background-color: #8BC34A; padding: 1px 5px;',
         timeStyle: 'color: #9E9E9E; padding: 1px 0;',
         responseTimeStyle: 'color: #9E9E9E; padding: 1px 0;'
       },
       {
         logType: LogTypeEnum.WARNING,
-        textStyle: 'color: #FFC400; font-weight: bold; padding: 1px 0;',
-        tagStyle: 'color: #000000; font-weight: bold; background-color: #FFC400; padding: 1px 5px;',
+        textStyle: 'color: #FFC107; font-weight: bold; padding: 1px 0;',
+        tagStyle: 'color: #000000; font-weight: bold; background-color: #FFC107; padding: 1px 5px;',
         timeStyle: 'color: #9E9E9E; padding: 1px 0;',
         responseTimeStyle: 'color: #9E9E9E; padding: 1px 0;'
       },
       {
         logType: LogTypeEnum.ERROR,
         textStyle: 'color: #F44336; font-weight: bold; padding: 1px 0;',
-        tagStyle: 'color: #FFFFFF; font-weight: bold; background-color: #D32F2F; padding: 1px 5px;',
+        tagStyle: 'color: #FFFFFF; font-weight: bold; background-color: #F44336; padding: 1px 5px;',
         timeStyle: 'color: #9E9E9E; padding: 1px 0;',
         responseTimeStyle: 'color: #9E9E9E; padding: 1px 0;'
       },
       {
         logType: LogTypeEnum.TRACE,
         textStyle: 'color: #FFFFFF; font-weight: bold; padding: 1px 0;',
-        tagStyle: 'color: #FFFFFF; font-weight: bold; background-color: #757575; padding: 1px 5px;',
+        tagStyle: 'color: #FFFFFF; font-weight: bold; background-color: #F44336; padding: 1px 5px;',
         timeStyle: 'color: #9E9E9E; padding: 1px 0;',
         responseTimeStyle: 'color: #9E9E9E; padding: 1px 0;'
       }

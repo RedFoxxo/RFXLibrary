@@ -2,7 +2,6 @@ import { Injectable, Optional } from '@angular/core';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { ConfigurationModel, LogTypeEnum, MessageStyleModel } from './models';
 import { RfxLoggerConfig } from './rfx-logger.config';
-import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
   providedIn: 'root',
