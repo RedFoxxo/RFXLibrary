@@ -15,7 +15,7 @@ Upgrade for browser console messages
 - Message have time ~~and http response time~~
 - Intercept HTTP calls and automatically prints message to the console
 - Completely disable logger
-- ~~Customize data you want to show in development or in production (http code, time, http duration, log types)~~
+- Customize data you want to show in development or in production (http code, time, http duration, log types)
 
 ## Installation
 
@@ -51,28 +51,55 @@ import { environment } from '../environments/environment';
 
 ## Module configuration
 
-### `production: _boolean_
+### `production`: _boolean_
 _(default value: `false`)_<br>
 Environment production variable.
 Angular by default store this variable in `../environments/environment` file
-(example in 'Import module and interceptor' section)
-### `disableLogger` _(default `false`)_<br>
-If true, completely disable all types of messages
-### `disableVerbose` _(default `false`)_<br>
-If true, logger doesn't print any debug data, just a one line message
-### ~~`disableHttpCodes`~~
-### ~~`disableHttpCallDuration`~~
-### `disableTime` _(default `false`)_<br>
-If true, disable time when message was printed
+(example in 'Import module and interceptor' section).
+### `disableLoggerInDevelopment`: _boolean_
+_(default value: `false`)_<br>
+If true, completely disable all types of messages in development environment.
 
-### `devEnabledLogs` _(all enabled by default)_<br>
+### `disableLoggerInProduction`: _boolean_
+_(default value: `false`)_<br>
+If true, completely disable all types of messages in production environment.
+
+### `disableVerboseInDevelopment`: _boolean_
+If true, logger doesn't print any debug data in development environment, just a one line message.
+### `disableVerboseInProduction`: _boolean_
+_(default value: `true`)_<br>
+If true, logger doesn't print any debug data in production environment, just a one line message.
+
+### ~~`disableHttpCodesInDevelopment`: _boolean_~~
+~~_(default value: `false`)_<br>~~
+~~If true, logger doesn't show http code in development environment when http interceptor is used.~~
+### ~~`disableHttpcodesInProduction`: _boolean_~~
+~~_(default value: `false`)_<br>~~
+~~If true, logger doesn't show http code in production environment when http interceptor is used.~~
+### ~~`disableHttpCallDurationInDevelopment`: _boolean_~~
+~~_(default value: `false`)_<br>~~
+~~If true, http calls duration in development environment are hidden~~
+### ~~`disableHttpCallDurationInProduction`: _boolean_~~
+~~_(default value: `true`)_<br>~~
+~~If true, http calls duration in production environment are hidden~~
+### `disableTimeInDevelopment`: _boolean_
+_(default value: `false`)_<br>
+If true, disable time inside log in development environment.
+
+### `disableTimeInProduction`: _boolean_
+_(default value: `true`)_<br>
+If true, disable time inside log in production environment.
+
+### `developmentEnabledLogs`: _(LogTypeEnum | string)[]_
+_(default value: `['success', 'warning', 'error', 'trace']`)_<br>
 Types of logs enabled in development environment.
-
-### `prodEnabledLogs` _(default: `['success', 'error']`)_<br>
+All logs are enabled by default.
+### `productionEnabledLogs`: _(LogTypeEnum | string)[]_
+_(default value: `['success', 'error']`)_<br>
 Types of logs enabled in production environment.<br>
 You can use an empty array if you want to completely disable logger in production
 
-### `colorsConfig`
+### `colorsConfig`: _LogStyleModel[]_
 You can customize every message tag, text, time and http response time<br>
 This is the default style:
 ```typescript

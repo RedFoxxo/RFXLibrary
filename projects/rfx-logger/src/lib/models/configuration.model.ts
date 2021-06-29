@@ -3,12 +3,17 @@ import { LogStyleModel } from "./log-style.model";
 
 export class ConfigurationModel {
   production?: boolean;
-  disableLogger?: boolean;
-  disableVerbose?: boolean;
-  // disableHttpCodes?: boolean;
-  // disableHttpCallDuration?: boolean;
-  disableTime?: boolean;
-  devEnabledLogs?: (LogTypeEnum | string)[];
-  prodEnabledLogs?: (LogTypeEnum | string)[];
+  disableLoggerInDevelopment?: boolean;
+  disableLoggerInProduction?: boolean;
+  disableVerboseInDevelopment?: boolean;
+  disableVerboseInProduction?: boolean;
+  // disableHttpCodesInDevelopment?: boolean;
+  // disableHttpcodesInProduction?: boolean;
+  // disableHttpCallDurationInDevelopment?: boolean;
+  // disableHttpCallDurationInProduction?: boolean;
+  disableTimeInDevelopment?: boolean;
+  disableTimeInProduction?: boolean;
+  developmentEnabledLogs?: (LogTypeEnum | string)[];
+  productionEnabledLogs?: (LogTypeEnum | string)[];
   colorsConfig?: LogStyleModel[];
 }

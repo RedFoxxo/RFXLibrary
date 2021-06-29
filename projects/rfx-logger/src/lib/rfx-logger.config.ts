@@ -10,18 +10,23 @@ export class RfxLoggerConfig {
    */
   public static readonly config: ConfigurationModel = {
     production: false,
-    disableLogger: false,
-    disableVerbose: false,
-    // disableHttpCodes: false,
-    // disableHttpCallDuration: false,
-    disableTime: false,
-    devEnabledLogs: [
+    disableLoggerInDevelopment: false,
+    disableLoggerInProduction: false,
+    disableVerboseInDevelopment: false,
+    disableVerboseInProduction: true,
+    // disableHttpCodesInDevelopment: false,
+    // disableHttpcodesInProduction: false;
+    // disableHttpCallDurationInDevelopment: false;
+    // disableHttpCallDurationInProduction: true;
+    disableTimeInDevelopment: false,
+    disableTimeInProduction: true,
+    developmentEnabledLogs: [
       LogTypeEnum.SUCCESS,
       LogTypeEnum.WARNING,
       LogTypeEnum.ERROR,
       LogTypeEnum.TRACE
     ],
-    prodEnabledLogs: [
+    productionEnabledLogs: [
       LogTypeEnum.SUCCESS,
       LogTypeEnum.ERROR
     ],

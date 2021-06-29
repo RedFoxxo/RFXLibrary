@@ -31,7 +31,8 @@ import { environment } from '../environments/environment';
     AppRoutingModule,
     FormsModule,
     RfxLoggerModule.config({
-      production: environment.production
+      production: environment.production,
+      productionEnabledLogs: ['success', 'warning', 'error', 'trace']
     }),
     RfxParallaxModule,
     RfxScrollAnimationModule,

@@ -17,7 +17,7 @@ export class RfxLoggerService {
   }
 
   public success(message: string, data?: any): void {
-    if (!this.getConfigValue('disableLogger') && this.isLogTypeEnabled(LogTypeEnum.SUCCESS)) {
+    if (!this.isLoggerDisabled() && this.isLogTypeEnabled(LogTypeEnum.SUCCESS)) {
       const logStyle: LogStyleModel = this.getLogStyle(LogTypeEnum.SUCCESS);
       const httpCode: string | null = this.getHttpCode(data);
       const logTag: string = httpCode ? `  ${httpCode}  ` : 'SUCCESS';
@@ -27,7 +27,7 @@ export class RfxLoggerService {
   }
 
   public warning(message: string, data?: any): void {
-    if (!this.getConfigValue('disableLogger') && this.isLogTypeEnabled(LogTypeEnum.WARNING)) {
+    if (!this.isLoggerDisabled() && this.isLogTypeEnabled(LogTypeEnum.WARNING)) {
       const logStyle: LogStyleModel = this.getLogStyle(LogTypeEnum.WARNING);
       const httpCode: string | null = this.getHttpCode(data);
       const logTag: string = httpCode ? `  ${httpCode}  ` : 'WARNING';
@@ -37,7 +37,7 @@ export class RfxLoggerService {
   }
 
   public error(message: string, data?: any): void {
-    if (!this.getConfigValue('disableLogger') && this.isLogTypeEnabled(LogTypeEnum.ERROR)) {
+    if (!this.isLoggerDisabled() && this.isLogTypeEnabled(LogTypeEnum.ERROR)) {
       const logStyle: LogStyleModel = this.getLogStyle(LogTypeEnum.ERROR);
       const httpCode: string | null = this.getHttpCode(data);
       const logTag: string = httpCode ? `  ${httpCode}  ` : ' ERROR ';
@@ -47,7 +47,7 @@ export class RfxLoggerService {
   }
 
   public trace(message: string, data?: any): void {
-    if (!this.getConfigValue('disableLogger') && this.isLogTypeEnabled(LogTypeEnum.TRACE)) {
+    if (!this.isLoggerDisabled() && this.isLogTypeEnabled(LogTypeEnum.TRACE)) {
       const logStyle: LogStyleModel = this.getLogStyle(LogTypeEnum.TRACE);
       const httpCode: string | null = this.getHttpCode(data);
       const logTag: string = httpCode ? `  ${httpCode}  ` : ' TRACE ';
@@ -75,9 +75,8 @@ export class RfxLoggerService {
   }
 
   private getFormattedLog(messageTag: string, message: string, logStyle: LogStyleModel): string[] {
-    const isTimeDisabled: boolean = this.getConfigValue('disableTime');
     return [
-      `%c ${messageTag} %c ${isTimeDisabled ? '' : `${this.getCurrentDate()} - `}%c${message}`,
+      `%c ${messageTag} %c ${this.isTimeDisabled() ? '' : `${this.getCurrentDate()} - `}%c${message}`,
       logStyle.tagStyle,
       logStyle.timeStyle,
       logStyle.textStyle
@@ -85,7 +84,7 @@ export class RfxLoggerService {
   }
 
   private consoleMessage(formattedMessage: string[], data: any): void {
-    if (this.getConfigValue('disableVerbose') || data === undefined) {
+    if (this.isVerboseDisabled() || data === undefined) {
       console.log(...formattedMessage);
     } else {
       console.groupCollapsed(...formattedMessage);
@@ -107,6 +106,23 @@ export class RfxLoggerService {
   }
 
   private isLogTypeEnabled(logType: LogTypeEnum): boolean {
-    return true; // TODO
+    const isProduction: boolean = this.getConfigValue('production');
+    const config: (LogTypeEnum | string)[] = this.getConfigValue(isProduction ? 'productionEnabledLogs' : 'developmentEnabledLogs');
+    return !!config.find(x => x === logType);
+  }
+
+  private isLoggerDisabled(): boolean {
+    const isProduction: boolean = this.getConfigValue('production');
+    return this.getConfigValue(isProduction ? 'disableLoggerInProduction' : 'disableLoggerInDevelopment');
+  }
+
+  private isTimeDisabled(): boolean {
+    const isProduction: boolean = this.getConfigValue('production');
+    return this.getConfigValue(isProduction ? 'disableTimeInProduction' : 'disableTimeInDevelopment');
+  }
+
+  private isVerboseDisabled(): boolean {
+    const isProduction: boolean = this.getConfigValue('production');
+    return this.getConfigValue(isProduction ? 'disableVerboseInProduction' : 'disableVerboseInDevelopment');
   }
 }
