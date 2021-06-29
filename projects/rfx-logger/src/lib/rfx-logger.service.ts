@@ -1,6 +1,6 @@
 import { Injectable, Optional } from '@angular/core';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { ConfigurationModel, LogTypeEnum, MessageStyleModel } from './models';
+import { ConfigurationModel, LogTypeEnum, LogStyleModel } from './models';
 import { RfxLoggerConfig } from './rfx-logger.config';
 
 @Injectable({
@@ -17,41 +17,41 @@ export class RfxLoggerService {
   }
 
   public success(message: string, data?: any): void {
-    if (!this.getConfigValue('disableLogger')) {
-      const logStyle: MessageStyleModel = this.getMessageStyle(LogTypeEnum.SUCCESS);
+    if (!this.getConfigValue('disableLogger') && this.isLogTypeEnabled(LogTypeEnum.SUCCESS)) {
+      const logStyle: LogStyleModel = this.getLogStyle(LogTypeEnum.SUCCESS);
       const httpCode: string | null = this.getHttpCode(data);
-      const messageTag: string = httpCode ? `  ${httpCode}  ` : 'SUCCESS';
-      const formattedMessage: string[] = this.getFormattedMessage(messageTag, message, logStyle);
+      const logTag: string = httpCode ? `  ${httpCode}  ` : 'SUCCESS';
+      const formattedMessage: string[] = this.getFormattedLog(logTag, message, logStyle);
       this.consoleMessage(formattedMessage, data);
     }
   }
 
   public warning(message: string, data?: any): void {
-    if (!this.getConfigValue('disableLogger')) {
-      const logStyle: MessageStyleModel = this.getMessageStyle(LogTypeEnum.WARNING);
+    if (!this.getConfigValue('disableLogger') && this.isLogTypeEnabled(LogTypeEnum.WARNING)) {
+      const logStyle: LogStyleModel = this.getLogStyle(LogTypeEnum.WARNING);
       const httpCode: string | null = this.getHttpCode(data);
-      const messageTag: string = httpCode ? `  ${httpCode}  ` : 'WARNING';
-      const formattedMessage: string[] = this.getFormattedMessage(messageTag, message, logStyle);
+      const logTag: string = httpCode ? `  ${httpCode}  ` : 'WARNING';
+      const formattedMessage: string[] = this.getFormattedLog(logTag, message, logStyle);
       this.consoleMessage(formattedMessage, data);
     }
   }
 
   public error(message: string, data?: any): void {
-    if (!this.getConfigValue('disableLogger')) {
-      const logStyle: MessageStyleModel = this.getMessageStyle(LogTypeEnum.ERROR);
+    if (!this.getConfigValue('disableLogger') && this.isLogTypeEnabled(LogTypeEnum.ERROR)) {
+      const logStyle: LogStyleModel = this.getLogStyle(LogTypeEnum.ERROR);
       const httpCode: string | null = this.getHttpCode(data);
-      const messageTag: string = httpCode ? `  ${httpCode}  ` : ' ERROR ';
-      const formattedMessage: string[] = this.getFormattedMessage(messageTag, message, logStyle);
+      const logTag: string = httpCode ? `  ${httpCode}  ` : ' ERROR ';
+      const formattedMessage: string[] = this.getFormattedLog(logTag, message, logStyle);
       this.consoleMessage(formattedMessage, data);
     }
   }
 
   public trace(message: string, data?: any): void {
-    if (!this.getConfigValue('disableLogger')) {
-      const logStyle: MessageStyleModel = this.getMessageStyle(LogTypeEnum.TRACE);
+    if (!this.getConfigValue('disableLogger') && this.isLogTypeEnabled(LogTypeEnum.TRACE)) {
+      const logStyle: LogStyleModel = this.getLogStyle(LogTypeEnum.TRACE);
       const httpCode: string | null = this.getHttpCode(data);
-      const messageTag: string = httpCode ? `  ${httpCode}  ` : ' TRACE ';
-      const formattedMessage: string[] = this.getFormattedMessage(messageTag, message, logStyle);
+      const logTag: string = httpCode ? `  ${httpCode}  ` : ' TRACE ';
+      const formattedMessage: string[] = this.getFormattedLog(logTag, message, logStyle);
       this.consoleMessage(formattedMessage, data);
     }
   }
@@ -64,9 +64,9 @@ export class RfxLoggerService {
     return !!status && status.toString().length === 3;
   }
 
-  private getMessageStyle(logType: LogTypeEnum): MessageStyleModel {
-    const colorsConfig: MessageStyleModel[] = this.getConfigValue('colorsConfig');
-    return colorsConfig.find(x => x.logType === logType) as MessageStyleModel;
+  private getLogStyle(logType: LogTypeEnum): LogStyleModel {
+    const colorsConfig: LogStyleModel[] = this.getConfigValue('colorsConfig');
+    return colorsConfig.find(x => x.logType === logType) as LogStyleModel;
   }
 
   private getHttpCode(data: any): string | null {
@@ -74,13 +74,13 @@ export class RfxLoggerService {
     return isHttpResponse && this.isHttpStatusValid(data?.status) ? data.status : null;
   }
 
-  private getFormattedMessage(messageTag: string, message: string, messageStyle: MessageStyleModel): string[] {
+  private getFormattedLog(messageTag: string, message: string, logStyle: LogStyleModel): string[] {
     const isTimeDisabled: boolean = this.getConfigValue('disableTime');
     return [
       `%c ${messageTag} %c ${isTimeDisabled ? '' : `${this.getCurrentDate()} - `}%c${message}`,
-      messageStyle.tagStyle,
-      messageStyle.timeStyle,
-      messageStyle.textStyle
+      logStyle.tagStyle,
+      logStyle.timeStyle,
+      logStyle.textStyle
     ];
   }
 
@@ -104,5 +104,9 @@ export class RfxLoggerService {
     return (this.configuration as {[key: string]: any})[field] === undefined ?
       (RfxLoggerConfig.config as {[key: string]: any})[field] :
       (this.configuration as {[key: string]: any})[field];
+  }
+
+  private isLogTypeEnabled(logType: LogTypeEnum): boolean {
+    return true; // TODO
   }
 }

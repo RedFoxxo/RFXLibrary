@@ -1,5 +1,5 @@
 import { LogTypeEnum } from "./log-type.enum";
-import { MessageStyleModel } from "./message-style.model";
+import { LogStyleModel } from "./log-style.model";
 
 export class ConfigurationModel {
   production?: boolean;
@@ -10,5 +10,5 @@ export class ConfigurationModel {
   disableTime?: boolean;
   devEnabledLogs?: (LogTypeEnum | string)[];
   prodEnabledLogs?: (LogTypeEnum | string)[];
-  colorsConfig?: MessageStyleModel[];
+  colorsConfig?: LogStyleModel[];
 }

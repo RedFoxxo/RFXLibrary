@@ -1,6 +1,6 @@
 import { LogTypeEnum } from "./log-type.enum";
 
-export interface MessageStyleModel {
+export interface LogStyleModel {
   /**
    * Log type
    * You can use LogTypeEnum (ex. LogTypeEnum.ERROR)
