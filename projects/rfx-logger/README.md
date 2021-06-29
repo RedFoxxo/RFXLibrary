@@ -53,10 +53,12 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 ### `disableLogger` _(default `false`)_<br>
 If true, completely disable all types of messages
 ### `disableVerbose` _(default `false`)_<br>
-When this option is set to true, logger doesn't print any debug data, just a one line message
+If true, logger doesn't print any debug data, just a one line message
 ### ~~`disableHttpCodes`~~
 ### ~~`disableHttpCallDuration`~~
-### ~~`disableTime`~~
+### `disableTime` _(default `false`)_<br>
+If true, disable time when message was printed
+
 ### ~~`devEnabledLogs`~~
 ### ~~`prodEnabledLogs`~~
 ### `colorsConfig`
