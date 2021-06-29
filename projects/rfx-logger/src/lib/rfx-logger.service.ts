@@ -16,35 +16,43 @@ export class RfxLoggerService {
   }
 
   public success(message: string, data?: any): void {
-    const logStyle: MessageStyleModel = this.getMessageStyle(LogTypeEnum.SUCCESS);
-    const httpCode: string | null = this.getHttpCode(data);
-    const messageTag: string = httpCode ? `  ${httpCode}  ` : 'SUCCESS';
-    const formattedMessage: string[] = this.getFormattedMessage(messageTag, message, logStyle);
-    this.consoleMessage(formattedMessage, data);
+    if (!this.configuration?.disableLogger) {
+      const logStyle: MessageStyleModel = this.getMessageStyle(LogTypeEnum.SUCCESS);
+      const httpCode: string | null = this.getHttpCode(data);
+      const messageTag: string = httpCode ? `  ${httpCode}  ` : 'SUCCESS';
+      const formattedMessage: string[] = this.getFormattedMessage(messageTag, message, logStyle);
+      this.consoleMessage(formattedMessage, data);
+    }
   }
 
   public warning(message: string, data?: any): void {
-    const logStyle: MessageStyleModel = this.getMessageStyle(LogTypeEnum.WARNING);
-    const httpCode: string | null = this.getHttpCode(data);
-    const messageTag: string = httpCode ? `  ${httpCode}  ` : 'WARNING';
-    const formattedMessage: string[] = this.getFormattedMessage(messageTag, message, logStyle);
-    this.consoleMessage(formattedMessage, data);
+    if (!this.configuration?.disableLogger) {
+      const logStyle: MessageStyleModel = this.getMessageStyle(LogTypeEnum.WARNING);
+      const httpCode: string | null = this.getHttpCode(data);
+      const messageTag: string = httpCode ? `  ${httpCode}  ` : 'WARNING';
+      const formattedMessage: string[] = this.getFormattedMessage(messageTag, message, logStyle);
+      this.consoleMessage(formattedMessage, data);
+    }
   }
 
   public error(message: string, data?: any): void {
-    const logStyle: MessageStyleModel = this.getMessageStyle(LogTypeEnum.ERROR);
-    const httpCode: string | null = this.getHttpCode(data);
-    const messageTag: string = httpCode ? `  ${httpCode}  ` : ' ERROR ';
-    const formattedMessage: string[] = this.getFormattedMessage(messageTag, message, logStyle);
-    this.consoleMessage(formattedMessage, data);
+    if (!this.configuration?.disableLogger) {
+      const logStyle: MessageStyleModel = this.getMessageStyle(LogTypeEnum.ERROR);
+      const httpCode: string | null = this.getHttpCode(data);
+      const messageTag: string = httpCode ? `  ${httpCode}  ` : ' ERROR ';
+      const formattedMessage: string[] = this.getFormattedMessage(messageTag, message, logStyle);
+      this.consoleMessage(formattedMessage, data);
+    }
   }
 
   public trace(message: string, data?: any): void {
-    const logStyle: MessageStyleModel = this.getMessageStyle(LogTypeEnum.TRACE);
-    const httpCode: string | null = this.getHttpCode(data);
-    const messageTag: string = httpCode ? `  ${httpCode}  ` : ' TRACE ';
-    const formattedMessage: string[] = this.getFormattedMessage(messageTag, message, logStyle);
-    this.consoleMessage(formattedMessage, data);
+    if (!this.configuration?.disableLogger) {
+      const logStyle: MessageStyleModel = this.getMessageStyle(LogTypeEnum.TRACE);
+      const httpCode: string | null = this.getHttpCode(data);
+      const messageTag: string = httpCode ? `  ${httpCode}  ` : ' TRACE ';
+      const formattedMessage: string[] = this.getFormattedMessage(messageTag, message, logStyle);
+      this.consoleMessage(formattedMessage, data);
+    }
   }
 
   private getCurrentDate() {
@@ -75,7 +83,7 @@ export class RfxLoggerService {
   }
 
   private consoleMessage(formattedMessage: string[], data: any): void {
-    if (this.configuration.disableVerbose || data === undefined) {
+    if (this.configuration?.disableVerbose || data === undefined) {
       console.log(...formattedMessage);
     } else {
       console.groupCollapsed(...formattedMessage);

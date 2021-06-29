@@ -9,7 +9,7 @@ export class RfxLoggerConfig {
    * Default package configuration
    */
   public static readonly config: ConfigurationModel = {
-    // disableLogger: false,
+    disableLogger: false,
     disableVerbose: false,
     // disableHttpCodes: false,
     // disableHttpCallDuration: false,

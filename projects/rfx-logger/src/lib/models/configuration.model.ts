@@ -2,7 +2,7 @@ import { LogTypeEnum } from "./log-type.enum";
 import { MessageStyleModel } from "./message-style.model";
 
 export class ConfigurationModel {
-  // disableLogger?: boolean;
+  disableLogger?: boolean;
   disableVerbose?: boolean;
   // disableHttpCodes?: boolean;
   // disableHttpCallDuration?: boolean;

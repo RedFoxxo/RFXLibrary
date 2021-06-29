@@ -14,7 +14,7 @@ Upgrade for browser console messages
 - Message tag support HTTP codes
 - Message have time ~~and http response time~~
 - Intercept HTTP calls and automatically prints message to the console
-- ~~Completely disable logger~~
+- Completely disable logger
 - ~~Customize data you want to show in development or in production (http code, time, http duration, log types)~~
 
 ## Installation
@@ -50,7 +50,8 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 ## Module configuration
 
-### ~~`disableLogger`~~
+### `disableLogger` _(default `false`)_<br>
+If true, completely disable all types of messages
 ### `disableVerbose` _(default `false`)_<br>
 When this option is set to true, logger doesn't print any debug data, just a one line message
 ### ~~`disableHttpCodes`~~
