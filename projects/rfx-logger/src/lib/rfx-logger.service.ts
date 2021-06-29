@@ -76,11 +76,11 @@ export class RfxLoggerService {
 
   private consoleMessage(formattedMessage: string[], data: any): void {
     if (this.configuration.disableVerbose || data === undefined) {
+      console.log(...formattedMessage);
+    } else {
       console.groupCollapsed(...formattedMessage);
       console.log(data);
       console.groupEnd();
-    } else {
-      console.log(...formattedMessage);
     }
   }
 }
