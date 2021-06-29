@@ -64,9 +64,9 @@ export class RfxLoggerService {
     return !!status && status.toString().length === 3;
   }
 
-  private getMessageStyle(logType: LogTypeEnum): MessageStyleModel { // TODO
-    return this.configuration?.colorsConfig?.find(x => x.logType === logType) ??
-      (RfxLoggerConfig.config.colorsConfig?.find(x => x.logType === logType) as MessageStyleModel);
+  private getMessageStyle(logType: LogTypeEnum): MessageStyleModel {
+    const colorsConfig: MessageStyleModel[] = this.getConfigValue('colorsConfig');
+    return colorsConfig.find(x => x.logType === logType) as MessageStyleModel;
   }
 
   private getHttpCode(data: any): string | null {
