@@ -9,9 +9,13 @@ Upgrade for browser console messages
 ## Features
 
 - One-line compact view
-- All messages have intuitive colors
-- Message tag supports HTTP codes
+- Non-intrusive debug data
+- Messages have customizable colors
+- Message tag support HTTP codes
+- Message have time ~~and http response time~~
 - Intercept HTTP calls and automatically prints message to the console
+- ~~Completely disable logger~~
+- ~~Customize data you want to show in development or in production (http code, time, http duration, log types)~~
 
 ## Installation
 
@@ -23,7 +27,7 @@ npm install rfx-logger
 ### Import module and interceptor:
 
 - __interceptor__ is optional 
-- `.config` is optional if you want to disable debug data (useful for production). Default is `false`
+- `.config` is optional
 ```typescript
 import { RfxLoggerModule, RfxLoggerInterceptor } from 'rfx-logger';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -31,7 +35,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 @NgModule({
   imports: [
     RfxLoggerModule.config({
-      disableDebug: true
+      [ ... ]
     })
   ],
   providers: [
@@ -43,6 +47,53 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
   ],
 })
 ```
+
+## Module configuration
+
+### ~~`disableLogger`~~
+### `disableVerbose` _(default `false`)_<br>
+When this option is set to true, logger doesn't print any debug data, just a one line message
+### ~~`disableHttpCodes`~~
+### ~~`disableHttpCallDuration`~~
+### ~~`disableTime`~~
+### ~~`devEnabledLogs`~~
+### ~~`prodEnabledLogs`~~
+### `colorsConfig`
+You can customize every message tag, text, time and http response time<br>
+This is the default style:
+```typescript
+colorsConfig: [
+  {
+    logType: 'success',
+    textStyle: 'color: #8BC34A; font-weight: bold; padding: 1px 0;',
+    tagStyle: 'color: #000000; font-weight: bold; background-color: #8BC34A; padding: 1px 5px;',
+    timeStyle: 'color: #9E9E9E; padding: 1px 0;',
+    responseTimeStyle: 'color: #9E9E9E; padding: 1px 0;'
+  },
+  {
+    logType: 'warning',
+    textStyle: 'color: #FFC107; font-weight: bold; padding: 1px 0;',
+    tagStyle: 'color: #000000; font-weight: bold; background-color: #FFC107; padding: 1px 5px;',
+    timeStyle: 'color: #9E9E9E; padding: 1px 0;',
+    responseTimeStyle: 'color: #9E9E9E; padding: 1px 0;'
+  },
+  {
+    logType: 'error',
+    textStyle: 'color: #F44336; font-weight: bold; padding: 1px 0;',
+    tagStyle: 'color: #FFFFFF; font-weight: bold; background-color: #F44336; padding: 1px 5px;',
+    timeStyle: 'color: #9E9E9E; padding: 1px 0;',
+    responseTimeStyle: 'color: #9E9E9E; padding: 1px 0;'
+  },
+  {
+    logType: 'trace',
+    textStyle: 'color: #BDBDBD; font-weight: bold; padding: 1px 0;',
+    tagStyle: 'color: #FFFFFF; font-weight: bold; background-color: #757575; padding: 1px 5px;',
+    timeStyle: 'color: #9E9E9E; padding: 1px 0;',
+    responseTimeStyle: 'color: #9E9E9E; padding: 1px 0;'
+  }
+]
+```
+
 
 ## Usage
 
