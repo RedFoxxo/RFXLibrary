@@ -27,15 +27,16 @@ npm install rfx-logger
 ### Import module and interceptor:
 
 - __interceptor__ is optional 
-- `.config` is optional
+- `.config` parameters are all optionals except `production`
 ```typescript
 import { RfxLoggerModule, RfxLoggerInterceptor } from 'rfx-logger';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { environment } from '../environments/environment';
 
 @NgModule({
   imports: [
     RfxLoggerModule.config({
-      [ ... ]
+      production: environment.production
     })
   ],
   providers: [
@@ -50,6 +51,11 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 ## Module configuration
 
+### `production: _boolean_
+_(default value: `false`)_<br>
+Environment production variable.
+Angular by default store this variable in `../environments/environment` file
+(example in 'Import module and interceptor' section)
 ### `disableLogger` _(default `false`)_<br>
 If true, completely disable all types of messages
 ### `disableVerbose` _(default `false`)_<br>
@@ -59,8 +65,13 @@ If true, logger doesn't print any debug data, just a one line message
 ### `disableTime` _(default `false`)_<br>
 If true, disable time when message was printed
 
-### ~~`devEnabledLogs`~~
-### ~~`prodEnabledLogs`~~
+### `devEnabledLogs` _(all enabled by default)_<br>
+Types of logs enabled in development environment.
+
+### `prodEnabledLogs` _(default: `['success', 'error']`)_<br>
+Types of logs enabled in production environment.<br>
+You can use an empty array if you want to completely disable logger in production
+
 ### `colorsConfig`
 You can customize every message tag, text, time and http response time<br>
 This is the default style:

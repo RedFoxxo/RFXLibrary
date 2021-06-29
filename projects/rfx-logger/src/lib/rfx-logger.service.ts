@@ -13,6 +13,7 @@ export class RfxLoggerService {
     @Optional() configuration: ConfigurationModel
   ) {
     this.configuration = configuration;
+    this.checkProductionVar(configuration);
   }
 
   public success(message: string, data?: any): void {
@@ -89,6 +90,12 @@ export class RfxLoggerService {
       console.groupCollapsed(...formattedMessage);
       console.log(data);
       console.groupEnd();
+    }
+  }
+
+  private checkProductionVar(configuration: ConfigurationModel): void {
+    if (configuration?.production === undefined) {
+      this.warning('Production variable is not set!\nPlease visit https://github.com/RedFoxxo/RFXLibrary/tree/master/projects/rfx-logger#import-module-and-interceptor for more info.');
     }
   }
 }
