@@ -15,7 +15,6 @@ import { RfxImageLoaderModule } from 'rfx-image-loader';
 import { RfxLoggerModule } from 'rfx-logger';
 import { RfxParallaxModule } from 'rfx-parallax';
 import { RfxScrollAnimationModule } from 'rfx-scroll-animation';
-import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -30,10 +29,7 @@ import { environment } from '../environments/environment';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    RfxLoggerModule.config({
-      production: environment.production,
-      productionEnabledLogs: ['success', 'warning', 'error', 'trace']
-    }),
+    RfxLoggerModule,
     RfxParallaxModule,
     RfxScrollAnimationModule,
     RfxImageLoaderModule,
