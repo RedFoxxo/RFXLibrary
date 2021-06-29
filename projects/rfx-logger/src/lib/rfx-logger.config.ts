@@ -48,8 +48,8 @@ export class RfxLoggerConfig {
       },
       {
         logType: LogTypeEnum.TRACE,
-        textStyle: 'color: #FFFFFF; font-weight: bold; padding: 1px 0;',
-        tagStyle: 'color: #FFFFFF; font-weight: bold; background-color: #F44336; padding: 1px 5px;',
+        textStyle: 'color: #BDBDBD; font-weight: bold; padding: 1px 0;',
+        tagStyle: 'color: #FFFFFF; font-weight: bold; background-color: #757575; padding: 1px 5px;',
         timeStyle: 'color: #9E9E9E; padding: 1px 0;',
         responseTimeStyle: 'color: #9E9E9E; padding: 1px 0;'
       }
