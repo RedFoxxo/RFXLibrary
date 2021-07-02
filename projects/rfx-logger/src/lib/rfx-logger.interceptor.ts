@@ -7,7 +7,7 @@ import {
   HttpResponse,
   HttpErrorResponse
 } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { RfxLoggerService } from './rfx-logger.service';
 
@@ -22,13 +22,13 @@ export class RfxLoggerInterceptor implements HttpInterceptor {
           this.rfxLoggerService.success(request.url, event);
         }
       }),
-      catchError(error => {
+      catchError((error: HttpErrorResponse) => {
         if (error instanceof HttpErrorResponse) {
           this.rfxLoggerService.error(request.url, error);
         }
 
-        return throwError(error);
-      })
+        return EMPTY;
+      }),
     ) as Observable<HttpEvent<any>>;
   }
 }
