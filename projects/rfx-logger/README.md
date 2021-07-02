@@ -55,14 +55,17 @@ _(default value: `false`)_<br>
 If true, completely disable all types of messages.
 
 ### `disableVerbose`: _boolean_
+_(default value: `false`)_<br>
 If true, logger doesn't print any debug data, just a one line message.
 
 ### ~~`disableHttpCodes`: _boolean_~~
 ~~_(default value: `false`)_<br>~~
 ~~If true, logger doesn't show http code when http interceptor is used.~~
+
 ### ~~`disableHttpCallDuration`: _boolean_~~
 ~~_(default value: `false`)_<br>~~
 ~~If true, http calls duration are hidden~~
+
 ### `disableTime`: _boolean_
 _(default value: `false`)_<br>
 If true, disable time inside console log.
@@ -79,31 +82,31 @@ This is the default style:
 colorsConfig: [
   {
     logType: 'success',
+    tagStyle: 'color: #000000; font-weight: bold; background-color: #8BC34A; padding: 1px 5px; margin-left: 2px;',
     textStyle: 'color: #8BC34A; font-weight: bold; padding: 1px 0;',
-    tagStyle: 'color: #000000; font-weight: bold; background-color: #8BC34A; padding: 1px 5px;',
-    timeStyle: 'color: #9E9E9E; padding: 1px 0;',
-    responseTimeStyle: 'color: #9E9E9E; padding: 1px 0;'
+    timeStyle: 'color: #9E9E9E; font-weight: bold; padding: 1px 0;',
+    responseTimeStyle: 'color: #9E9E9E; font-weight: normal; padding: 1px 0;'
   },
   {
     logType: 'warning',
+    tagStyle: 'color: #000000; font-weight: bold; background-color: #FFC107; padding: 1px 5px; margin-left: 2px;',
     textStyle: 'color: #FFC107; font-weight: bold; padding: 1px 0;',
-    tagStyle: 'color: #000000; font-weight: bold; background-color: #FFC107; padding: 1px 5px;',
-    timeStyle: 'color: #9E9E9E; padding: 1px 0;',
-    responseTimeStyle: 'color: #9E9E9E; padding: 1px 0;'
+    timeStyle: 'color: #9E9E9E; font-weight: bold; padding: 1px 0;',
+    responseTimeStyle: 'color: #9E9E9E; font-weight: normal; padding: 1px 0;'
   },
   {
     logType: 'error',
+    tagStyle: 'color: #FFFFFF; font-weight: bold; background-color: #F44336; padding: 1px 5px; margin-left: 2px;',
     textStyle: 'color: #F44336; font-weight: bold; padding: 1px 0;',
-    tagStyle: 'color: #FFFFFF; font-weight: bold; background-color: #F44336; padding: 1px 5px;',
-    timeStyle: 'color: #9E9E9E; padding: 1px 0;',
-    responseTimeStyle: 'color: #9E9E9E; padding: 1px 0;'
+    timeStyle: 'color: #9E9E9E; font-weight: bold; padding: 1px 0;',
+    responseTimeStyle: 'color: #9E9E9E; font-weight: normal; padding: 1px 0;'
   },
   {
     logType: 'trace',
+    tagStyle: 'color: #FFFFFF; font-weight: bold; background-color: #757575; padding: 1px 5px; margin-left: 2px;',
     textStyle: 'color: #BDBDBD; font-weight: bold; padding: 1px 0;',
-    tagStyle: 'color: #FFFFFF; font-weight: bold; background-color: #757575; padding: 1px 5px;',
-    timeStyle: 'color: #9E9E9E; padding: 1px 0;',
-    responseTimeStyle: 'color: #9E9E9E; padding: 1px 0;'
+    timeStyle: 'color: #9E9E9E; font-weight: bold; padding: 1px 0;',
+    responseTimeStyle: 'color: #9E9E9E; font-weight: normal; padding: 1px 0;'
   }
 ]
 ```
