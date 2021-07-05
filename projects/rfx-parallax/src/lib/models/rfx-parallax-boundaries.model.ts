@@ -1,4 +1,4 @@
-export interface RfxParallaxBoundariesInterface {
+export interface RfxParallaxBoundariesModel {
   startPoint: number;
   endPoint: number;
   totalPixels: number;
