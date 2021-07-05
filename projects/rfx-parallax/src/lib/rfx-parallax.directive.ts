@@ -1,6 +1,6 @@
 import { Directive, ElementRef, Input, OnChanges, OnDestroy, OnInit, Renderer2, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { RfxParallaxService } from './rfx-parallax.service';
+import { RfxParallaxResizeService, RfxParallaxScrollService } from './services';
 import { RfxParallaxBoundariesInterface, RfxParallaxPositionInterface } from './_interfaces';
 
 @Directive({
@@ -26,7 +26,8 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
   constructor(
     private htmlElement: ElementRef,
     private renderer: Renderer2,
-    private rfxParallaxService: RfxParallaxService
+    private rfxParallaxResizeService: RfxParallaxResizeService,
+    private rfxParallaxScrollService: RfxParallaxScrollService
   ) {
     this.parallaxPercentage = 40;
     this.positionPercentage = 50;
@@ -60,8 +61,8 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
    * Subscribe to scroll and resize listeners
    */
   private setListeners(): void {
-    this.onScrollListener = this.rfxParallaxService.getMouseScroll().subscribe((scroll: number | undefined) => this.onMouseScroll(scroll));
-    this.onResizeListener = this.rfxParallaxService.getWindowResize().subscribe((width: number | undefined) => this.onWindowResize(width));
+    this.onScrollListener = this.rfxParallaxScrollService.getMouseScroll().subscribe((scroll: number | undefined) => this.onMouseScroll(scroll));
+    this.onResizeListener = this.rfxParallaxResizeService.getWindowResize().subscribe((width: number | undefined) => this.onWindowResize(width));
   }
 
   /**

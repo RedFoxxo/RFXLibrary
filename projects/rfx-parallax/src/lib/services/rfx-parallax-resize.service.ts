@@ -1,6 +1,6 @@
-import { Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
+import { Injectable, OnDestroy, Renderer2 } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ResizeObserverEntryInterface, ResizeObserverOptionsInterface } from './_interfaces';
+import { ResizeObserverEntryInterface, ResizeObserverOptionsInterface } from '../_interfaces';
 
 declare class ResizeObserver {
   constructor(callback: (entries: ReadonlyArray<ResizeObserverEntryInterface>, observer: ResizeObserver) => void);
@@ -12,29 +12,17 @@ declare class ResizeObserver {
 @Injectable({
   providedIn: 'root'
 })
-export class RfxParallaxService implements OnDestroy {
-  private renderer: Renderer2;
-
-  private subjectScroll: BehaviorSubject<number | undefined>;
+export class RfxParallaxResizeService implements OnDestroy {
   private subjectResize: BehaviorSubject<number | undefined>;
 
   private elementHeightEvent!: ResizeObserver;
-  private elementScrollEvent!: () => void;
   private windowResizeEvent!: () => void;
 
-  constructor(
-    private rendererFactory: RendererFactory2
-  ) {
-    this.subjectScroll = new BehaviorSubject<number | undefined>(undefined);
+  constructor() {
     this.subjectResize = new BehaviorSubject<number | undefined>(undefined);
-    this.renderer = this.rendererFactory.createRenderer(null, null);
   }
 
   public ngOnDestroy(): void {
-    if (this.elementScrollEvent) {
-      this.elementScrollEvent();
-    }
-
     if (this.windowResizeEvent) {
       this.windowResizeEvent();
     }
@@ -43,12 +31,12 @@ export class RfxParallaxService implements OnDestroy {
   }
 
   /**
-   * Start element scroll event, window resize event and element resize event listeners
+   * Start window resize event and element resize event listeners
+   * @param renderer renderer created from renderer factory
    * @param scrollElement main element with scroll property
    */
-  public initListeners(scrollElement?: HTMLElement): void {
-    this.elementScrollEvent = this.renderer.listen(scrollElement ?? window, 'scroll', (event) => this.onMouseScroll(event));
-    this.windowResizeEvent = this.renderer.listen(window, 'resize', (event) => this.onWindowResize(event));
+  public init(renderer: Renderer2, scrollElement?: HTMLElement): void {
+    this.windowResizeEvent = renderer.listen(window, 'resize', (event) => this.onWindowResize(event));
 
     if (scrollElement) {
       this.setElementResizeEvent(scrollElement);
@@ -67,20 +55,6 @@ export class RfxParallaxService implements OnDestroy {
     for (const children of elementChildrenList) {
       this.elementHeightEvent.observe(children);
     }
-  }
-
-  /**
-   * Mouse scroll event
-   */
-  private onMouseScroll(event: Event | any): void {
-    this.subjectScroll.next(event.target.scrollTop ?? event.target.documentElement.scrollTop);
-  }
-
-  /**
-   * Mouse scroll event observable
-   */
-  public getMouseScroll(): Observable<number | undefined> {
-    return this.subjectScroll.asObservable();
   }
 
   /**
