@@ -11,8 +11,8 @@ export class RfxLoggerConfig {
   public static readonly config: ConfigurationModel = {
     disableLogger: false,
     disableVerbose: false,
-    // disableHttpCodes: false;
-    // disableHttpCallDuration: false;
+    // disableHttpCodes: false,
+    disableHttpCallDuration: false,
     disableTime: false,
     enabledLogTypes: [
       LogTypeEnum.SUCCESS,

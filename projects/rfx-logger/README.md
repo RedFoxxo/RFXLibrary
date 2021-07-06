@@ -12,7 +12,7 @@ Upgrade for browser console messages
 - Non-intrusive debug data
 - Messages have customizable colors
 - Message tag support HTTP codes
-- Message have time ~~and http response time~~
+- Message have time and http response time
 - Intercept HTTP calls and automatically prints message to the console
 - Completely disable logger
 - Customize data you want to show (http code, time, http duration, log types)
@@ -62,9 +62,9 @@ If true, logger doesn't print any debug data, just a one line message.
 ~~_(default value: `false`)_<br>~~
 ~~If true, logger doesn't show http code when http interceptor is used.~~
 
-### ~~`disableHttpCallDuration`: _boolean_~~
-~~_(default value: `false`)_<br>~~
-~~If true, http calls duration are hidden~~
+### `disableHttpCallDuration`: _boolean_
+_(default value: `false`)_<br>
+If true, http calls duration are hidden
 
 ### `disableTime`: _boolean_
 _(default value: `false`)_<br>
@@ -117,7 +117,7 @@ colorsConfig: [
 * __message__
 custom string *(eg. function name)*
 * __data__
-optional, any object you want to print with the debug message *(eg. backend data)*
+optional, any object you want to print with the console message *(eg. backend data)*
 
 ```typescript
 import { RfxLoggerService } from 'rfx-logger';

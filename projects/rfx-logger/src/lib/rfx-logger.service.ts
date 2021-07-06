@@ -111,6 +111,10 @@ export class RfxLoggerService {
     return isHttpResponse && this.isHttpStatusValid(data?.status) ? data.status : null;
   }
 
+  private getHttpTime(data: any | HttpResponse<any> | HttpErrorResponse | LogResponseModel): number | null {
+    return this.isLogResponseModel(data) && !this.getConfigValue('disableHttpCallDuration') ? data.timeMs : null;
+  }
+
   /**
    * Get formatted ready-to-use console log
    * @param fallbackTag fallback tag content when no http status is available
@@ -127,7 +131,7 @@ export class RfxLoggerService {
   ): string[] {
     const logStyle: LogStyleModel = this.getLogStyle(messageType);
     const httpCode: string | null = this.getHttpCode(data);
-    const httpTime: number | null = this.isLogResponseModel(data) ? data.timeMs : null;
+    const httpTime: number | null = this.getHttpTime(data);
     const logTag: string = httpCode ? `  ${httpCode}  ` : fallbackTag;
     const isTimeDisabled: boolean = this.getConfigValue('disableTime');
 
