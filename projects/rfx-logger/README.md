@@ -2,9 +2,7 @@
 
 Upgrade for browser console messages
 
-<img src="https://i.ibb.co/L6MSKnB/nice.png" width="350" />
-<br />
-<img src="https://i.ibb.co/6wZcg0x/rfx-http-logger.png" width="350" />
+<img src="https://i.ibb.co/pQXqqSF/rfx-logger.png" width="350" />
 
 ## Features
 
@@ -76,7 +74,7 @@ Enable only selected types of log.
 All logs are enabled by default.
 
 ### `colorsConfig`: _LogStyleModel[]_
-You can customize every message tag, text, time and http response time<br>
+Customize every message tag, text, time and http response time<br>
 This is the default style:
 ```typescript
 colorsConfig: [
