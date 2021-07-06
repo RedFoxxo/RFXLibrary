@@ -111,6 +111,11 @@ export class RfxLoggerService {
     return isHttpResponse && this.isHttpStatusValid(data?.status) ? data.status : null;
   }
 
+  /**
+   * Get http response time in milliseconds
+   * @param data HttpResponse, HttpResponseError, LogResponseModel or any other data
+   * @returns {number | null} response time or null object is not a LogResponseModel
+   */
   private getHttpTime(data: any | HttpResponse<any> | HttpErrorResponse | LogResponseModel): number | null {
     return this.isLogResponseModel(data) && !this.getConfigValue('disableHttpCallDuration') ? data.timeMs : null;
   }
