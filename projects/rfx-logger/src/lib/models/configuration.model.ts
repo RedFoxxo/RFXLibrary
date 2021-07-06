@@ -5,6 +5,7 @@ import { LogStyleModel } from "./log-style.model";
  * Package configuration model
  */
 export class ConfigurationModel {
+
   /**
    * If true, completely disable all types of messages.
    * (default is false)

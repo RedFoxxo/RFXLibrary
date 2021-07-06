@@ -1,3 +1,6 @@
+/**
+ * Available log types
+ */
 export enum LogTypeEnum {
   SUCCESS = 'success',
   WARNING = 'warning',
