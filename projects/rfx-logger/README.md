@@ -58,9 +58,9 @@ If true, completely disable all types of messages.
 _(default value: `false`)_<br>
 If true, logger doesn't print any debug data, just a one line message.
 
-### ~~`disableHttpCodes`: _boolean_~~
-~~_(default value: `false`)_<br>~~
-~~If true, logger doesn't show http code when http interceptor is used.~~
+### `disableHttpCodes`: _boolean_
+_(default value: `false`)_<br>
+If true, logger doesn't show http code when http interceptor is used.
 
 ### `disableHttpCallDuration`: _boolean_
 _(default value: `false`)_<br>

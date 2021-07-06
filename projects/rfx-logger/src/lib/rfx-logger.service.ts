@@ -102,13 +102,19 @@ export class RfxLoggerService {
    * @returns {string | null} http code or null if code is invalid
    */
   private getHttpCode(data: any | HttpResponse<any> | HttpErrorResponse | LogResponseModel): string | null {
-    const isHttpResponse: boolean = data instanceof HttpErrorResponse || data instanceof HttpResponse;
+    if (!this.getConfigValue('disableHttpCodes')) {
+      const isHttpResponse: boolean = data instanceof HttpErrorResponse || data instanceof HttpResponse;
 
-    if (!isHttpResponse && this.isLogResponseModel(data)) {
-      return this.isHttpStatusValid(data.response?.status) ? data.response.status : null;
+      if (!isHttpResponse && this.isLogResponseModel(data) && this.isHttpStatusValid(data.response?.status)) {
+        return data.response.status;
+      }
+
+      if (isHttpResponse && this.isHttpStatusValid(data?.status)) {
+        return data.status;
+      }
     }
 
-    return isHttpResponse && this.isHttpStatusValid(data?.status) ? data.status : null;
+    return null;
   }
 
   /**
