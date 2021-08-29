@@ -1,29 +1,19 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AnimationExpInterface } from '../animation/animation-exp.interface';
-import { AnimationTypeEnum } from '../animation/animation-type.enum';
-import { AnimationVisibilityEnum } from '../animation/animation-visiblity.enum';
 import { RfxScrollAnimationService } from '../rfx-scroll-animation.service';
+import { visibilityAnimation } from '../animations';
+import {
+  AnimationExpInterface,
+  AnimationTypeEnum,
+  AnimationVisibilityEnum
+} from '../models';
 
 @Component({
   selector: '[libRfxScrollAnimation]',
   templateUrl: './rfx-scroll-animation.component.html',
   styleUrls: ['./rfx-scroll-animation.component.less'],
   animations: [
-    trigger('visibility', [
-      state('visible', style({
-        opacity: 1,
-        transform: 'translate(0, 0)'
-      })),
-      state('hidden', style({
-        opacity: 0,
-        transform: '{{ currentTransition }}'
-      }), { params: { currentTransition: 'translate(0, 0) scale(1)' }}),
-      transition('visible <=> hidden', [
-        animate('{{ transitionDurationMs }}ms {{ transitionDelayMs }}ms {{ transitionTimingFunction }}')
-      ], { params: { transitionDurationMs: 0, transitionDelayMs: 0, transitionTimingFunction: 'ease' }})
-    ])
+    visibilityAnimation
   ]
 })
 export class RfxScrollAnimationComponent implements OnChanges, OnInit, OnDestroy {
