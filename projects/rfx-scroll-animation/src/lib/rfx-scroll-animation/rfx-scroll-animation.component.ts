@@ -1,12 +1,8 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, HostBinding, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { RfxScrollAnimationService } from '../rfx-scroll-animation.service';
 import { visibilityAnimation } from '../animations';
-import {
-  AnimationExpInterface,
-  AnimationTypeEnum,
-  AnimationVisibilityEnum
-} from '../models';
+import { AnimationExpInterface, AnimationTypeEnum,  AnimationVisibilityEnum } from '../models';
 
 @Component({
   selector: '[libRfxScrollAnimation]',
@@ -16,7 +12,7 @@ import {
     visibilityAnimation
   ]
 })
-export class RfxScrollAnimationComponent implements OnChanges, OnInit, OnDestroy, AfterViewInit {
+export class RfxScrollAnimationComponent implements OnChanges, OnDestroy, AfterViewInit {
   /**
    * Element animation type.
    * Default is NONE.
@@ -101,6 +97,17 @@ export class RfxScrollAnimationComponent implements OnChanges, OnInit, OnDestroy
    */
   private currentTransform: string;
 
+  /**
+   * Is page ready to animate elements.
+   */
+  private isPageReady: boolean;
+
+  /**
+   * Registered element index.
+   * @type {number}
+   */
+  public elementIndex: number;
+
 
   /**
    * Bind visibility animation to host element.
@@ -130,22 +137,21 @@ export class RfxScrollAnimationComponent implements OnChanges, OnInit, OnDestroy
     this.transitionDelayMs = 0;
     this.transitionTimingFunction = 'cubic-bezier(0.4, 0.0, 0.2, 1)';
 
-
     // this.distanceFromPageBottomPercentage = 20;
     // this.isOnlyFirstTime = true;
     // this.elementVisibleChange = new EventEmitter<boolean>();
+
     this.currentTransform = 'translate(0, 0) scale(1)';
     this.animationVisibility = AnimationVisibilityEnum.HIDDEN;
-  }
-
-  public ngOnInit(): void {
-    this.subscribeToHeightEvent();
-    this.subscribeToScrollEvent();
+    this.isPageReady = false;
+    this.elementIndex = this.rfxScrollAnimationService.registerElement(this);
   }
 
   public ngAfterViewInit(): void {
-    // TODO CALCULATE POSITION
-    this.animationVisibility = AnimationVisibilityEnum.VISIBLE;
+    this.subscribeToHeightEvent();
+    this.subscribeToScrollEvent();
+    this.subscribeToPageReadyEvent();
+    this.rfxScrollAnimationService.setElementReady(this.elementIndex);
   }
 
   /**
@@ -165,6 +171,16 @@ export class RfxScrollAnimationComponent implements OnChanges, OnInit, OnDestroy
   private subscribeToScrollEvent(): void {
     this.scrollListenerSubscription = this.rfxScrollAnimationService.getMouseScroll().subscribe(
       (scroll: number) => this.onScrollEvent(scroll)
+    );
+  }
+
+  /**
+   * Subscribe to page ready flag event.
+   * @returns {void}
+   */
+  private subscribeToPageReadyEvent(): void {
+    this.rfxScrollAnimationService.getPageReady().subscribe(
+      (isReady: boolean) => this.isPageReady = isReady
     );
   }
 

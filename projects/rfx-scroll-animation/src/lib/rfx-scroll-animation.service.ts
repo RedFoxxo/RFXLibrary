@@ -1,5 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
+import { RfxScrollAnimationComponent } from './rfx-scroll-animation/rfx-scroll-animation.component';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { AnimatedElementModel } from 'rfx-scroll-animation';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +18,12 @@ export class RfxScrollAnimationService implements OnDestroy {
    * @type {BehaviorSubject<number>}
    */
   private subjectHeight: BehaviorSubject<number>;
+
+  /**
+   * Subscribe to page ready event.
+   * @type {BehaviorSubject<boolean>}
+   */
+  private subjectPageReady: BehaviorSubject<boolean>;
 
   /**
    * Current body element in use.
@@ -35,10 +43,18 @@ export class RfxScrollAnimationService implements OnDestroy {
    */
   private bodyHeightEvent: ResizeObserver | undefined;
 
+  /**
+   * Available animated elements in page
+   * with isReady state.
+   * @type {AnimatedElementModel[]}
+   */
+  private elements: AnimatedElementModel[];
 
   constructor() {
+    this.elements = [];
     this.subjectScroll = new BehaviorSubject<number>(0);
     this.subjectHeight = new BehaviorSubject<number>(0);
+    this.subjectPageReady = new BehaviorSubject<boolean>(false);
     this.mouseScrollEvent = this.onMouseScrollEvent.bind(this);
   }
 
@@ -72,7 +88,7 @@ export class RfxScrollAnimationService implements OnDestroy {
   /**
    * Initialize and return body element height changes listener.
    * @param {HTMLElement} bodyElement - Body element to use.
-   * @return {ResizeObserver}
+   * @return {ResizeObserver} - Resize observer.
    */
   private getBodyHeightEventListener(bodyElement: HTMLElement): ResizeObserver {
     const bodyHeightEventListener = new ResizeObserver((entries: ResizeObserverEntry[]) => {;
@@ -95,14 +111,24 @@ export class RfxScrollAnimationService implements OnDestroy {
   /**
    * Trigger body height event.
    * @param {number} height - Body height.
+   * @return {void}
    */
   private onHeightChangeEvent(height: number): void {
     this.subjectHeight.next(height);
   }
 
   /**
+   * Trigger page ready event.
+   * @param {boolean} isReady - Page ready state.
+   * @return {void}
+   */
+  public onPageReady(isReady: boolean): void {
+    this.subjectPageReady.next(isReady);
+  }
+
+  /**
    * Get body height event.
-   * @return {Observable<number>}
+   * @return {Observable<number>} - Body height event.
    */
   public getBodyHeight(): Observable<number> {
     return this.subjectHeight.asObservable();
@@ -110,9 +136,49 @@ export class RfxScrollAnimationService implements OnDestroy {
 
   /**
    * Get body scroll event.
-   * @return {Observable<number>}
+   * @return {Observable<number>} - Body scroll event.
    */
   public getMouseScroll(): Observable<number> {
     return this.subjectScroll.asObservable();
+  }
+
+  /**
+   * Get page ready event.
+   * @return {Observable<boolean>} - Page ready event.
+   */
+  public getPageReady(): Observable<boolean> {
+    return this.subjectPageReady.asObservable();
+  }
+
+  /**
+   * Register animated element inside service.
+   * @param {RfxScrollAnimationComponent} element - Animated element.
+   * @return {number} - Index of element.
+   */
+  public registerElement(element: RfxScrollAnimationComponent): number {
+    this.elements.push({ isReady: false, element });
+    return this.elements.length - 1;
+  }
+
+  /**
+   * Set element ready in service list.
+   * @param {number} index - Index of element.
+   */
+  public setElementReady(index: number): void {
+    this.elements[index].isReady = true;
+    this.checkElementsReady();
+  }
+
+  /**
+   * Check if all elements are ready.
+   * If yes, trigger page ready event.
+   * @return {void}
+   */
+  private checkElementsReady(): void {
+    const ready: boolean = this.elements.every(element => element.isReady);
+
+    if (ready) {
+      this.onPageReady(ready);
+    }
   }
 }
