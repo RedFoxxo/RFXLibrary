@@ -142,6 +142,14 @@ export class RfxScrollAnimationService implements OnDestroy {
   }
 
   /**
+   * Get body height event.
+   * @return {Observable<number>}
+   */
+  public getBodyHeight(): Observable<number> {
+    return this.subjectHeight.asObservable();
+  }
+
+  /**
    * Get body scroll event.
    * @return {Observable<number>}
    */
@@ -150,7 +158,7 @@ export class RfxScrollAnimationService implements OnDestroy {
   }
 
   /**
-   * Get body height event.
+   * Get router navigation event.
    * @return {Observable<number>}
    */
   public getRouterEvent(): Observable<boolean> {
@@ -158,7 +166,7 @@ export class RfxScrollAnimationService implements OnDestroy {
   }
 
   /**
-   * Get router navigation event.
+   * Get router navigation event value.
    * @return {Observable<number>}
    */
   public getRouterEventValue(): boolean {
