@@ -89,12 +89,6 @@ export class RfxScrollAnimationComponent implements OnChanges, OnInit, OnDestroy
   private scrollListenerSubscription: Subscription | undefined;
 
   /**
-   * Subscription to page readiness status.
-   * @returns {void}
-   */
-  private routerListenerSubscription: Subscription | undefined;
-
-  /**
    * Animation visibility status.
    * Can be 'HIDDEN' or 'VISIBLE'.
    * @type {AnimationVisibilityEnum}
@@ -182,17 +176,9 @@ export class RfxScrollAnimationComponent implements OnChanges, OnInit, OnDestroy
     // console.warn(scroll);
   }
 
-
-  // private onRouterEvent(isReady: boolean): void {
-  //   if (isReady) {
-  //     setTimeout(() => { this.onMouseScroll() })
-  //   }
-  // }
-
   public ngOnDestroy(): void {
     this.heightListenerSubscription?.unsubscribe();
     this.scrollListenerSubscription?.unsubscribe();
-    this.routerListenerSubscription?.unsubscribe();
   }
 
   public ngOnChanges(changes: SimpleChanges): void {

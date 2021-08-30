@@ -1,6 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { NavigationEnd, NavigationStart, Router } from '@angular/router';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,12 +10,6 @@ export class RfxScrollAnimationService implements OnDestroy {
    * @type {Observable<number>}
    */
   private subjectScroll: BehaviorSubject<number>;
-
-  /**
-   * Subscribe to router navigation changes.
-   * @type {Observable<boolean>}
-   */
-  private subjectNavigation: BehaviorSubject<boolean>;
 
   /**
    * Subscribe to body height changes.
@@ -42,18 +35,10 @@ export class RfxScrollAnimationService implements OnDestroy {
    */
   private bodyHeightEvent: ResizeObserver | undefined;
 
-  /**
-   * Router navigation event listener.
-   * @type {Subscription}
-   */
-  private routerNavEvent: Subscription | undefined;
 
-  constructor(
-    private router: Router
-  ) {
+  constructor() {
     this.subjectScroll = new BehaviorSubject<number>(0);
     this.subjectHeight = new BehaviorSubject<number>(0);
-    this.subjectNavigation = new BehaviorSubject<boolean>(false);
     this.mouseScrollEvent = this.onMouseScrollEvent.bind(this);
   }
 
@@ -68,7 +53,6 @@ export class RfxScrollAnimationService implements OnDestroy {
   private destroyListeners(): void {
     window.removeEventListener('scroll', this.mouseScrollEvent, false);
     this.bodyHeightEvent?.disconnect();
-    this.routerNavEvent?.unsubscribe();
   }
 
   /**
@@ -83,7 +67,6 @@ export class RfxScrollAnimationService implements OnDestroy {
     this.bodyElement = bodyElement;
     this.bodyElement.addEventListener('scroll', this.mouseScrollEvent, false);
     this.bodyHeightEvent = this.getBodyHeightEventListener(this.bodyElement);
-    this.routerNavEvent = this.getRouterEventListener();
   }
 
   /**
@@ -98,30 +81,6 @@ export class RfxScrollAnimationService implements OnDestroy {
     });
     bodyHeightEventListener.observe(bodyElement);
     return bodyHeightEventListener;
-  }
-
-  /**
-   * Initialize and return router navigation event listener.
-   * @return {Subscription}
-   */
-  private getRouterEventListener(): Subscription {
-    return this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.onRouterEvent(true);
-      }
-      if (event instanceof NavigationStart) {
-        this.onRouterEvent(false);
-      }
-    });
-  }
-
-  /**
-   * Trigger router navigation event.
-   * @param {boolean} ready - Is page ready to scroll.
-   * @return {void}
-   */
-  private onRouterEvent(ready: boolean): void {
-    this.subjectNavigation.next(ready);
   }
 
   /**
@@ -155,21 +114,5 @@ export class RfxScrollAnimationService implements OnDestroy {
    */
   public getMouseScroll(): Observable<number> {
     return this.subjectScroll.asObservable();
-  }
-
-  /**
-   * Get router navigation event.
-   * @return {Observable<number>}
-   */
-  public getRouterEvent(): Observable<boolean> {
-    return this.subjectNavigation.asObservable();
-  }
-
-  /**
-   * Get router navigation event value.
-   * @return {Observable<number>}
-   */
-  public getRouterEventValue(): boolean {
-    return this.subjectNavigation.value;
   }
 }
