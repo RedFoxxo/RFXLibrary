@@ -91,11 +91,18 @@ export class RfxScrollAnimationService implements OnDestroy {
    * @return {ResizeObserver} - Resize observer.
    */
   private getBodyHeightEventListener(bodyElement: HTMLElement): ResizeObserver {
-    const bodyHeightEventListener = new ResizeObserver((entries: ResizeObserverEntry[]) => {;
-      const height = entries[0].contentRect.height;
-      this.onHeightChangeEvent(height);
+    this.onHeightChangeEvent(bodyElement.scrollHeight);
+
+    const bodyHeightEventListener = new ResizeObserver(() => {
+      this.onHeightChangeEvent(bodyElement.scrollHeight);
     });
+
     bodyHeightEventListener.observe(bodyElement);
+
+    for (var i = 0; i < bodyElement.children.length; i++) {
+      bodyHeightEventListener.observe(bodyElement.children[i]);
+    }
+
     return bodyHeightEventListener;
   }
 
@@ -124,6 +131,22 @@ export class RfxScrollAnimationService implements OnDestroy {
    */
   public onPageReady(isReady: boolean): void {
     this.subjectPageReady.next(isReady);
+  }
+
+  /**
+   * Get body height current value;
+   * @return {number} - Body height.
+   */
+  public getBodyHeightValue(): number {
+    return this.bodyElement?.scrollHeight ?? 0;
+  }
+
+  /**
+   * Get body scroll current value.
+   * @return {number} - Body scroll value.
+   */
+  public getMouseScrollValue(): number {
+    return this.subjectScroll.value;
   }
 
   /**

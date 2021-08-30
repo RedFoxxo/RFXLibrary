@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, HostBinding, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostBinding, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { RfxScrollAnimationService } from '../rfx-scroll-animation.service';
 import { visibilityAnimation } from '../animations';
-import { AnimationExpInterface, AnimationTypeEnum,  AnimationVisibilityEnum } from '../models';
+import { AnimationExpInterface, AnimationTypeEnum, AnimationVisibilityEnum, VisibilityRangeModel } from '../models';
 
 @Component({
   selector: '[libRfxScrollAnimation]',
@@ -12,7 +12,7 @@ import { AnimationExpInterface, AnimationTypeEnum,  AnimationVisibilityEnum } fr
     visibilityAnimation
   ]
 })
-export class RfxScrollAnimationComponent implements OnChanges, OnDestroy, AfterViewInit {
+export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, OnDestroy {
   /**
    * Element animation type.
    * Default is NONE.
@@ -68,7 +68,23 @@ export class RfxScrollAnimationComponent implements OnChanges, OnDestroy, AfterV
   @Input()
   public transitionTimingFunction: string;
 
-  // @Input() public distanceFromPageBottomPercentage: number;
+  /**
+   * How much space (in percentage) from the bottom of the page
+   * before the element is considered to be visible.
+   * @type {number}
+   */
+  @Input()
+  public distanceFromPageBottomPercentage: number;
+
+  /**
+   * How much space (in percentage) from the top of the page
+   * before the element is considered to be hidden.
+   * Works only if isOnlyFirstTime is false.
+   * @type {number}
+   */
+  @Input()
+  public distanceFromPageTopPercentage: number;
+
   // @Input() public isOnlyFirstTime: boolean;
   // @Output() public elementVisibleChange: EventEmitter<boolean>;
 
@@ -93,12 +109,14 @@ export class RfxScrollAnimationComponent implements OnChanges, OnDestroy, AfterV
 
   /**
    * Current transform value.
+   * Default is 'translate(0, 0) scale(1)'.
    * @type {string}
    */
   private currentTransform: string;
 
   /**
    * Is page ready to animate elements.
+   * Default is false.
    */
   private isPageReady: boolean;
 
@@ -107,6 +125,14 @@ export class RfxScrollAnimationComponent implements OnChanges, OnDestroy, AfterV
    * @type {number}
    */
   public elementIndex: number;
+
+  /**
+   * Element visibility range.
+   * @type {VisibilityRangeModel}
+   */
+  private visibilityRange: VisibilityRangeModel | undefined;
+
+  @Input() test!: boolean;
 
 
   /**
@@ -127,7 +153,7 @@ export class RfxScrollAnimationComponent implements OnChanges, OnDestroy, AfterV
   }
 
   constructor(
-    // private htmlElement: ElementRef,
+    private htmlElement: ElementRef,
     private rfxScrollAnimationService: RfxScrollAnimationService
   ) {
     this.animationType = AnimationTypeEnum.NONE;
@@ -136,8 +162,9 @@ export class RfxScrollAnimationComponent implements OnChanges, OnDestroy, AfterV
     this.transitionDurationMs = 500;
     this.transitionDelayMs = 0;
     this.transitionTimingFunction = 'cubic-bezier(0.4, 0.0, 0.2, 1)';
+    this.distanceFromPageBottomPercentage = 20;
+    this.distanceFromPageTopPercentage = 20;
 
-    // this.distanceFromPageBottomPercentage = 20;
     // this.isOnlyFirstTime = true;
     // this.elementVisibleChange = new EventEmitter<boolean>();
 
@@ -176,21 +203,79 @@ export class RfxScrollAnimationComponent implements OnChanges, OnDestroy, AfterV
 
   /**
    * Subscribe to page ready flag event.
+   * If page is ready, calculate element visiblity range.
    * @returns {void}
    */
   private subscribeToPageReadyEvent(): void {
     this.rfxScrollAnimationService.getPageReady().subscribe(
-      (isReady: boolean) => this.isPageReady = isReady
+      (isReady: boolean) => {
+        if (isReady) {
+          this.isPageReady = true;
+          this.calculateVisibilityRange();
+        }
+      }
     );
   }
 
-  public onHeightEvent(height: number) {
-    // console.warn(height);
+  /**
+   * Calculate element visibility range, assign it to visibilityRange
+   * property and trigger manually scroll event.
+   */
+  public calculateVisibilityRange(): void {
+    const windowHeightPx: number = window.innerHeight;
+    const bodyHeightPx: number = this.rfxScrollAnimationService.getBodyHeightValue();
+
+    this.visibilityRange = this.getVisibilityRange(
+      this.htmlElement.nativeElement,
+      windowHeightPx,
+      bodyHeightPx,
+      this.distanceFromPageBottomPercentage,
+      this.distanceFromPageTopPercentage
+    );
+
+    this.onScrollEvent(
+      this.rfxScrollAnimationService.getMouseScrollValue()
+    );
   }
 
-  public onScrollEvent(scroll: number) {
-    // console.warn(scroll);
+  /**
+   * Get range in which element is visible in pixels.
+   * @param {HTMLElement} element - Element to check.
+   * @param {number} distanceFromPageBottomPercentage - Distance from page bottom in percentage.
+   * @returns {VisibilityRangeModel} - Visibility range.
+   */
+  private getVisibilityRange(
+    element: HTMLElement,
+    windowHeight: number,
+    bodyHeight: number,
+    distanceFromPageBottomPercentage: number,
+    distanceFromPageTopPercentage: number
+  ): VisibilityRangeModel {
+    const elementRect: DOMRect = element.getBoundingClientRect();
+    const bottomDistancePx: number = windowHeight * distanceFromPageBottomPercentage / 100;
+    const topDistancePx: number = windowHeight * distanceFromPageTopPercentage / 100;
+    // const startPx: number = elementRect.top + windowHeight - bottomDistancePx - elementRect.height;
+    // const endPx: number = elementRect.top + topDistancePx;
+
+    // console.warn(
+    //   bodyHeight,
+    //   Math.max(0, startPx),
+    //   endPx
+    // );
+
+    return {
+      startPx: 0, // Math.max(0, startPx),
+      endPx: 0
+    };
   }
+
+  // private isElementInVisibleArea(element: HTMLElement, distanceFromPageBottomPercentage: number): boolean {
+  //   const scrollBottom: number = window.scrollY + window.innerHeight;
+  //   const distanceInPx: number = (window.innerHeight / 100) * distanceFromPageBottomPercentage;
+  //   const rect: DOMRect = element.getBoundingClientRect();
+  //   const scrollBottomWithDistance: number = rect.top + window.pageYOffset - document.documentElement.clientTop + distanceInPx;
+  //   return scrollBottom >= scrollBottomWithDistance;
+  // }
 
   public ngOnDestroy(): void {
     this.heightListenerSubscription?.unsubscribe();
@@ -232,6 +317,17 @@ export class RfxScrollAnimationComponent implements OnChanges, OnDestroy, AfterV
         return `translate(0, 0) scale(${scaleRatio})`;
       default:
         return 'translate(0, 0) scale(1)';
+    }
+  }
+
+  private onHeightEvent(height: number) {
+    // TODO: RECALCULATE ANIMATION POSITION
+    // console.warn(height);
+  }
+
+  private onScrollEvent(scroll: number) {
+    if (this.isPageReady) {
+      // TODO
     }
   }
 
