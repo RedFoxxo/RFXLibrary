@@ -1,5 +1,5 @@
 export interface AnimationExpParamsInterface {
-  currentTransition: string;
+  currentTransform: string;
   transitionTimingFunction: string;
   transitionDurationMs: number;
   transitionDelayMs: number;

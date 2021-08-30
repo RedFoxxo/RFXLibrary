@@ -30,21 +30,23 @@ import { RfxScrollAnimationModule } from 'rfx-scroll-animation';
 
 ### Initialize scroll animations
 
-In your *app.component.ts* initialize animation listeners inside `ngOnInit`
+In your *app.component.ts* initialize animation listeners inside `ngAfterViewInit`
+**WARNING:** *use `ngAfterViewInit` instead of `ngOnInit`
+otherwise you may experience glitches on page loading
 ```typescript
 import { RfxScrollAnimationService } from 'rfx-scroll-animation';
 
 constructor(private rfxScrollAnimationService: RfxScrollAnimationService) { }
 
-public ngOnInit(): void {
+public ngAfterViewInit(): void {
   this.rfxScrollAnimationService.initListeners();
 }
 ```
 
 and if you have a custom scrollbar component you can pass the nativeElement
 to the initListeners() function like this:<br />
-**WARNING:** *use `ngAfterViewInit` instead of `ngOnInit` otherwise your nativeElement
-may not be defined*
+**WARNING:** *use `ngAfterViewInit` instead of `ngOnInit`
+otherwise you may experience glitches on page loading
 ```html
 <custom-scrollbar #scrollbar>
   <!-- Your page here -->
