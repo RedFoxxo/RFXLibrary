@@ -76,15 +76,6 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
   @Input()
   public distanceFromPageBottomPercentage: number;
 
-  /**
-   * How much space (in percentage) from the top of the page
-   * before the element is considered to be hidden.
-   * Works only if isOnlyFirstTime is false.
-   * @type {number}
-   */
-  @Input()
-  public distanceFromPageTopPercentage: number;
-
   // @Input() public isOnlyFirstTime: boolean;
 
   /**
@@ -127,18 +118,20 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
   private isPageReady: boolean;
 
   /**
-   * Registered element index.
+   * Registered element index inside service.
    * @type {number}
    */
   public elementIndex: number;
 
   /**
-   * Element visibility range.
-   * @type {VisibilityRangeModel}
+   * Value where the element is considered to be visible.
+   * @type {number | undefined}
    */
-  private visibilityRange: VisibilityRangeModel | undefined;
+  private visibilityBarrier: number | undefined;
 
-  @Input() test!: boolean;
+
+  @Input()
+  test!: boolean; // ! TEMP
 
 
   /**
@@ -169,7 +162,6 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
     this.transitionDelayMs = 0;
     this.transitionTimingFunction = 'cubic-bezier(0.4, 0.0, 0.2, 1)';
     this.distanceFromPageBottomPercentage = 20;
-    this.distanceFromPageTopPercentage = 20;
     this.elementVisibleChange = new EventEmitter<boolean>();
 
     // this.isOnlyFirstTime = true;
@@ -189,11 +181,15 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
 
   /**
    * Subscribe to height change event.
+   * When height change, update visibility barrier.
    * @returns {void}
    */
   private subscribeToHeightEvent(): void {
     this.heightListenerSubscription = this.rfxScrollAnimationService.getBodyHeight().subscribe(
-      (height: number) => this.onHeightEvent(height)
+      () => {
+        this.visibilityBarrier = undefined;
+        this.calculateVisibilityBarrier();
+      }
     );
   }
 
@@ -209,7 +205,7 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
 
   /**
    * Subscribe to page ready flag event.
-   * If page is ready, calculate element visiblity range.
+   * If page is ready, calculate element visiblity barrier.
    * @returns {void}
    */
   private subscribeToPageReadyEvent(): void {
@@ -217,74 +213,41 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
       (isReady: boolean) => {
         if (isReady) {
           this.isPageReady = true;
-          this.calculateVisibilityRange();
+          this.calculateVisibilityBarrier();
         }
       }
     );
   }
 
   /**
-   * Calculate element visibility range, assign it to visibilityRange
-   * property and trigger manually scroll event.
+   * Calculate element visibility barrier, assign it to visibilityBarrier
+   * property and manually trigger scroll event.
+   * @returns {void}
    */
-  public calculateVisibilityRange(): void {
+  public calculateVisibilityBarrier(): void {
     const windowHeightPx: number = window.innerHeight;
-    const bodyHeightPx: number = this.rfxScrollAnimationService.getBodyHeightValue();
-
-    this.visibilityRange = this.getVisibilityRange(
-      this.htmlElement.nativeElement,
-      windowHeightPx,
-      bodyHeightPx,
-      this.distanceFromPageBottomPercentage,
-      this.distanceFromPageTopPercentage
-    );
-
-    this.onScrollEvent(
-      this.rfxScrollAnimationService.getMouseScrollValue()
-    );
+    const pageHeightPx: number = this.rfxScrollAnimationService.getBodyHeightValue();
+    this.visibilityBarrier = this.getVisibilityBarrier(this.htmlElement.nativeElement, windowHeightPx, pageHeightPx, this.distanceFromPageBottomPercentage);
+    this.onScrollEvent(this.rfxScrollAnimationService.getMouseScrollValue());
   }
 
   /**
-   * Get range in which element is visible in pixels.
+   * Get value which indicates where element is visible.
+   * If bottom limit cannot be reached, force it at the very bottom of the page
+   * so we can see the element.
    * @param {HTMLElement} element - Element to check.
+   * @param {number} windowHeightPx - Window height in pixels.
+   * @param {number} pageHeightPx - Page height in pixels.
    * @param {number} distanceFromPageBottomPercentage - Distance from page bottom in percentage.
-   * @returns {VisibilityRangeModel} - Visibility range.
+   * @returns {number} - Visibility barrier.
    */
-  private getVisibilityRange(
-    element: HTMLElement,
-    windowHeight: number,
-    bodyHeight: number,
-    distanceFromPageBottomPercentage: number,
-    distanceFromPageTopPercentage: number
-  ): VisibilityRangeModel {
+  private getVisibilityBarrier(element: HTMLElement, windowHeightPx: number, pageHeightPx: number, distanceFromPageBottomPercentage: number): number {
     const elementRect: DOMRect = element.getBoundingClientRect();
-
-    // const topDistancePx: number = windowHeight * distanceFromPageTopPercentage / 100;
-    const bottomDistancePx: number = windowHeight * distanceFromPageBottomPercentage / 100;
-
-    // const topLimitPx: number = elementRect.top - topDistancePx;
-    const bottomLimitPx: number = elementRect.top - windowHeight + bottomDistancePx;
-
-    // console.warn(
-    //   '\ntop:', topLimitPx,
-    //   '\nbottom:', bottomLimitPx
-    // //   Math.max(0, startPx),
-    // //   endPx
-    // );
-
-    return {
-      topLimit: NaN, // Math.max(0, startPx),
-      bottomLimit: bottomLimitPx
-    };
+    const bottomDistancePx: number = windowHeightPx * distanceFromPageBottomPercentage / 100;
+    const bottomLimitPx: number = elementRect.top - windowHeightPx + bottomDistancePx;
+    const bottomPageLimitPx: number = pageHeightPx - windowHeightPx;
+    return bottomLimitPx > bottomPageLimitPx ? bottomPageLimitPx : bottomLimitPx;
   }
-
-  // private isElementInVisibleArea(element: HTMLElement, distanceFromPageBottomPercentage: number): boolean {
-  //   const scrollBottom: number = window.scrollY + window.innerHeight;
-  //   const distanceInPx: number = (window.innerHeight / 100) * distanceFromPageBottomPercentage;
-  //   const rect: DOMRect = element.getBoundingClientRect();
-  //   const scrollBottomWithDistance: number = rect.top + window.pageYOffset - document.documentElement.clientTop + distanceInPx;
-  //   return scrollBottom >= scrollBottomWithDistance;
-  // }
 
   public ngOnDestroy(): void {
     this.heightListenerSubscription?.unsubscribe();
@@ -329,20 +292,12 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
     }
   }
 
-  private onHeightEvent(height: number) {
-    // TODO: RECALCULATE ANIMATION POSITION
-    // console.warn(height);
-  }
-
   private onScrollEvent(scroll: number) {
-    if (this.isPageReady && this.visibilityRange) {
-      const visibility: AnimationVisibilityEnum = this.getVisibility(scroll, this.visibilityRange);
-
+    if (this.isPageReady && this.visibilityBarrier !== undefined) {
+      const visibility: AnimationVisibilityEnum = this.getVisibility(scroll, this.visibilityBarrier);
 
       if (visibility !== this.animationVisibility) {
-        // console.warn(scroll, this.visibilityRange, visibility);
         this.setVisibility(visibility);
-
       }
     }
   }
@@ -363,17 +318,18 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
 
   /**
    * Get visibility state.
+   * Element is visible when scroll position crosses visibility barrier.
    * @param {number} scroll - Scroll position.
-   * @param {VisibilityRangeModel} visibilityRange - Visibility range.
+   * @param {number} visibilityBarrier - the limit where the element becomes visible.
    * @returns {AnimationVisibilityEnum}
    */
-  private getVisibility(scroll: number = window.scrollY, visibilityRange: VisibilityRangeModel): AnimationVisibilityEnum {
-    const isVisible: boolean = scroll >= visibilityRange.bottomLimit;
+  private getVisibility(scroll: number, visibilityBarrier: number): AnimationVisibilityEnum {
+    const isVisible: boolean = scroll >= visibilityBarrier;
     return isVisible ? AnimationVisibilityEnum.VISIBLE : AnimationVisibilityEnum.HIDDEN;
   }
 
   /**
-   * Set element visiblity.
+   * Set element visiblity and emit visibility change event.
    * @param {AnimationVisibilityEnum} visibility - Visibility value.
    * @returns {void}
    */
