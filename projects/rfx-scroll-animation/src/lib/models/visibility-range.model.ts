@@ -1,4 +1,4 @@
 export interface VisibilityRangeModel {
-  startPx: number;
-  endPx: number;
+  topLimit: number;
+  bottomLimit: number;
 }
