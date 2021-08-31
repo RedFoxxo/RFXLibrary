@@ -81,8 +81,8 @@ export class RfxScrollAnimationService implements OnDestroy {
    * @return {void}
    */
   private destroyListeners(): void {
-    window.removeEventListener('resize', this.windowResizeEvent, false);
-    this.bodyElement?.removeEventListener('scroll', this.mouseScrollEvent, false);
+    window.removeEventListener('resize', this.windowResizeEvent);
+    this.bodyElement?.removeEventListener('scroll', this.mouseScrollEvent);
     this.bodyHeightEvent?.disconnect();
   }
 
@@ -96,8 +96,8 @@ export class RfxScrollAnimationService implements OnDestroy {
   public initListeners(bodyElement: HTMLElement = document.body): void {
     this.destroyListeners();
     this.bodyElement = bodyElement;
-    this.bodyElement.addEventListener('scroll', this.mouseScrollEvent, false);
-    window.addEventListener('resize', this.windowResizeEvent, false);
+    this.bodyElement.addEventListener('scroll', this.mouseScrollEvent, { passive: true });
+    window.addEventListener('resize', this.windowResizeEvent, { passive: true });
     this.bodyHeightEvent = this.getBodyHeightEventListener(this.bodyElement);
   }
 

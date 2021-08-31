@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, HostBinding, Input,
 import { Subscription } from 'rxjs';
 import { RfxScrollAnimationService } from '../rfx-scroll-animation.service';
 import { visibilityAnimation } from '../animations';
-import { AnimationExpInterface, AnimationTypeEnum, AnimationVisibilityEnum, VisibilityRangeModel } from '../models';
+import { AnimationExpInterface, AnimationTypeEnum, AnimationVisibilityEnum } from '../models';
 
 @Component({
   selector: '[libRfxScrollAnimation]',
@@ -236,7 +236,6 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
    * Subscribe to window resize event.
    * When window is resized, update visibility barrier.
    * @returns {void}
-   * ! TODO: Try to throttle this event.
    */
   private subscribeToWindowResizeEvent(): void {
     this.windowResizeListenerSubscription = this.rfxScrollAnimationService.getWindowResize().subscribe(
@@ -266,7 +265,6 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
   /**
    * Subscribe to scroll change event.
    * @returns {void}
-   * ! TODO: Try to throttle this event.
    */
   private subscribeToScrollEvent(): void {
     this.scrollListenerSubscription = this.rfxScrollAnimationService.getMouseScroll().subscribe(
@@ -392,7 +390,9 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
    * @returns {void}
    */
   private setVisibility(visible: AnimationVisibilityEnum): void {
-    this.animationVisibility = visible;
-    this.elementVisibleChange.emit(visible === AnimationVisibilityEnum.VISIBLE);
+    requestAnimationFrame(() => {
+      this.animationVisibility = visible;
+      this.elementVisibleChange.emit(visible === AnimationVisibilityEnum.VISIBLE);
+    });
   }
 }
