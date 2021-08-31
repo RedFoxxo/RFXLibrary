@@ -76,7 +76,13 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
   @Input()
   public distanceFromPageBottomPercentage: number;
 
-  // @Input() public isOnlyFirstTime: boolean;
+  /**
+   * If true, element appears only once and never hides.
+   * Default is true.
+   * @type {boolean}
+   */
+  @Input()
+  public isOnlyFirstTime: boolean;
 
   /**
    * Emit element visibility change event.
@@ -98,6 +104,12 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
   private scrollListenerSubscription: Subscription | undefined;
 
   /**
+   * Subscription to page ready value changes.
+   * @type {Subscription}
+   */
+  private pageReadyListenerSubscription: Subscription | undefined;
+
+  /**
    * Animation visibility status.
    * Can be 'HIDDEN' or 'VISIBLE'.
    * @type {AnimationVisibilityEnum}
@@ -110,6 +122,12 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
    * @type {string}
    */
   private currentTransform: string;
+
+  /**
+   * Current page height in pixels.
+   * @type {number}
+   */
+  private currentPageHeight: number;
 
   /**
    * Is page ready to animate elements.
@@ -162,12 +180,11 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
     this.transitionDelayMs = 0;
     this.transitionTimingFunction = 'cubic-bezier(0.4, 0.0, 0.2, 1)';
     this.distanceFromPageBottomPercentage = 20;
+    this.isOnlyFirstTime = true;
     this.elementVisibleChange = new EventEmitter<boolean>();
-
-    // this.isOnlyFirstTime = true;
-
     this.currentTransform = 'translate(0, 0) scale(1)';
     this.animationVisibility = AnimationVisibilityEnum.HIDDEN;
+    this.currentPageHeight = 0;
     this.isPageReady = false;
     this.elementIndex = this.rfxScrollAnimationService.registerElement(this);
   }
@@ -186,9 +203,12 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
    */
   private subscribeToHeightEvent(): void {
     this.heightListenerSubscription = this.rfxScrollAnimationService.getBodyHeight().subscribe(
-      () => {
-        this.visibilityBarrier = undefined;
-        this.calculateVisibilityBarrier();
+      (height) => {
+        if (this.currentPageHeight !== height) {
+          console.warn('yeet', this.currentPageHeight, height);
+          this.visibilityBarrier = undefined;
+          this.calculateVisibilityBarrier();
+        }
       }
     );
   }
@@ -205,13 +225,15 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
 
   /**
    * Subscribe to page ready flag event.
-   * If page is ready, calculate element visiblity barrier.
+   * If page is ready, calculate element visiblity barrier
+   * and destroy this listener.
    * @returns {void}
    */
   private subscribeToPageReadyEvent(): void {
-    this.rfxScrollAnimationService.getPageReady().subscribe(
+    this.pageReadyListenerSubscription = this.rfxScrollAnimationService.getPageReady().subscribe(
       (isReady: boolean) => {
         if (isReady) {
+          this.pageReadyListenerSubscription?.unsubscribe();
           this.isPageReady = true;
           this.calculateVisibilityBarrier();
         }
@@ -226,8 +248,13 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
    */
   public calculateVisibilityBarrier(): void {
     const windowHeightPx: number = window.innerHeight;
-    const pageHeightPx: number = this.rfxScrollAnimationService.getBodyHeightValue();
-    this.visibilityBarrier = this.getVisibilityBarrier(this.htmlElement.nativeElement, windowHeightPx, pageHeightPx, this.distanceFromPageBottomPercentage);
+    this.currentPageHeight = this.rfxScrollAnimationService.getBodyHeightValue();
+    this.visibilityBarrier = this.getVisibilityBarrier(
+      this.htmlElement.nativeElement,
+      windowHeightPx,
+      this.currentPageHeight,
+      this.distanceFromPageBottomPercentage
+    );
     this.onScrollEvent(this.rfxScrollAnimationService.getMouseScrollValue());
   }
 
@@ -252,6 +279,7 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
   public ngOnDestroy(): void {
     this.heightListenerSubscription?.unsubscribe();
     this.scrollListenerSubscription?.unsubscribe();
+    this.pageReadyListenerSubscription?.unsubscribe();
   }
 
   public ngOnChanges(changes: SimpleChanges): void {

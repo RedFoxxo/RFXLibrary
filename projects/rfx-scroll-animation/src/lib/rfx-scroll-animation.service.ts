@@ -91,8 +91,6 @@ export class RfxScrollAnimationService implements OnDestroy {
    * @return {ResizeObserver} - Resize observer.
    */
   private getBodyHeightEventListener(bodyElement: HTMLElement): ResizeObserver {
-    this.onHeightChangeEvent(bodyElement.scrollHeight);
-
     const bodyHeightEventListener = new ResizeObserver(() => {
       this.onHeightChangeEvent(bodyElement.scrollHeight);
     });
