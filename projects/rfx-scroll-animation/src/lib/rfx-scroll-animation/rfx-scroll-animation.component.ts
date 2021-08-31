@@ -153,11 +153,6 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
    */
   private visibilityBarrier: number | undefined;
 
-
-  @Input()
-  test!: boolean; // ! TEMP
-
-
   /**
    * Bind visibility animation to host element.
    */
