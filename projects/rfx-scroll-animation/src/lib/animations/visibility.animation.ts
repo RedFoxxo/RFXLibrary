@@ -8,8 +8,8 @@ export const visibilityAnimation: AnimationTriggerMetadata[] = [
     })),
     state('hidden', style({
       opacity: 0,
-      transform: '{{ currentTransition }}'
-    }), { params: { currentTransition: 'translate(0, 0) scale(1)' }}),
+      transform: '{{ currentTransform }}'
+    }), { params: { currentTransform: 'translate(0, 0) scale(1)' }}),
     transition('visible <=> hidden', [
       animate('{{ transitionDurationMs }}ms {{ transitionDelayMs }}ms {{ transitionTimingFunction }}')
     ], { params: { transitionDurationMs: 0, transitionDelayMs: 0, transitionTimingFunction: 'ease' }})
