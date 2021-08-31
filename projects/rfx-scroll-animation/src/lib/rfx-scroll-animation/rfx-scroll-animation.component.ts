@@ -218,6 +218,14 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
   }
 
   public ngOnDestroy(): void {
+    this.destroyListeners();
+  }
+
+  /**
+   * Destroy all listeners.
+   * @returns {void}
+   */
+  private destroyListeners(): void {
     this.heightListenerSubscription?.unsubscribe();
     this.scrollListenerSubscription?.unsubscribe();
     this.pageReadyListenerSubscription?.unsubscribe();
@@ -228,6 +236,7 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
    * Subscribe to window resize event.
    * When window is resized, update visibility barrier.
    * @returns {void}
+   * ! TODO: Try to throttle this event.
    */
   private subscribeToWindowResizeEvent(): void {
     this.windowResizeListenerSubscription = this.rfxScrollAnimationService.getWindowResize().subscribe(
@@ -257,6 +266,7 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
   /**
    * Subscribe to scroll change event.
    * @returns {void}
+   * ! TODO: Try to throttle this event.
    */
   private subscribeToScrollEvent(): void {
     this.scrollListenerSubscription = this.rfxScrollAnimationService.getMouseScroll().subscribe(
@@ -354,25 +364,15 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
     if (this.isPageReady && this.visibilityBarrier !== undefined) {
       const visibility: AnimationVisibilityEnum = this.getVisibility(scroll, this.visibilityBarrier);
 
+      if (this.isOnlyFirstTime && visibility === AnimationVisibilityEnum.VISIBLE) {
+        this.destroyListeners();
+      }
+
       if (visibility !== this.animationVisibility) {
         this.setVisibility(visibility);
       }
     }
   }
-
-  // private onMouseScroll(): void {
-  //   const isElementInVisibleArea: boolean = this.isElementInVisibleArea(this.htmlElement.nativeElement, this.distanceFromPageBottomPercentage);
-
-  //   if (this.isOnlyFirstTime && this.animationVisibility === AnimationVisibilityEnum.VISIBLE) {
-  //     this.scrollListenerSubscription?.unsubscribe();
-  //   }
-
-  //   if (isElementInVisibleArea && this.animationVisibility === AnimationVisibilityEnum.HIDDEN) {
-  //     this.setVisibility(AnimationVisibilityEnum.VISIBLE);
-  //   } else if (!isElementInVisibleArea && this.animationVisibility === AnimationVisibilityEnum.VISIBLE) {
-  //     this.setVisibility(AnimationVisibilityEnum.HIDDEN);
-  //   }
-  // }
 
   /**
    * Get visibility state.
