@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { RfxScrollAnimationComponent } from './rfx-scroll-animation/rfx-scroll-animation.component';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { AnimatedElementModel } from 'rfx-scroll-animation';
+import { AnimatedElementModel } from './models';
 
 @Injectable({
   providedIn: 'root'
