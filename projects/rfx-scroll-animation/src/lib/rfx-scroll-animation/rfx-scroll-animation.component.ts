@@ -104,6 +104,12 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
   private scrollListenerSubscription: Subscription | undefined;
 
   /**
+   * Subscription to window resize changes.
+   * @type {Subscription}
+   */
+  private windowResizeListenerSubscription: Subscription | undefined;
+
+  /**
    * Subscription to page ready value changes.
    * @type {Subscription}
    */
@@ -190,10 +196,46 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
   }
 
   public ngAfterViewInit(): void {
+    this.subscribeToWindowResizeEvent();
     this.subscribeToHeightEvent();
     this.subscribeToScrollEvent();
     this.subscribeToPageReadyEvent();
     this.rfxScrollAnimationService.setElementReady(this.elementIndex);
+  }
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes?.animationType?.currentValue !== undefined ||
+      changes?.animationDistancePx?.currentValue !== undefined ||
+      changes?.scaleRatio?.currentValue !== undefined
+    ) {
+      this.currentTransform = this.getCurrentTransform(
+        this.animationType,
+        this.animationDistancePx,
+        this.scaleRatio
+      );
+    }
+  }
+
+  public ngOnDestroy(): void {
+    this.heightListenerSubscription?.unsubscribe();
+    this.scrollListenerSubscription?.unsubscribe();
+    this.pageReadyListenerSubscription?.unsubscribe();
+    this.windowResizeListenerSubscription?.unsubscribe();
+  }
+
+  /**
+   * Subscribe to window resize event.
+   * When window is resized, update visibility barrier.
+   * @returns {void}
+   */
+  private subscribeToWindowResizeEvent(): void {
+    this.windowResizeListenerSubscription = this.rfxScrollAnimationService.getWindowResize().subscribe(
+      () => {
+        this.visibilityBarrier = undefined;
+        this.calculateVisibilityBarrier();
+      }
+    );
   }
 
   /**
@@ -205,7 +247,6 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
     this.heightListenerSubscription = this.rfxScrollAnimationService.getBodyHeight().subscribe(
       (height) => {
         if (this.currentPageHeight !== height) {
-          console.warn('yeet', this.currentPageHeight, height);
           this.visibilityBarrier = undefined;
           this.calculateVisibilityBarrier();
         }
@@ -248,9 +289,11 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
    */
   public calculateVisibilityBarrier(): void {
     const windowHeightPx: number = window.innerHeight;
+    const scroll: number = this.rfxScrollAnimationService.getMouseScrollValue();
     this.currentPageHeight = this.rfxScrollAnimationService.getBodyHeightValue();
     this.visibilityBarrier = this.getVisibilityBarrier(
       this.htmlElement.nativeElement,
+      scroll,
       windowHeightPx,
       this.currentPageHeight,
       this.distanceFromPageBottomPercentage
@@ -263,37 +306,24 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
    * If bottom limit cannot be reached, force it at the very bottom of the page
    * so we can see the element.
    * @param {HTMLElement} element - Element to check.
+   * @param {number} scroll - Current scroll value.
    * @param {number} windowHeightPx - Window height in pixels.
    * @param {number} pageHeightPx - Page height in pixels.
    * @param {number} distanceFromPageBottomPercentage - Distance from page bottom in percentage.
    * @returns {number} - Visibility barrier.
    */
-  private getVisibilityBarrier(element: HTMLElement, windowHeightPx: number, pageHeightPx: number, distanceFromPageBottomPercentage: number): number {
+  private getVisibilityBarrier(
+    element: HTMLElement,
+    scroll: number,
+    windowHeightPx: number,
+    pageHeightPx: number,
+    distanceFromPageBottomPercentage: number
+  ): number {
     const elementRect: DOMRect = element.getBoundingClientRect();
     const bottomDistancePx: number = windowHeightPx * distanceFromPageBottomPercentage / 100;
-    const bottomLimitPx: number = elementRect.top - windowHeightPx + bottomDistancePx;
+    const bottomLimitPx: number = elementRect.top + scroll - windowHeightPx + bottomDistancePx;
     const bottomPageLimitPx: number = pageHeightPx - windowHeightPx;
     return bottomLimitPx > bottomPageLimitPx ? bottomPageLimitPx : bottomLimitPx;
-  }
-
-  public ngOnDestroy(): void {
-    this.heightListenerSubscription?.unsubscribe();
-    this.scrollListenerSubscription?.unsubscribe();
-    this.pageReadyListenerSubscription?.unsubscribe();
-  }
-
-  public ngOnChanges(changes: SimpleChanges): void {
-    if (
-      changes?.animationType?.currentValue !== undefined ||
-      changes?.animationDistancePx?.currentValue !== undefined ||
-      changes?.scaleRatio?.currentValue !== undefined
-    ) {
-      this.currentTransform = this.getCurrentTransform(
-        this.animationType,
-        this.animationDistancePx,
-        this.scaleRatio
-      );
-    }
   }
 
   /**

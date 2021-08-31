@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { RfxScrollAnimationComponent } from './rfx-scroll-animation/rfx-scroll-animation.component';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { AnimatedElementModel } from 'rfx-scroll-animation';
 
 @Injectable({
@@ -9,9 +9,15 @@ import { AnimatedElementModel } from 'rfx-scroll-animation';
 export class RfxScrollAnimationService implements OnDestroy {
   /**
    * Subscribe to body scroll changes.
-   * @type {Observable<number>}
+   * @type {BehaviorSubject<number>}
    */
   private subjectScroll: BehaviorSubject<number>;
+
+  /**
+   * Subscribe to window resize changes.
+   * @type {Subject<undefined>}
+   */
+  private subjectWindowResize: Subject<undefined>;
 
   /**
    * Subscribe to body height changes.
@@ -27,19 +33,25 @@ export class RfxScrollAnimationService implements OnDestroy {
 
   /**
    * Current body element in use.
-   * @type {HTMLElement}
+   * @type {HTMLElement | undefined}
    */
   private bodyElement: HTMLElement | undefined;
 
   /**
    * Mouse scroll listener.
-   * @type {EventListener}
+   * @type {EventListenerOrEventListenerObject}
    */
   private mouseScrollEvent: EventListenerOrEventListenerObject;
 
   /**
+   * Window resize listener.
+   * @type {EventListenerOrEventListenerObject}
+   */
+  private windowResizeEvent: EventListenerOrEventListenerObject;
+
+  /**
    * Body height changes listener.
-   * @param {number} height
+   * @type {ResizeObserver | undefined}
    */
   private bodyHeightEvent: ResizeObserver | undefined;
 
@@ -53,9 +65,11 @@ export class RfxScrollAnimationService implements OnDestroy {
   constructor() {
     this.elements = [];
     this.subjectScroll = new BehaviorSubject<number>(0);
+    this.subjectWindowResize = new Subject<undefined>();
     this.subjectHeight = new BehaviorSubject<number>(0);
     this.subjectPageReady = new BehaviorSubject<boolean>(false);
     this.mouseScrollEvent = this.onMouseScrollEvent.bind(this);
+    this.windowResizeEvent = this.onWindowResizeEvent.bind(this);
   }
 
   public ngOnDestroy(): void {
@@ -67,7 +81,8 @@ export class RfxScrollAnimationService implements OnDestroy {
    * @return {void}
    */
   private destroyListeners(): void {
-    window.removeEventListener('scroll', this.mouseScrollEvent, false);
+    window.removeEventListener('resize', this.windowResizeEvent, false);
+    this.bodyElement?.removeEventListener('scroll', this.mouseScrollEvent, false);
     this.bodyHeightEvent?.disconnect();
   }
 
@@ -82,6 +97,7 @@ export class RfxScrollAnimationService implements OnDestroy {
     this.destroyListeners();
     this.bodyElement = bodyElement;
     this.bodyElement.addEventListener('scroll', this.mouseScrollEvent, false);
+    window.addEventListener('resize', this.windowResizeEvent, false);
     this.bodyHeightEvent = this.getBodyHeightEventListener(this.bodyElement);
   }
 
@@ -111,6 +127,14 @@ export class RfxScrollAnimationService implements OnDestroy {
    */
   private onMouseScrollEvent(event: Event): void {
     this.subjectScroll.next((event.target as HTMLElement).scrollTop);
+  }
+
+  /**
+   * Trigger window resize event.
+   * @return {void}
+   */
+  private onWindowResizeEvent(): void {
+    this.subjectWindowResize.next(undefined);
   }
 
   /**
@@ -161,6 +185,14 @@ export class RfxScrollAnimationService implements OnDestroy {
    */
   public getMouseScroll(): Observable<number> {
     return this.subjectScroll.asObservable();
+  }
+
+  /**
+   * Get window resize event.
+   * @return {Observable<undefined>} - Window resize event.
+   */
+  public getWindowResize(): Observable<undefined> {
+    return this.subjectWindowResize.asObservable();
   }
 
   /**
