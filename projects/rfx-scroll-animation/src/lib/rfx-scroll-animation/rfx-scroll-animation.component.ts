@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, Renderer2, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { RfxScrollAnimationService } from '../rfx-scroll-animation.service';
 import { visibilityAnimation } from '../animations';
-import { AnimationExpInterface, AnimationTypeEnum, AnimationVisibilityEnum } from '../models';
+import { AnimationExpInterface, AnimationTypeEnum, AnimationVisibilityEnum, SectionAreaModel } from '../models';
+
 
 @Component({
   selector: '[libRfxScrollAnimation]',
@@ -123,6 +124,11 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
   private animationVisibility: AnimationVisibilityEnum;
 
   /**
+   * Animation will change value.
+   */
+  private animationWillChange: boolean;
+
+  /**
    * Current transform value.
    * Default is 'translate(0, 0) scale(1)'.
    * @type {string}
@@ -154,6 +160,12 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
   private visibilityBarrier: number | undefined;
 
   /**
+   * Values where the element have will-change property.
+   * @type {SectionAreaModel | undefined}
+   */
+  private willChangeArea: SectionAreaModel | undefined;
+
+  /**
    * Bind visibility animation to host element.
    */
   @HostBinding('@visibility')
@@ -172,6 +184,7 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
 
   constructor(
     private htmlElement: ElementRef,
+    private renderer: Renderer2,
     private rfxScrollAnimationService: RfxScrollAnimationService
   ) {
     this.animationType = AnimationTypeEnum.NONE;
@@ -185,6 +198,7 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
     this.elementVisibleChange = new EventEmitter<boolean>();
     this.currentTransform = 'translate(0, 0) scale(1)';
     this.animationVisibility = AnimationVisibilityEnum.HIDDEN;
+    this.animationWillChange = true;
     this.currentPageHeight = 0;
     this.isPageReady = false;
     this.elementIndex = this.rfxScrollAnimationService.registerElement(this);
@@ -218,7 +232,6 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
 
   /**
    * Destroy all listeners.
-   * @returns {void}
    */
   private destroyListeners(): void {
     this.heightListenerSubscription?.unsubscribe();
@@ -229,29 +242,23 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
 
   /**
    * Subscribe to window resize event.
-   * When window is resized, update visibility barrier.
-   * @returns {void}
+   * When window is resized, update element properties.
    */
   private subscribeToWindowResizeEvent(): void {
     this.windowResizeListenerSubscription = this.rfxScrollAnimationService.getWindowResize().subscribe(
-      () => {
-        this.visibilityBarrier = undefined;
-        this.calculateVisibilityBarrier();
-      }
+      () => this.calculateElementProperties()
     );
   }
 
   /**
    * Subscribe to height change event.
-   * When height change, update visibility barrier.
-   * @returns {void}
+   * When height change, update element properties.
    */
   private subscribeToHeightEvent(): void {
     this.heightListenerSubscription = this.rfxScrollAnimationService.getBodyHeight().subscribe(
       (height) => {
         if (this.currentPageHeight !== height) {
-          this.visibilityBarrier = undefined;
-          this.calculateVisibilityBarrier();
+          this.calculateElementProperties();
         }
       }
     );
@@ -259,7 +266,6 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
 
   /**
    * Subscribe to scroll change event.
-   * @returns {void}
    */
   private subscribeToScrollEvent(): void {
     this.scrollListenerSubscription = this.rfxScrollAnimationService.getMouseScroll().subscribe(
@@ -269,9 +275,7 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
 
   /**
    * Subscribe to page ready flag event.
-   * If page is ready, calculate element visiblity barrier
-   * and destroy this listener.
-   * @returns {void}
+   * If page is ready, calculate element properties and destroy this listener.
    */
   private subscribeToPageReadyEvent(): void {
     this.pageReadyListenerSubscription = this.rfxScrollAnimationService.getPageReady().subscribe(
@@ -279,29 +283,48 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
         if (isReady) {
           this.pageReadyListenerSubscription?.unsubscribe();
           this.isPageReady = true;
-          this.calculateVisibilityBarrier();
+          this.calculateElementProperties();
         }
       }
     );
   }
 
   /**
-   * Calculate element visibility barrier, assign it to visibilityBarrier
-   * property and manually trigger scroll event.
-   * @returns {void}
+   * Calculate and set will-change area.
+   * Calculate and set visibility barrier.
+   * Trigger page scroll event so that element can be updated.
    */
-  public calculateVisibilityBarrier(): void {
+  public calculateElementProperties(): void {
+    this.visibilityBarrier = undefined;
     const windowHeightPx: number = window.innerHeight;
     const scroll: number = this.rfxScrollAnimationService.getMouseScrollValue();
     this.currentPageHeight = this.rfxScrollAnimationService.getBodyHeightValue();
-    this.visibilityBarrier = this.getVisibilityBarrier(
-      this.htmlElement.nativeElement,
-      scroll,
-      windowHeightPx,
-      this.currentPageHeight,
-      this.distanceFromPageBottomPercentage
+
+    this.willChangeArea = this.getWillChangeArea(
+      this.htmlElement.nativeElement, scroll, windowHeightPx
     );
-    this.onScrollEvent(this.rfxScrollAnimationService.getMouseScrollValue());
+
+    this.visibilityBarrier = this.getVisibilityBarrier(
+      this.htmlElement.nativeElement, scroll, windowHeightPx, this.currentPageHeight, this.distanceFromPageBottomPercentage
+    );
+
+    this.onScrollEvent(scroll);
+  }
+
+  /**
+   * Calculate area where element is probably going to be animated soon.
+   * @param {HTMLElement} element - Element to calculate will-change area for.
+   * @param {number} scroll - Current scroll value.
+   * @param {number} windowHeightPx - Current window height.
+   * @returns {number} - Will-change area.
+   */
+  private getWillChangeArea(element: HTMLElement, scroll: number, windowHeightPx: number): SectionAreaModel {
+    const elementRect: DOMRect = element.getBoundingClientRect();
+    const elementTop: number = elementRect.top + scroll;
+    const triggerArea: number = windowHeightPx * 2;
+    const areaTop: number = elementTop - triggerArea;
+    const areaBottom: number = elementTop + triggerArea;
+    return { top: areaTop, bottom: areaBottom };
   }
 
   /**
@@ -334,7 +357,7 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
    * @param {AnimationTypeEnum} animationType - Animation type.
    * @param {number} animationDistancePx - Animation distance in pixels.
    * @param {number} scaleRatio - Scale ratio.
-   * @returns {string}
+   * @returns {string} - Current transform value.
    */
   private getCurrentTransform(animationType: AnimationTypeEnum | string, animationDistancePx: number = 0, scaleRatio: number = 1): string {
     switch (animationType) {
@@ -353,8 +376,16 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
     }
   }
 
-  private onScrollEvent(scroll: number) {
-    if (this.isPageReady && this.visibilityBarrier !== undefined) {
+  /**
+   * Scroll event handler:
+   * - calculate visibility
+   * - destroy listeners if element is visible and is a one-shot element
+   * - set element visibility if changed
+   * - set will-change property if element is near the barrier value
+   * @param {number} scroll - Current scroll value.
+   */
+  private onScrollEvent(scroll: number): void {
+    if (this.isPageReady && this.visibilityBarrier !== undefined && this.willChangeArea !== undefined) {
       const visibility: AnimationVisibilityEnum = this.getVisibility(scroll, this.visibilityBarrier);
 
       if (this.isOnlyFirstTime && visibility === AnimationVisibilityEnum.VISIBLE) {
@@ -363,6 +394,16 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
 
       if (visibility !== this.animationVisibility) {
         this.setVisibility(visibility);
+      }
+
+      const isElementInArea: boolean = this.isElementInArea(scroll, this.willChangeArea);
+
+      if (!this.isOnlyFirstTime && (isElementInArea !== this.animationWillChange)) {
+        this.setWillChange(isElementInArea);
+      }
+
+      if (this.isOnlyFirstTime && visibility === AnimationVisibilityEnum.VISIBLE) {
+        this.setWillChange(false);
       }
     }
   }
@@ -381,13 +422,36 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
 
   /**
    * Set element visiblity and emit visibility change event.
+   * If animation is only first time, wait for animation to finish and remove will-change.
    * @param {AnimationVisibilityEnum} visibility - Visibility value.
-   * @returns {void}
    */
   public setVisibility(visible: AnimationVisibilityEnum): void {
     requestAnimationFrame(() => {
       this.animationVisibility = visible;
       this.elementVisibleChange.emit(visible === AnimationVisibilityEnum.VISIBLE);
     });
+  }
+
+  /**
+   * Set element will-change property.
+   * @param {boolean} willChange - will-change enabled or disabled.
+   */
+  private setWillChange(willChange: boolean): void {
+    this.animationWillChange = willChange;
+    this.renderer.setStyle(
+      this.htmlElement.nativeElement,
+      'will-change',
+      willChange ? 'opacity, transform' : 'auto'
+    );
+  }
+
+  /**
+   * Check if element is in will-change area.
+   * @param {number} scroll - Scroll position.
+   * @param {SectionAreaModel} willChangeArea - Will-change area.
+   * @returns {boolean} - Is element in will-change area.
+   */
+  private isElementInArea(scroll: number, willChangeArea: SectionAreaModel): boolean {
+    return scroll >= willChangeArea.top && scroll <= willChangeArea.bottom;
   }
 }
