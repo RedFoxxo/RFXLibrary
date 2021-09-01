@@ -6,7 +6,7 @@ import {
   RfxParallaxComponent,
   RfxScrollAnimationComponent,
   RfxImageLoaderComponent
-} from './_components';
+} from './components';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
