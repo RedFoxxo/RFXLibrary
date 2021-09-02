@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ScrollEventService {
+export class ScrollEventService implements OnDestroy {
   /**
    * Subscribe to body scroll changes.
    * @type {BehaviorSubject<number>}
@@ -26,6 +26,10 @@ export class ScrollEventService {
   constructor() {
     this.subjectScroll = new BehaviorSubject<number>(0);
     this.mouseScrollEvent = this.onMouseScroll.bind(this);
+  }
+
+  public ngOnDestroy(): void {
+    this.destroyListener();
   }
 
   /**

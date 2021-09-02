@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class HeightEventService {
+export class HeightEventService implements OnDestroy {
   /**
    * Subscribe to body height changes.
    * @type {BehaviorSubject<number>}
@@ -25,6 +25,10 @@ export class HeightEventService {
 
   constructor() {
     this.subjectHeight = new BehaviorSubject<number>(0);
+  }
+
+  public ngOnDestroy(): void {
+    this.destroyListener();
   }
 
   /**

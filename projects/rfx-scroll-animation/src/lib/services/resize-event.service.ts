@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ResizeEventService {
+export class ResizeEventService implements OnDestroy {
   /**
    * Subscribe to window resize changes.
    * @type {Subject<undefined>}
@@ -20,6 +20,10 @@ export class ResizeEventService {
   constructor() {
     this.subjectResize = new Subject<undefined>();
     this.resizeEvent = this.onResizeEvent.bind(this);
+  }
+
+  public ngOnDestroy(): void {
+    this.destroyListener();
   }
 
   /**

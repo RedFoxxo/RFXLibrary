@@ -7,7 +7,6 @@ import { HeightEventService } from './height-event.service';
   providedIn: 'root'
 })
 export class RfxScrollAnimationService implements OnDestroy {
-
   constructor(
     private scrollEventService: ScrollEventService,
     private resizeEventService: ResizeEventService,
