@@ -110,6 +110,10 @@ export class RfxParallaxComponent implements OnInit {
     );
   }
 
+  public ngOnDestroy(): void {
+    this.scrollEventListener?.unsubscribe();
+  }
+
   /**
    * On mouse scroll event recalculate and change
    * parallaxed image position.
@@ -255,6 +259,10 @@ export class RfxParallaxComponent implements OnInit {
    * @param {number} topPx - Image top position.
    */
   private setImageTransform(image: HTMLImageElement, leftPx: number, topPx: number): void {
-    this.renderer.setStyle(image, 'transform', `translate(${leftPx}px, ${topPx}px)`);
+    const newTranslate: string = `translate(${leftPx.toFixed(1)}px, ${topPx.toFixed(1)}px)`;
+
+    if (image.style.transform !== newTranslate) {
+      this.renderer.setStyle(image, 'transform', newTranslate);
+    }
   }
 }
