@@ -7,13 +7,19 @@ import {
   HttpResponse,
   HttpErrorResponse
 } from '@angular/common/http';
-import { EMPTY, Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { RfxLoggerService } from './rfx-logger.service';
 
+/**
+ * Intercept http calls and emit logger
+ * messages accordingly
+ */
 @Injectable()
 export class RfxLoggerInterceptor implements HttpInterceptor {
-  constructor(private rfxLoggerService: RfxLoggerService) {}
+  constructor(
+    private rfxLoggerService: RfxLoggerService
+  ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const startTime: number = Date.now();
@@ -35,7 +41,7 @@ export class RfxLoggerInterceptor implements HttpInterceptor {
           });
         }
 
-        return EMPTY;
+        return throwError(error);
       }),
     ) as Observable<HttpEvent<any>>;
   }

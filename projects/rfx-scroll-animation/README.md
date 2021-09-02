@@ -30,28 +30,31 @@ import { RfxScrollAnimationModule } from 'rfx-scroll-animation';
 
 ### Initialize scroll animations
 
-In your *app.component.ts* initialize animation listeners inside `ngOnInit`
+In your *app.component.ts* initialize animation listeners inside `ngAfterViewInit`
+**WARNING:** *use `ngAfterViewInit` instead of `ngOnInit`
+otherwise you may experience glitches on page loading
 ```typescript
 import { RfxScrollAnimationService } from 'rfx-scroll-animation';
 
 constructor(private rfxScrollAnimationService: RfxScrollAnimationService) { }
 
-public ngOnInit(): void {
+public ngAfterViewInit(): void {
   this.rfxScrollAnimationService.initListeners();
 }
 ```
 
 and if you have a custom scrollbar component you can pass the nativeElement
 to the initListeners() function like this:<br />
-**WARNING:** *use `ngAfterViewInit` instead of `ngOnInit` otherwise your nativeElement
-may not be defined*
+**WARNING:** *use `ngAfterViewInit` instead of `ngOnInit`
+otherwise you may experience glitches on page loading
 ```html
 <custom-scrollbar #scrollbar>
   <!-- Your page here -->
 </custom-scrollbar>
 ```
 ```typescript
-@ViewChild('scrollbar') public scrollbarElement: ElementRef;
+@ViewChild('scrollbar')
+public scrollbarElement: ElementRef;
 
 public ngAfterViewInit(): void {
   this.rfxParallaxService.initListeners(this.scrollbarElement.nativeElement);
@@ -59,7 +62,7 @@ public ngAfterViewInit(): void {
 ```
 ## Usage
 
-just apply `libRfxScrollAnimation` to your container and pass animation type
+just apply `libRfxScrollAnimation` to your container and set animation type
 ```html
 <div libRfxScrollAnimation animationType="bottom">
   [...]
@@ -70,7 +73,7 @@ just apply `libRfxScrollAnimation` to your container and pass animation type
 
 ### `distanceFromPageBottomPercentage: number`
 *(default value: 20)*<br />
-when element should appear - in percentage from the bottom of the page (e.g. 30 = 30% from the bottom of current viewport)
+when element should appear - in percentage from the bottom of the page (e.g. 20 = 20% of current viewport from the bottom)
 
 ### `animationType: AnimationTypeEnum`
 *(default value: 'none')*<br />
@@ -117,7 +120,8 @@ listen to show / hide element events and create your own custom animation
 
 ## Demo
 
-TODO
+You can view all available demos here:<br>
+https://demo.redfoxxo.dev/
 
 ## License
 

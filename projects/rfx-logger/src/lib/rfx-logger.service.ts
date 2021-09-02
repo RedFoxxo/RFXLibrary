@@ -102,13 +102,28 @@ export class RfxLoggerService {
    * @returns {string | null} http code or null if code is invalid
    */
   private getHttpCode(data: any | HttpResponse<any> | HttpErrorResponse | LogResponseModel): string | null {
-    const isHttpResponse: boolean = data instanceof HttpErrorResponse || data instanceof HttpResponse;
+    if (!this.getConfigValue('disableHttpCodes')) {
+      const isHttpResponse: boolean = data instanceof HttpErrorResponse || data instanceof HttpResponse;
 
-    if (!isHttpResponse && this.isLogResponseModel(data)) {
-      return this.isHttpStatusValid(data.response?.status) ? data.response.status : null;
+      if (!isHttpResponse && this.isLogResponseModel(data) && this.isHttpStatusValid(data.response?.status)) {
+        return data.response.status;
+      }
+
+      if (isHttpResponse && this.isHttpStatusValid(data?.status)) {
+        return data.status;
+      }
     }
 
-    return isHttpResponse && this.isHttpStatusValid(data?.status) ? data.status : null;
+    return null;
+  }
+
+  /**
+   * Get http response time in milliseconds
+   * @param data HttpResponse, HttpResponseError, LogResponseModel or any other data
+   * @returns {number | null} response time or null object is not a LogResponseModel
+   */
+  private getHttpTime(data: any | HttpResponse<any> | HttpErrorResponse | LogResponseModel): number | null {
+    return this.isLogResponseModel(data) && !this.getConfigValue('disableHttpCallDuration') ? data.timeMs : null;
   }
 
   /**
@@ -127,7 +142,7 @@ export class RfxLoggerService {
   ): string[] {
     const logStyle: LogStyleModel = this.getLogStyle(messageType);
     const httpCode: string | null = this.getHttpCode(data);
-    const httpTime: number | null = this.isLogResponseModel(data) ? data.timeMs : null;
+    const httpTime: number | null = this.getHttpTime(data);
     const logTag: string = httpCode ? `  ${httpCode}  ` : fallbackTag;
     const isTimeDisabled: boolean = this.getConfigValue('disableTime');
 

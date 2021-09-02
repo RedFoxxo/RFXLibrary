@@ -9,7 +9,7 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 import {
   HomeComponent, RfxLoggerComponent, RfxParallaxComponent, RfxScrollAnimationComponent,
   RfxImageLoaderComponent
-} from './_components';
+} from './components';
 
 import { RfxImageLoaderModule } from 'rfx-image-loader';
 import { RfxLoggerModule } from 'rfx-logger';
