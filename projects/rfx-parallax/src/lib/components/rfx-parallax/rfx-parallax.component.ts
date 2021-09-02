@@ -1,5 +1,6 @@
 import { Component, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
 import { ScrollEventService } from 'rfx-scroll-animation';
+import { Subscription } from 'rxjs';
 import { ParallaxBoundariesModel } from '../../models';
 
 @Component({
@@ -49,7 +50,7 @@ export class RfxParallaxComponent implements OnInit {
    * @type {boolean}
    */
   @Input()
-  public visibleOverflow!: boolean;
+  public visibleOverflow: boolean;
 
   /**
    * Disable image parallax effect and
@@ -58,9 +59,34 @@ export class RfxParallaxComponent implements OnInit {
    * @type {boolean}
    */
   @Input()
-  public isDisabled!: boolean;
+  public isDisabled: boolean;
 
+  /**
+   * Subscription to scroll event.
+   * @type {Subscription | undefined}
+   */
+  private scrollEventListener: Subscription | undefined;
+
+  /**
+   * Parallaxed image boundaries.
+   * @type {ParallaxBoundariesModel | undefined}
+   */
   private parallaxBoundaries: ParallaxBoundariesModel | undefined;
+
+  /**
+   * Image to be parallaxed.
+   * @type {HTMLImageElement | undefined}
+   */
+  private image: HTMLImageElement | undefined;
+
+  /**
+   * Image left position.
+   * We save this value and reduce overhead of
+   * calculating it every time on scroll.
+   * @type {number}
+   */
+  private imageLeftPx: number;
+
 
   constructor(
     private htmlElement: ElementRef,
@@ -72,11 +98,28 @@ export class RfxParallaxComponent implements OnInit {
     this.imageZIndex = -1;
     this.isDisabled = false;
     this.visibleOverflow = false;
+    this.imageLeftPx = 0;
   }
 
   public ngOnInit(): void {
     this.setContainerPosition(this.htmlElement.nativeElement);
     this.setContainerOverflow(this.htmlElement.nativeElement, this.visibleOverflow);
+
+    this.scrollEventListener = this.scrollEventService.getMouseScroll().subscribe(
+      (scroll: number) => this.onMouseScroll(scroll)
+    );
+  }
+
+  /**
+   * On mouse scroll event recalculate and change
+   * parallaxed image position.
+   * @param {number} scroll - Scroll value.
+   */
+  private onMouseScroll(scroll: number): void {
+    if (this.parallaxBoundaries && this.image) {
+      const topPx: number = this.getImageTop(scroll, this.parallaxBoundaries, this.isDisabled);
+      this.setImageTransform(this.image, this.imageLeftPx, topPx);
+    }
   }
 
   /**
@@ -84,11 +127,11 @@ export class RfxParallaxComponent implements OnInit {
    * @param {Event} event - Image loaded event.
    */
   public onImageLoaded(event: Event): void {
-    const image: HTMLImageElement = event.target as HTMLImageElement;
+    this.image = event.target as HTMLImageElement;
     const scrollTop: number = this.scrollEventService.getMouseScrollValue();
 
     this.setImageSize(
-      image,
+      this.image,
       this.htmlElement.nativeElement.clientWidth,
       this.htmlElement.nativeElement.clientHeight,
       this.parallaxPercentage,
@@ -98,14 +141,14 @@ export class RfxParallaxComponent implements OnInit {
     this.parallaxBoundaries = this.getParallaxBoundaries(
       scrollTop,
       this.htmlElement.nativeElement,
-      image.height,
+      this.image.height,
       this.parallaxPercentage
     );
 
-    const leftPx: number = this.getImageLeft(this.htmlElement.nativeElement.clientWidth, image.width, this.positionPercentage);
+    this.imageLeftPx = this.getImageLeft(this.htmlElement.nativeElement.clientWidth, this.image.width, this.positionPercentage);
     const topPx: number = this.getImageTop(scrollTop, this.parallaxBoundaries, this.isDisabled);
 
-    this.setImageTransform(image, leftPx, topPx);
+    this.setImageTransform(this.image, this.imageLeftPx, topPx);
   }
 
   /**
