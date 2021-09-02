@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
-import { ScrollEventService } from 'rfx-scroll-animation';
 import { Subscription } from 'rxjs';
+import { ResizeEventService, ScrollEventService } from '../../services';
 import { ParallaxBoundariesModel } from '../../models';
 
 @Component({
@@ -68,6 +68,12 @@ export class RfxParallaxComponent implements OnInit {
   private scrollEventListener: Subscription | undefined;
 
   /**
+   * Subscription to resize event.
+   * @type {Subscription | undefined}
+   */
+  private resizeEventListener: Subscription | undefined;
+
+  /**
    * Parallaxed image boundaries.
    * @type {ParallaxBoundariesModel | undefined}
    */
@@ -91,7 +97,8 @@ export class RfxParallaxComponent implements OnInit {
   constructor(
     private htmlElement: ElementRef,
     private renderer: Renderer2,
-    private scrollEventService: ScrollEventService
+    private scrollEventService: ScrollEventService,
+    private resizeEventService: ResizeEventService
   ) {
     this.parallaxPercentage = 40;
     this.positionPercentage = 50;
@@ -108,10 +115,15 @@ export class RfxParallaxComponent implements OnInit {
     this.scrollEventListener = this.scrollEventService.getMouseScroll().subscribe(
       (scroll: number) => this.onMouseScroll(scroll)
     );
+
+    this.resizeEventListener = this.resizeEventService.getResize().subscribe(
+      () => this.onResize()
+    );
   }
 
   public ngOnDestroy(): void {
     this.scrollEventListener?.unsubscribe();
+    this.resizeEventListener?.unsubscribe();
   }
 
   /**
@@ -127,15 +139,31 @@ export class RfxParallaxComponent implements OnInit {
   }
 
   /**
+   * On window resize event reload parallax properties.
+   */
+  private onResize(): void {
+    if (this.image) {
+      this.setImageProperties(this.image);
+    }
+  }
+
+  /**
    * Set image properties after image is fully loaded.
    * @param {Event} event - Image loaded event.
    */
   public onImageLoaded(event: Event): void {
     this.image = event.target as HTMLImageElement;
+    this.setImageProperties(this.image);
+  }
+
+  /**
+   * Set image properties needed for parallax effect.
+   */
+  private setImageProperties(image: HTMLImageElement): void {
     const scrollTop: number = this.scrollEventService.getMouseScrollValue();
 
     this.setImageSize(
-      this.image,
+      image,
       this.htmlElement.nativeElement.clientWidth,
       this.htmlElement.nativeElement.clientHeight,
       this.parallaxPercentage,
@@ -145,14 +173,14 @@ export class RfxParallaxComponent implements OnInit {
     this.parallaxBoundaries = this.getParallaxBoundaries(
       scrollTop,
       this.htmlElement.nativeElement,
-      this.image.height,
+      image.height,
       this.parallaxPercentage
     );
 
-    this.imageLeftPx = this.getImageLeft(this.htmlElement.nativeElement.clientWidth, this.image.width, this.positionPercentage);
+    this.imageLeftPx = this.getImageLeft(this.htmlElement.nativeElement.clientWidth, image.width, this.positionPercentage);
     const topPx: number = this.getImageTop(scrollTop, this.parallaxBoundaries, this.isDisabled);
 
-    this.setImageTransform(this.image, this.imageLeftPx, topPx);
+    this.setImageTransform(image, this.imageLeftPx, topPx);
   }
 
   /**

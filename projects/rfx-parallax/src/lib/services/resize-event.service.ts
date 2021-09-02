@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,9 +7,9 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class ResizeEventService implements OnDestroy {
   /**
    * Subscribe to window resize changes.
-   * @type {BehaviorSubject<number>}
+   * @type {Subject<undefined>}
    */
-  private subjectResize: BehaviorSubject<number>;
+  private subjectResize: Subject<undefined>;
 
   /**
    * Window resize listener.
@@ -18,7 +18,7 @@ export class ResizeEventService implements OnDestroy {
   private resizeEvent: EventListenerOrEventListenerObject;
 
   constructor() {
-    this.subjectResize = new BehaviorSubject<number>(0);
+    this.subjectResize = new Subject<undefined>();
     this.resizeEvent = this.onResizeEvent.bind(this);
   }
 
@@ -42,17 +42,16 @@ export class ResizeEventService implements OnDestroy {
 
   /**
    * Trigger window resize event.
-   * @param {Event} event - Window resize event.
    */
-  private onResizeEvent(event: Event): void {
-    this.subjectResize.next((event.target as any).innerWidth);
+  private onResizeEvent(): void {
+    this.subjectResize.next(undefined);
   }
 
   /**
    * Get window resize event.
-   * @return {Observable<number>} - Window resize event.
+   * @return {Observable<undefined>} - Window resize event.
    */
-  public getResize(): Observable<number> {
+  public getResize(): Observable<undefined> {
     return this.subjectResize.asObservable();
   }
 }
