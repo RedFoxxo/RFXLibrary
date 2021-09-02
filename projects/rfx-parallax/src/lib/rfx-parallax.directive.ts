@@ -1,10 +1,13 @@
 import { Directive, ElementRef, Input, OnChanges, OnDestroy, OnInit, Renderer2, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { RfxParallaxResizeService, RfxParallaxScrollService } from './services';
-import { RfxParallaxBoundariesModel, RfxParallaxPositionModel } from './models';
+import { ResizeEventService, ScrollEventService } from './services';
+import { ParallaxBoundariesModel, RfxParallaxPositionModel } from './models';
 
+/**
+ * @deprecated
+ */
 @Directive({
-  selector: '[libRfxParallax]'
+  selector: '[libRfxParallaxDeprecated]'
 })
 export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
   @Input() public parallaxPercentage: number;
@@ -18,7 +21,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
   private image!: HTMLImageElement;
   private imageLeft: number;
   private scrollTop: number;
-  private parallaxBoundaries!: RfxParallaxBoundariesModel;
+  private parallaxBoundaries!: ParallaxBoundariesModel;
 
   private onScrollListener!: Subscription;
   private onResizeListener!: Subscription;
@@ -26,8 +29,8 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
   constructor(
     private htmlElement: ElementRef,
     private renderer: Renderer2,
-    private rfxParallaxResizeService: RfxParallaxResizeService,
-    private rfxParallaxScrollService: RfxParallaxScrollService
+    private rfxParallaxResizeService: ResizeEventService,
+    private rfxParallaxScrollService: ScrollEventService
   ) {
     this.parallaxPercentage = 40;
     this.positionPercentage = 50;
@@ -62,7 +65,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
    */
   private setListeners(): void {
     this.onScrollListener = this.rfxParallaxScrollService.getMouseScroll().subscribe((scroll: number | undefined) => this.onMouseScroll(scroll));
-    this.onResizeListener = this.rfxParallaxResizeService.getWindowResize().subscribe((width: number | undefined) => this.onWindowResize(width));
+    this.onResizeListener = this.rfxParallaxResizeService.getResize().subscribe((width: number | undefined) => this.onWindowResize(width));
   }
 
   /**
@@ -200,7 +203,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
     elementHeight: number,
     imageHeight: number,
     parallaxPercentage: number
-  ): RfxParallaxBoundariesModel {
+  ): ParallaxBoundariesModel {
     const usablePixels = elementHeight / 100 * parallaxPercentage;
     const unusablePixels = imageHeight - elementHeight - usablePixels;
     const startPoint = elementTop - usablePixels - window.innerHeight;
@@ -235,7 +238,7 @@ export class RfxParallaxDirective implements OnInit, OnDestroy, OnChanges {
    * @param boundaries parallax position points inside the page
    * @param isDisabled parallax is disabled
    */
-  private getImageTop(scrollTop: number, boundaries: RfxParallaxBoundariesModel, isDisabled: boolean): number {
+  private getImageTop(scrollTop: number, boundaries: ParallaxBoundariesModel, isDisabled: boolean): number {
     const area: number = Math.max(0, Math.min(scrollTop - boundaries.startPoint, boundaries.totalPixels));
     const areaPercentage: number = 100 / boundaries.totalPixels * area;
 
