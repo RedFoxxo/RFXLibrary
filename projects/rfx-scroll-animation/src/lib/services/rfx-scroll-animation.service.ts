@@ -30,12 +30,12 @@ export class RfxScrollAnimationService implements OnDestroy {
    * Destroy all extisting listeners and then create new listeners.
    * Initialize mouse scroll, body height and height change listeners.
    * Default body element is the document element.
-   * @param {HTMLElement} bodyElement - Body element to use.
+   * @param {HTMLElement} element - Scroll element to use.
    */
-  public initListeners(bodyElement: HTMLElement = document.body): void {
+  public initListeners(element: HTMLElement | Document = document): void {
     this.destroyListeners();
-    this.scrollEventService.createListener(bodyElement);
+    this.scrollEventService.createListener(element);
     this.resizeEventService.createListener();
-    this.heightEventService.createListener(bodyElement);
+    this.heightEventService.createListener(element);
   }
 }

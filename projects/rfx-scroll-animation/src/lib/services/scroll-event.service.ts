@@ -19,9 +19,9 @@ export class ScrollEventService implements OnDestroy {
 
   /**
    * Current element with scroll event.
-   * @type {HTMLElement | undefined}
+   * @type {HTMLElement | Document | undefined}
    */
-  private element: HTMLElement | undefined;
+  private element: HTMLElement | Document | undefined;
 
   constructor() {
     this.subjectScroll = new BehaviorSubject<number>(0);
@@ -36,7 +36,7 @@ export class ScrollEventService implements OnDestroy {
    * Create mouse scroll listener.
    * @param {HTMLElement} element - Element with scroll event.
    */
-  public createListener(element: HTMLElement): void {
+  public createListener(element: HTMLElement | Document): void {
     this.element = element;
     this.element.addEventListener('scroll', this.mouseScrollEvent, { passive: true });
   }
@@ -54,7 +54,8 @@ export class ScrollEventService implements OnDestroy {
    * @param {number} event - Mouse scroll event.
    */
   private onMouseScroll(event: Event): void {
-    this.subjectScroll.next((event.target as HTMLElement).scrollTop);
+    const target: HTMLElement = event.target instanceof Document ? event.target.documentElement : (event.target as HTMLElement);
+    this.subjectScroll.next(target.scrollTop);
   }
 
   /**

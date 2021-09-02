@@ -19,9 +19,9 @@ export class HeightEventService implements OnDestroy {
 
   /**
    * Current element with height value.
-   * @type {HTMLElement | undefined}
+   * @type {HTMLElement | Document | undefined}
    */
-  private element: HTMLElement | undefined;
+  private element: HTMLElement | Document | undefined;
 
   constructor() {
     this.subjectHeight = new BehaviorSubject<number>(0);
@@ -36,18 +36,20 @@ export class HeightEventService implements OnDestroy {
    * and destroy previous one if exists.
    * @param {HTMLElement} element - Page element
    */
-  public createListener(element: HTMLElement): void {
+  public createListener(element: HTMLElement | Document): void {
     this.destroyListener();
     this.element = element;
 
+    const elementBody: HTMLElement = this.element instanceof Document ? this.element.body : this.element;
+
     const heightEventListener = new ResizeObserver(() => {
-      this.onHeightEvent(this.element?.scrollHeight ?? 0);
+      this.onHeightEvent(elementBody.scrollHeight);
     });
 
-    heightEventListener.observe(this.element);
+    heightEventListener.observe(elementBody);
 
-    for (var i = 0; i < this.element.children.length; i++) {
-      heightEventListener.observe(this.element.children[i]);
+    for (var i = 0; i < elementBody.children.length; i++) {
+      heightEventListener.observe(elementBody.children[i]);
     }
 
     this.heightEvent = heightEventListener;
@@ -84,6 +86,10 @@ export class HeightEventService implements OnDestroy {
    * @return {number} - Body height.
    */
   public getHeightValue(): number {
-    return this.element?.scrollHeight ?? 0;
+    if (this.element) {
+      return this.element instanceof Document ? this.element.body.scrollHeight : this.element.scrollHeight;
+    }
+
+    return 0;
   }
 }
