@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ScrollEventService {
+export class ScrollEventService implements OnDestroy {
   /**
    * Subscribe to body scroll changes.
    * @type {BehaviorSubject<number>}
@@ -19,20 +19,24 @@ export class ScrollEventService {
 
   /**
    * Current element with scroll event.
-   * @type {HTMLElement | undefined}
+   * @type {HTMLElement | Document | undefined}
    */
-  private element: HTMLElement | undefined;
+  private element: HTMLElement | Document | undefined;
 
   constructor() {
     this.subjectScroll = new BehaviorSubject<number>(0);
     this.mouseScrollEvent = this.onMouseScroll.bind(this);
   }
 
+  public ngOnDestroy(): void {
+    this.destroyListener();
+  }
+
   /**
    * Create mouse scroll listener.
    * @param {HTMLElement} element - Element with scroll event.
    */
-  public createListener(element: HTMLElement): void {
+  public createListener(element: HTMLElement | Document): void {
     this.element = element;
     this.element.addEventListener('scroll', this.mouseScrollEvent, { passive: true });
   }
@@ -50,7 +54,8 @@ export class ScrollEventService {
    * @param {number} event - Mouse scroll event.
    */
   private onMouseScroll(event: Event): void {
-    this.subjectScroll.next((event.target as HTMLElement).scrollTop);
+    const target: HTMLElement = event.target instanceof Document ? event.target.documentElement : (event.target as HTMLElement);
+    this.subjectScroll.next(target.scrollTop);
   }
 
   /**
