@@ -1,5 +1,5 @@
-export * from './rfx-scroll-animation.service';
 export * from './rfx-scroll-animation.module';
-export * from './rfx-scroll-animation/rfx-scroll-animation.component';
+export * from './services';
+export * from './components';
 export * from './models';
 export * from './animations';

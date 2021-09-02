@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, Renderer2, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { RfxScrollAnimationService } from '../rfx-scroll-animation.service';
-import { visibilityAnimation } from '../animations';
-import { AnimationExpInterface, AnimationTypeEnum, AnimationVisibilityEnum, SectionAreaModel } from '../models';
+import { ElementsManagementService, ScrollEventService, ResizeEventService, HeightEventService } from '../../services';
+import { visibilityAnimation } from '../../animations';
+import { AnimationExpInterface, AnimationTypeEnum, AnimationVisibilityEnum, SectionAreaModel } from '../../models';
 
 
 @Component({
@@ -108,13 +108,13 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
    * Subscription to window resize changes.
    * @type {Subscription}
    */
-  private windowResizeListenerSubscription: Subscription | undefined;
+  private resizeListenerSubscription: Subscription | undefined;
 
   /**
-   * Subscription to page ready value changes.
+   * Subscription to elements ready value changes.
    * @type {Subscription}
    */
-  private pageReadyListenerSubscription: Subscription | undefined;
+  private elementsReadyListenerSubscription: Subscription | undefined;
 
   /**
    * Animation visibility status.
@@ -185,7 +185,10 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
   constructor(
     private htmlElement: ElementRef,
     private renderer: Renderer2,
-    private rfxScrollAnimationService: RfxScrollAnimationService
+    private scrollEventService: ScrollEventService,
+    private heightEventService: HeightEventService,
+    private resizeEventService: ResizeEventService,
+    private elementsManagementService: ElementsManagementService
   ) {
     this.animationType = AnimationTypeEnum.NONE;
     this.animationDistancePx = 25;
@@ -201,15 +204,15 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
     this.animationWillChange = true;
     this.currentPageHeight = 0;
     this.isPageReady = false;
-    this.elementIndex = this.rfxScrollAnimationService.registerElement(this);
+    this.elementIndex = this.elementsManagementService.registerElement(this);
   }
 
   public ngAfterViewInit(): void {
-    this.subscribeToWindowResizeEvent();
+    this.subscribeToResizeEvent();
     this.subscribeToHeightEvent();
     this.subscribeToScrollEvent();
-    this.subscribeToPageReadyEvent();
-    this.rfxScrollAnimationService.setElementReady(this.elementIndex);
+    this.subscribeToElementsReadyEvent();
+    this.elementsManagementService.setElementReady(this.elementIndex);
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -236,16 +239,16 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
   private destroyListeners(): void {
     this.heightListenerSubscription?.unsubscribe();
     this.scrollListenerSubscription?.unsubscribe();
-    this.pageReadyListenerSubscription?.unsubscribe();
-    this.windowResizeListenerSubscription?.unsubscribe();
+    this.resizeListenerSubscription?.unsubscribe();
+    this.elementsReadyListenerSubscription?.unsubscribe();
   }
 
   /**
    * Subscribe to window resize event.
    * When window is resized, update element properties.
    */
-  private subscribeToWindowResizeEvent(): void {
-    this.windowResizeListenerSubscription = this.rfxScrollAnimationService.getWindowResize().subscribe(
+  private subscribeToResizeEvent(): void {
+    this.resizeListenerSubscription = this.resizeEventService.getResize().subscribe(
       () => this.calculateElementProperties()
     );
   }
@@ -255,7 +258,7 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
    * When height change, update element properties.
    */
   private subscribeToHeightEvent(): void {
-    this.heightListenerSubscription = this.rfxScrollAnimationService.getBodyHeight().subscribe(
+    this.heightListenerSubscription = this.heightEventService.getHeight().subscribe(
       (height) => {
         if (this.currentPageHeight !== height) {
           this.calculateElementProperties();
@@ -268,20 +271,20 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
    * Subscribe to scroll change event.
    */
   private subscribeToScrollEvent(): void {
-    this.scrollListenerSubscription = this.rfxScrollAnimationService.getMouseScroll().subscribe(
+    this.scrollListenerSubscription = this.scrollEventService.getMouseScroll().subscribe(
       (scroll: number) => this.onScrollEvent(scroll)
     );
   }
 
   /**
-   * Subscribe to page ready flag event.
-   * If page is ready, calculate element properties and destroy this listener.
+   * Subscribe to elements ready flag event.
+   * If elements are ready, calculate element properties and destroy this listener.
    */
-  private subscribeToPageReadyEvent(): void {
-    this.pageReadyListenerSubscription = this.rfxScrollAnimationService.getPageReady().subscribe(
+  private subscribeToElementsReadyEvent(): void {
+    this.elementsReadyListenerSubscription = this.elementsManagementService.getElementsReady().subscribe(
       (isReady: boolean) => {
         if (isReady) {
-          this.pageReadyListenerSubscription?.unsubscribe();
+          this.elementsReadyListenerSubscription?.unsubscribe();
           this.isPageReady = true;
           this.calculateElementProperties();
         }
@@ -297,8 +300,8 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
   public calculateElementProperties(): void {
     this.visibilityBarrier = undefined;
     const windowHeightPx: number = window.innerHeight;
-    const scroll: number = this.rfxScrollAnimationService.getMouseScrollValue();
-    this.currentPageHeight = this.rfxScrollAnimationService.getBodyHeightValue();
+    const scroll: number = this.scrollEventService.getMouseScrollValue();
+    this.currentPageHeight = this.heightEventService.getHeightValue();
 
     this.willChangeArea = this.getWillChangeArea(
       this.htmlElement.nativeElement, scroll, windowHeightPx
