@@ -239,7 +239,12 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
       this.parallaxPercentage
     );
 
-    this.imageLeftPx = this.getImageLeft(this.htmlElement.nativeElement.clientWidth, image.width, this.positionPercentage);
+    this.imageLeftPx = this.getImageLeft(
+      this.htmlElement.nativeElement.clientWidth,
+      image.width,
+      this.positionPercentage
+    );
+
     const topPx: number = this.isDisabled ?
       this.getDisabledImageTop(this.parallaxBoundaries) :
       this.getImageTop(scrollTop, this.parallaxBoundaries);

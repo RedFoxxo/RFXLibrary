@@ -1,15 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RfxParallaxDirective } from './rfx-parallax.directive';
 import { RfxParallaxComponent } from './components/rfx-parallax/rfx-parallax.component';
+import { WillChangeDirective } from './directives/will-change.directive';
 
 @NgModule({
   declarations: [
-    RfxParallaxDirective, // DEPRECATED
-    RfxParallaxComponent
+    RfxParallaxComponent,
+    WillChangeDirective
   ],
   imports: [],
   exports: [
-    RfxParallaxDirective, // DEPRECATED
     RfxParallaxComponent
   ]
 })
