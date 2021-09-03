@@ -194,7 +194,7 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
    */
   private onMouseScroll(scroll: number): void {
     if (this.parallaxBoundaries && this.image) {
-      const topPx: number = this.getImageTop(scroll, this.parallaxBoundaries, this.isDisabled);
+      const topPx: number = this.getImageTop(scroll, this.parallaxBoundaries);
       this.setImageTransform(this.image, this.imageLeftPx, topPx);
     }
   }
@@ -240,7 +240,9 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
     );
 
     this.imageLeftPx = this.getImageLeft(this.htmlElement.nativeElement.clientWidth, image.width, this.positionPercentage);
-    const topPx: number = this.getImageTop(scrollTop, this.parallaxBoundaries, this.isDisabled);
+    const topPx: number = this.isDisabled ?
+      this.getDisabledImageTop(this.parallaxBoundaries) :
+      this.getImageTop(scrollTop, this.parallaxBoundaries);
 
     this.setImageTransform(image, this.imageLeftPx, topPx);
   }
@@ -328,18 +330,21 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
    * Get image top position.
    * @param {number} scrollTop - Scroll top.
    * @param {ParallaxBoundariesModel} boundaries - Parallax boundaries.
-   * @param {boolean} isDisabled - true to disable parallax effect.
    * @return {number} - Image top position.
    */
-  private getImageTop(scrollTop: number, boundaries: ParallaxBoundariesModel, isDisabled: boolean): number {
+  private getImageTop(scrollTop: number, boundaries: ParallaxBoundariesModel): number {
     const area: number = Math.max(0, Math.min(scrollTop - boundaries.startPoint, boundaries.totalPixels));
     const areaPercentage: number = 100 / boundaries.totalPixels * area;
-
-    // if (isDisabled) {
-    //   return (-boundaries.usablePixels - boundaries.unusablePixels) / 2;
-    // }
-
     return -boundaries.usablePixels * (1 - areaPercentage / 100) - boundaries.unusablePixels / 2;
+  }
+
+  /**
+   * Get disabled image top position.
+   * @param {number} boundaries - Parallax boundaries.
+   * @return {number} - Image top position.
+   */
+  private getDisabledImageTop(boundaries: ParallaxBoundariesModel): number {
+    return (-boundaries.usablePixels - boundaries.unusablePixels) / 2
   }
 
   /**
