@@ -429,10 +429,8 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
    * @param {AnimationVisibilityEnum} visibility - Visibility value.
    */
   public setVisibility(visible: AnimationVisibilityEnum): void {
-    requestAnimationFrame(() => {
-      this.animationVisibility = visible;
-      this.elementVisibleChange.emit(visible === AnimationVisibilityEnum.VISIBLE);
-    });
+    this.animationVisibility = visible;
+    this.elementVisibleChange.emit(visible === AnimationVisibilityEnum.VISIBLE);
   }
 
   /**
