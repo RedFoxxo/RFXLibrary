@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnInit, Renderer2, SimpleChange, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ResizeEventService, ScrollEventService } from '../../services';
 import { ParallaxBoundariesModel } from '../../models';
@@ -8,7 +8,7 @@ import { ParallaxBoundariesModel } from '../../models';
   templateUrl: './rfx-parallax.component.html',
   styleUrls: ['./rfx-parallax.component.less']
 })
-export class RfxParallaxComponent implements OnInit {
+export class RfxParallaxComponent implements OnInit, OnChanges {
   /**
    * Image url.
    * Can be http(s) or relative path.
@@ -108,9 +108,75 @@ export class RfxParallaxComponent implements OnInit {
     this.imageLeftPx = 0;
   }
 
+  /**
+   * Set container position and overflow.
+   * If parallax is not disabled, create listeners.
+   */
   public ngOnInit(): void {
     this.setContainerPosition(this.htmlElement.nativeElement);
     this.setContainerOverflow(this.htmlElement.nativeElement, this.visibleOverflow);
+
+    if (!this.isDisabled) {
+      this.createListeners();
+    }
+  }
+
+  /**
+   * Update parallax values when some properies changed.
+   * - isDisabled change, enable or disable parallax and refresh image properties.
+   * - visibleOverflow change, show or hide image overflow on container without refresh.
+   * - imagerUrl, parallaxPercentage or positionPercentage change, refresh image properties.
+   * @param {SimpleChanges} changes - SimpleChanges object.
+   */
+  public ngOnChanges(changes: SimpleChanges): void {
+    if (this.hasValueChanged(changes.isDisabled, true)) {
+      this.destroyListeners();
+    } else if (this.hasValueChanged(changes.isDisabled, false)) {
+      this.createListeners();
+    }
+
+    if (this.hasValueChanged(changes.visibleOverflow)) {
+      this.setContainerOverflow(this.htmlElement.nativeElement, changes.visibleOverflow.currentValue);
+    }
+
+    if (this.image && ((
+      this.hasValueChanged(changes.imageUrl) ||
+      this.hasValueChanged(changes.parallaxPercentage) ||
+      this.hasValueChanged(changes.positionPercentage)) ||
+      this.hasValueChanged(changes.isDisabled))) {
+      this.setImageProperties(this.image);
+    }
+  }
+
+  public ngOnDestroy(): void {
+    this.destroyListeners();
+  }
+
+  /**
+   * Check if SimpleChange value has changed.
+   * Eventually check if value corresponds to a new value.
+   * @param {SimpleChange} change - SimpleChange object.
+   * @param {any} newValue - New value.
+   * @returns {boolean} - true if value has changed.
+   */
+  private hasValueChanged(change: SimpleChange, newValue: any = change?.currentValue): boolean {
+    return change?.firstChange === false && change?.currentValue !== undefined && change?.currentValue === newValue;
+  }
+
+  /**
+   * Destroy all listeners.
+   */
+  private destroyListeners(): void {
+    this.scrollEventListener?.unsubscribe();
+    this.resizeEventListener?.unsubscribe();
+  }
+
+  /**
+   * Listen to scroll and resize events.
+   * Destroy alreay existing listeners.
+   */
+  private createListeners(): void {
+    this.destroyListeners();
 
     this.scrollEventListener = this.scrollEventService.getMouseScroll().subscribe(
       (scroll: number) => this.onMouseScroll(scroll)
@@ -119,11 +185,6 @@ export class RfxParallaxComponent implements OnInit {
     this.resizeEventListener = this.resizeEventService.getResize().subscribe(
       () => this.onResize()
     );
-  }
-
-  public ngOnDestroy(): void {
-    this.scrollEventListener?.unsubscribe();
-    this.resizeEventListener?.unsubscribe();
   }
 
   /**
@@ -158,6 +219,7 @@ export class RfxParallaxComponent implements OnInit {
 
   /**
    * Set image properties needed for parallax effect.
+   * @param {HTMLImageElement} image - Image to be parallaxed.
    */
   private setImageProperties(image: HTMLImageElement): void {
     const scrollTop: number = this.scrollEventService.getMouseScrollValue();
@@ -239,7 +301,7 @@ export class RfxParallaxComponent implements OnInit {
    * @param {HTMLElement} container - Container element.
    * @param {number} imageHeight - Image height.
    * @param {number} parallaxPercentage - Parallax percentage.
-   * @return {ParallaxBoundariesModel}
+   * @return {ParallaxBoundariesModel} - Parallax boundaries.
    */
   private getParallaxBoundaries(scrollTop: number, container: HTMLElement, imageHeight: number, parallaxPercentage: number): ParallaxBoundariesModel {
     const elementTop: number = container.getBoundingClientRect().top + scrollTop;
