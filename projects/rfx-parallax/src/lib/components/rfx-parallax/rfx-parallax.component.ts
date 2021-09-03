@@ -2,11 +2,15 @@ import { Component, ElementRef, Input, OnChanges, OnInit, Renderer2, SimpleChang
 import { Subscription } from 'rxjs';
 import { ResizeEventService, ScrollEventService } from '../../services';
 import { ParallaxBoundariesModel } from '../../models';
+import { visibilityAnimation } from '../../animations';
 
 @Component({
   selector: '[libRfxParallax]',
   templateUrl: './rfx-parallax.component.html',
-  styleUrls: ['./rfx-parallax.component.less']
+  styleUrls: ['./rfx-parallax.component.less'],
+  animations: [
+    visibilityAnimation
+  ]
 })
 export class RfxParallaxComponent implements OnInit, OnChanges {
   /**
@@ -93,6 +97,12 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
    */
   private imageLeftPx: number;
 
+  /**
+   * Is image loaded.
+   * @type {boolean}
+   */
+  public isLoaded: boolean;
+
 
   constructor(
     private htmlElement: ElementRef,
@@ -106,6 +116,7 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
     this.isDisabled = false;
     this.visibleOverflow = false;
     this.imageLeftPx = 0;
+    this.isLoaded = false;
   }
 
   /**
@@ -215,6 +226,7 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
   public onImageLoaded(event: Event): void {
     this.image = event.target as HTMLImageElement;
     this.setImageProperties(this.image);
+    this.isLoaded = true;
   }
 
   /**
