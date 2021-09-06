@@ -208,9 +208,7 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
   }
 
   public ngAfterViewInit(): void {
-    this.subscribeToResizeEvent();
-    this.subscribeToHeightEvent();
-    this.subscribeToScrollEvent();
+    this.createListeners();
     this.subscribeToElementsReadyEvent();
     this.elementsManagementService.setElementReady(this.elementIndex);
   }
@@ -231,6 +229,17 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
 
   public ngOnDestroy(): void {
     this.destroyListeners();
+  }
+
+  /**
+   * Create listeners.
+   * Destroy all existing listeners before creating new ones.
+   */
+  private createListeners(): void {
+    this.destroyListeners();
+    this.subscribeToResizeEvent();
+    this.subscribeToHeightEvent();
+    this.subscribeToScrollEvent();
   }
 
   /**
@@ -431,6 +440,15 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
   public setVisibility(visible: AnimationVisibilityEnum): void {
     this.animationVisibility = visible;
     this.elementVisibleChange.emit(visible === AnimationVisibilityEnum.VISIBLE);
+  }
+
+  /**
+   * Reset element visibility state.
+   * Usefull when element is a one-shot element and
+   * we want to hide it after it has been visible.
+   */
+  public resetElement(): void {
+    this.createListeners();
   }
 
   /**
