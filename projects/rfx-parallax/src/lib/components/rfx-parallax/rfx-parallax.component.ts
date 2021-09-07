@@ -23,6 +23,13 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
   public imageUrl: string | undefined;
 
   /**
+   * Image alt attribute.
+   * @type {string}
+   */
+  @Input()
+  public imageAlt: string | undefined;
+
+  /**
    * Percentage of image scrolling.
    * e.g. 40% will scroll 40% of the image.
    * Default is 40.
