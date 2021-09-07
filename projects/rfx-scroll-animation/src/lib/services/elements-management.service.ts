@@ -61,6 +61,14 @@ export class ElementsManagementService {
   }
 
   /**
+   * Get all registered elements.
+   * @return {AnimatedElementModel[]} - Registered elements.
+   */
+  public getElements(): AnimatedElementModel[] {
+    return this.elements;
+  }
+
+  /**
    * Check if all elements are ready.
    * If yes, trigger elements ready event.
    */

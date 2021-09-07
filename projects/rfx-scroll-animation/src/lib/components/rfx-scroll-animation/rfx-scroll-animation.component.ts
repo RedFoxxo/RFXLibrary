@@ -447,7 +447,7 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
    * Usefull when element is a one-shot element and
    * we want to hide it after it has been visible.
    */
-  public resetElement(): void {
+  public reset(): void {
     this.createListeners();
   }
 
