@@ -91,6 +91,11 @@ container overflow
 *(default value: false)*<br />
 is parallax disabled
 
+### ``forceFullWidth: boolean``
+*(default value: false)*<br />
+force image to be the same width as container.
+usefull when you have `visibleOverflow` set to true
+
 <br />
 
 **_Missing configuration parameter?_**<br />

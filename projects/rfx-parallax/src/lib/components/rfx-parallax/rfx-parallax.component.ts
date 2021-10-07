@@ -73,6 +73,13 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
   public isDisabled: boolean;
 
   /**
+   * Force image to be 100% of container width.
+   * @type {boolean}
+   */
+  @Input()
+  public forceFullWidth: boolean;
+
+  /**
    * Subscription to scroll event.
    * @type {Subscription | undefined}
    */
@@ -124,6 +131,7 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
     this.visibleOverflow = false;
     this.imageLeftPx = 0;
     this.isLoaded = false;
+    this.forceFullWidth = false;
   }
 
   /**
@@ -161,7 +169,8 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
       this.hasValueChanged(changes.imageUrl) ||
       this.hasValueChanged(changes.parallaxPercentage) ||
       this.hasValueChanged(changes.positionPercentage)) ||
-      this.hasValueChanged(changes.isDisabled))) {
+      this.hasValueChanged(changes.isDisabled) ||
+      this.hasValueChanged(changes.forceFullWidth))) {
       this.setImageProperties(this.image);
     }
   }
@@ -248,7 +257,8 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
       this.htmlElement.nativeElement.clientWidth,
       this.htmlElement.nativeElement.clientHeight,
       this.parallaxPercentage,
-      this.isDisabled
+      this.isDisabled,
+      this.forceFullWidth
     );
 
     this.parallaxBoundaries = this.getParallaxBoundaries(
@@ -300,24 +310,31 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
    * @param {number} containerHeight - Container height.
    * @param {number} parallaxPercentage - Parallax percentage.
    * @param {boolean} isDisabled - true to disable parallax effect.
+   * @param {boolean} forceFullWidth - true to force image size to container width.
    */
   private setImageSize(
     image: HTMLImageElement,
     containerWidth: number,
     containerHeight: number,
     parallaxPercentage: number,
-    isDisabled: boolean
+    isDisabled: boolean,
+    forceFullWidth: boolean
   ): void {
-    const minimumHeight: number = (containerHeight * (100 + (isDisabled ? 0 : parallaxPercentage))) / 100;
-    const ratio: number = image.naturalHeight / image.naturalWidth;
-    const minimumRatio: number = minimumHeight / containerWidth;
-
-    if (ratio > minimumRatio) {
+    if (forceFullWidth) {
       this.renderer.setAttribute(image, 'width', `${containerWidth}px`);
       this.renderer.setAttribute(image, 'height', `auto`);
     } else {
-      this.renderer.setAttribute(image, 'width', `auto`);
-      this.renderer.setAttribute(image, 'height', `${minimumHeight}px`);
+      const minimumHeight: number = (containerHeight * (100 + (isDisabled ? 0 : parallaxPercentage))) / 100;
+      const ratio: number = image.naturalHeight / image.naturalWidth;
+      const minimumRatio: number = minimumHeight / containerWidth;
+
+      if (ratio > minimumRatio) {
+        this.renderer.setAttribute(image, 'width', `${containerWidth}px`);
+        this.renderer.setAttribute(image, 'height', `auto`);
+      } else {
+        this.renderer.setAttribute(image, 'width', `auto`);
+        this.renderer.setAttribute(image, 'height', `${minimumHeight}px`);
+      }
     }
   }
 
