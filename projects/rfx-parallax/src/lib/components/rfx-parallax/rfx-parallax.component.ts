@@ -277,7 +277,8 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
    * @param {HTMLElement} container
    */
   private setContainerPosition(container: HTMLElement): void {
-    if (container.style.position !== 'relative' && container.style.position !== 'absolute') {
+    const position: string = getComputedStyle(container).position;
+    if (position !== 'relative' && position !== 'absolute') {
       this.renderer.setStyle(container, 'position', 'relative');
     }
   }
