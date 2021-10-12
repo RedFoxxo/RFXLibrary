@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, Renderer2, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostBinding, Inject, Input, OnChanges, OnDestroy, Output, PLATFORM_ID, Renderer2, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ElementsManagementService, ScrollEventService, ResizeEventService, HeightEventService } from '../../services';
 import { visibilityAnimation } from '../../animations';
 import { AnimationExpInterface, AnimationTypeEnum, AnimationVisibilityEnum, SectionAreaModel } from '../../models';
+import { isPlatformBrowser } from '@angular/common';
 
 
 @Component({
@@ -166,6 +167,13 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
   private willChangeArea: SectionAreaModel | undefined;
 
   /**
+   * Is platform browser.
+   * False for example when using SSR.
+   * @type {boolean}
+   */
+  private isBrowser: boolean;
+
+  /**
    * Bind visibility animation to host element.
    */
   @HostBinding('@visibility')
@@ -188,7 +196,8 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
     private scrollEventService: ScrollEventService,
     private heightEventService: HeightEventService,
     private resizeEventService: ResizeEventService,
-    private elementsManagementService: ElementsManagementService
+    private elementsManagementService: ElementsManagementService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.animationType = AnimationTypeEnum.NONE;
     this.animationDistancePx = 25;
@@ -205,10 +214,14 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
     this.currentPageHeight = 0;
     this.isPageReady = false;
     this.elementIndex = this.elementsManagementService.registerElement(this);
+    this.isBrowser = isPlatformBrowser(platformId);
   }
 
   public ngAfterViewInit(): void {
-    this.createListeners();
+    if (this.isBrowser) {
+      this.createListeners();
+    }
+
     this.subscribeToElementsReadyEvent();
     this.elementsManagementService.setElementReady(this.elementIndex);
   }
@@ -295,7 +308,12 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
         if (isReady) {
           this.elementsReadyListenerSubscription?.unsubscribe();
           this.isPageReady = true;
-          this.calculateElementProperties();
+
+          if (this.isBrowser) {
+            this.calculateElementProperties();
+          } else {
+            this.setVisibility(AnimationVisibilityEnum.VISIBLE);
+          }
         }
       }
     );
