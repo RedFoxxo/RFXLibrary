@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 export class WillChangeDirective implements OnInit, OnChanges, OnDestroy {
   /**
    * Area where element has will-change property.
-   * Default is window height * 2.
+   * Default is window height / 4 * 6.
    * @type {number}
    */
   @Input()
@@ -47,15 +47,14 @@ export class WillChangeDirective implements OnInit, OnChanges, OnDestroy {
     private renderer: Renderer2,
     private scrollEventService: ScrollEventService
   ) {
-    this.triggerArea = window.innerHeight / 4 * 6;
+    this.triggerArea = typeof window !== 'undefined' ? window.innerHeight / 4 * 6 : 0;
     this.isDisabled = false;
     this.willChange = true;
   }
 
   public ngOnInit(): void {
-    this.willChangeArea = this.getWillChangeArea();
-
     if (!this.isDisabled) {
+      this.willChangeArea = this.getWillChangeArea();
       this.createListener();
     }
   }
@@ -85,8 +84,12 @@ export class WillChangeDirective implements OnInit, OnChanges, OnDestroy {
    * @param {SimpleChanges} changes - Changes.
    */
   public ngOnChanges(changes: SimpleChanges): void {
-    if ((changes?.triggerArea?.currentValue !== undefined && !changes?.triggerArea?.firstChange) ||
-       ((changes?.isDisabled?.currentValue !== undefined && !changes?.isDisabled?.firstChange))) {
+    if (changes?.isDisabled?.currentValue !== undefined && !changes?.isDisabled?.firstChange) {
+      this.destroyListener();
+      return;
+    }
+
+    if (changes?.triggerArea?.currentValue !== undefined && !changes?.triggerArea?.firstChange && !this.isDisabled) {
       const scroll: number = this.scrollEventService.getMouseScrollValue();
       this.willChangeArea = this.getWillChangeArea();
       this.checkWillChange(scroll);

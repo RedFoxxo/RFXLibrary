@@ -1,8 +1,9 @@
-import { Component, ElementRef, Input, OnChanges, OnInit, Renderer2, SimpleChange, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, Inject, Input, OnChanges, OnInit, PLATFORM_ID, Renderer2, SimpleChange, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ResizeEventService, ScrollEventService } from '../../services';
 import { ParallaxBoundariesModel } from '../../models';
 import { visibilityAnimation } from '../../animations';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: '[libRfxParallax]',
@@ -117,12 +118,20 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
    */
   public isLoaded: boolean;
 
+  /**
+   * Is platform browser.
+   * False for example when using SSR.
+   * @type {boolean}
+   */
+  public isBrowser: boolean;
+
 
   constructor(
     private htmlElement: ElementRef,
     private renderer: Renderer2,
     private scrollEventService: ScrollEventService,
-    private resizeEventService: ResizeEventService
+    private resizeEventService: ResizeEventService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.parallaxPercentage = 40;
     this.positionPercentage = 50;
@@ -132,6 +141,7 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
     this.imageLeftPx = 0;
     this.isLoaded = false;
     this.forceFullWidth = false;
+    this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
   /**
@@ -139,11 +149,13 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
    * If parallax is not disabled, create listeners.
    */
   public ngOnInit(): void {
-    this.setContainerPosition(this.htmlElement.nativeElement);
-    this.setContainerOverflow(this.htmlElement.nativeElement, this.visibleOverflow);
+    if (this.isBrowser) {
+      this.setContainerPosition(this.htmlElement.nativeElement);
+      this.setContainerOverflow(this.htmlElement.nativeElement, this.visibleOverflow);
 
-    if (!this.isDisabled) {
-      this.createListeners();
+      if (!this.isDisabled) {
+        this.createListeners();
+      }
     }
   }
 
@@ -155,23 +167,25 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
    * @param {SimpleChanges} changes - SimpleChanges object.
    */
   public ngOnChanges(changes: SimpleChanges): void {
-    if (this.hasValueChanged(changes.isDisabled, true)) {
-      this.destroyListeners();
-    } else if (this.hasValueChanged(changes.isDisabled, false)) {
-      this.createListeners();
-    }
+    if (this.isBrowser) {
+      if (this.hasValueChanged(changes.isDisabled, true)) {
+        this.destroyListeners();
+      } else if (this.hasValueChanged(changes.isDisabled, false)) {
+        this.createListeners();
+      }
 
-    if (this.hasValueChanged(changes.visibleOverflow)) {
-      this.setContainerOverflow(this.htmlElement.nativeElement, changes.visibleOverflow.currentValue);
-    }
+      if (this.hasValueChanged(changes.visibleOverflow)) {
+        this.setContainerOverflow(this.htmlElement.nativeElement, changes.visibleOverflow.currentValue);
+      }
 
-    if (this.image && ((
-      this.hasValueChanged(changes.imageUrl) ||
-      this.hasValueChanged(changes.parallaxPercentage) ||
-      this.hasValueChanged(changes.positionPercentage)) ||
-      this.hasValueChanged(changes.isDisabled) ||
-      this.hasValueChanged(changes.forceFullWidth))) {
-      this.setImageProperties(this.image);
+      if (this.image && ((
+        this.hasValueChanged(changes.imageUrl) ||
+        this.hasValueChanged(changes.parallaxPercentage) ||
+        this.hasValueChanged(changes.positionPercentage)) ||
+        this.hasValueChanged(changes.isDisabled) ||
+        this.hasValueChanged(changes.forceFullWidth))) {
+        this.setImageProperties(this.image);
+      }
     }
   }
 
@@ -236,12 +250,18 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
   }
 
   /**
-   * Set image properties after image is fully loaded.
+   * Set image object and loading status.
+   * Set image properties after image is fully loaded
+   * but only if platform is browser.
    * @param {Event} event - Image loaded event.
    */
   public onImageLoaded(event: Event): void {
     this.image = event.target as HTMLImageElement;
-    this.setImageProperties(this.image);
+
+    if (this.isBrowser) {
+      this.setImageProperties(this.image);
+    }
+
     this.isLoaded = true;
   }
 

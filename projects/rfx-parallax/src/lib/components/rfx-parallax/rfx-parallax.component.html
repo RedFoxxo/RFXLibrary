@@ -2,7 +2,7 @@
   [alt]="imageAlt ?? ''"
   [@visibility]="isLoaded"
   libWillChange
-  [isDisabled]="isDisabled"
+  [isDisabled]="isDisabled || !isBrowser"
   class="rfx-image"
   [src]="imageUrl"
   [style.zIndex]="imageZIndex"
