@@ -21,7 +21,7 @@ export class RfxParallaxService {
    * Start element scroll event, window resize event and element resize event listeners
    * @param element main element with scroll property
    */
-  public initListeners(element: HTMLElement | Document | undefined): void {
+  public initListeners(element?: HTMLElement | Document): void {
     if (this.isBrowser) {
       this.resizeEventService.createListener();
       this.scrollEventService.createListener(element ?? document);

@@ -41,7 +41,7 @@ export class RfxScrollAnimationService implements OnDestroy {
    * Default body element is the document element.
    * @param {HTMLElement | Document | undefined} element - Scroll element to use.
    */
-  public initListeners(element: HTMLElement | Document | undefined): void {
+  public initListeners(element?: HTMLElement | Document): void {
     this.destroyListeners();
 
     if (this.isBrowser) {
