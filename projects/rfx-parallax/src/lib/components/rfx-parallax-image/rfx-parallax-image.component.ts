@@ -78,7 +78,7 @@ export class RfxParallaxImageComponent implements OnInit, OnChanges {
    * @type {boolean}
    */
   @Input()
-  public forceFullWidth: boolean;
+  public isAdaptiveDisabled: boolean;
 
   /**
    * Subscription to scroll event.
@@ -133,7 +133,7 @@ export class RfxParallaxImageComponent implements OnInit, OnChanges {
     this.visibleOverflow = false;
     this.imageLeftPx = 0;
     this.isLoaded = false;
-    this.forceFullWidth = false;
+    this.isAdaptiveDisabled = false;
   }
 
   /**
@@ -261,7 +261,7 @@ export class RfxParallaxImageComponent implements OnInit, OnChanges {
       this.htmlElement.nativeElement.clientHeight,
       this.parallaxPercentage,
       this.isDisabled,
-      this.forceFullWidth
+      this.isAdaptiveDisabled
     );
 
     this.setImageSize(image, imageDimensions);
