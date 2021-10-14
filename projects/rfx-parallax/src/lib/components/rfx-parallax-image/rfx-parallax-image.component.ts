@@ -62,7 +62,7 @@ export class RfxParallaxImageComponent implements OnInit, OnChanges {
    * @type {boolean}
    */
   @Input()
-  public visibleOverflow: boolean;
+  public isOverflowVisible: boolean;
 
   /**
    * Disable image parallax effect and
@@ -130,7 +130,7 @@ export class RfxParallaxImageComponent implements OnInit, OnChanges {
     this.positionPercentage = 50;
     this.imageZIndex = -1;
     this.isDisabled = false;
-    this.visibleOverflow = false;
+    this.isOverflowVisible = false;
     this.imageLeftPx = 0;
     this.isLoaded = false;
     this.isAdaptiveDisabled = false;
@@ -143,7 +143,7 @@ export class RfxParallaxImageComponent implements OnInit, OnChanges {
   public ngOnInit(): void {
     if (this.parallaxUtilsHelper.isBrowser) {
       this.setContainerPosition(this.htmlElement.nativeElement);
-      this.setContainerOverflow(this.htmlElement.nativeElement, this.visibleOverflow);
+      this.setContainerOverflow(this.htmlElement.nativeElement, this.isOverflowVisible);
 
       if (!this.isDisabled) {
         this.createListeners();
