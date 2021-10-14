@@ -1,9 +1,9 @@
-import { Component, ElementRef, Inject, Input, OnChanges, OnInit, PLATFORM_ID, Renderer2, SimpleChange, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnInit, Renderer2, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ResizeEventService, ScrollEventService } from '../../services';
-import { ParallaxBoundariesModel } from '../../models';
+import { ParallaxBoundariesModel, ElementDimensionsModel } from '../../models';
 import { visibilityAnimation } from '../../animations';
-import { isPlatformBrowser } from '@angular/common';
+import { ParallaxUtilsHelper } from '../../helpers';
 
 @Component({
   selector: '[libRfxParallax]',
@@ -118,20 +118,13 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
    */
   public isLoaded: boolean;
 
-  /**
-   * Is platform browser.
-   * False for example when using SSR.
-   * @type {boolean}
-   */
-  public isBrowser: boolean;
-
 
   constructor(
     private htmlElement: ElementRef,
     private renderer: Renderer2,
     private scrollEventService: ScrollEventService,
     private resizeEventService: ResizeEventService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    public parallaxUtilsHelper: ParallaxUtilsHelper
   ) {
     this.parallaxPercentage = 40;
     this.positionPercentage = 50;
@@ -141,7 +134,6 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
     this.imageLeftPx = 0;
     this.isLoaded = false;
     this.forceFullWidth = false;
-    this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
   /**
@@ -149,7 +141,7 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
    * If parallax is not disabled, create listeners.
    */
   public ngOnInit(): void {
-    if (this.isBrowser) {
+    if (this.parallaxUtilsHelper.isBrowser) {
       this.setContainerPosition(this.htmlElement.nativeElement);
       this.setContainerOverflow(this.htmlElement.nativeElement, this.visibleOverflow);
 
@@ -167,23 +159,25 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
    * @param {SimpleChanges} changes - SimpleChanges object.
    */
   public ngOnChanges(changes: SimpleChanges): void {
-    if (this.isBrowser) {
-      if (this.hasValueChanged(changes.isDisabled, true)) {
+    if (this.parallaxUtilsHelper.isBrowser) {
+      if (this.parallaxUtilsHelper.isValueChanged(changes.isDisabled, true)) {
         this.destroyListeners();
-      } else if (this.hasValueChanged(changes.isDisabled, false)) {
+      } else if (this.parallaxUtilsHelper.isValueChanged(changes.isDisabled, false)) {
         this.createListeners();
       }
 
-      if (this.hasValueChanged(changes.visibleOverflow)) {
+      if (this.parallaxUtilsHelper.isValueChanged(changes.visibleOverflow)) {
         this.setContainerOverflow(this.htmlElement.nativeElement, changes.visibleOverflow.currentValue);
       }
 
-      if (this.image && ((
-        this.hasValueChanged(changes.imageUrl) ||
-        this.hasValueChanged(changes.parallaxPercentage) ||
-        this.hasValueChanged(changes.positionPercentage)) ||
-        this.hasValueChanged(changes.isDisabled) ||
-        this.hasValueChanged(changes.forceFullWidth))) {
+      if (this.image && (
+        this.parallaxUtilsHelper.isAtLeastOneValueChanged(
+          changes.imageUrl,
+          changes.parallaxPercentage,
+          changes.positionPercentage,
+          changes.isDisabled,
+          changes.forceFullWidth)
+      )) {
         this.setImageProperties(this.image);
       }
     }
@@ -191,17 +185,6 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
 
   public ngOnDestroy(): void {
     this.destroyListeners();
-  }
-
-  /**
-   * Check if SimpleChange value has changed.
-   * Eventually check if value corresponds to a new value.
-   * @param {SimpleChange} change - SimpleChange object.
-   * @param {any} newValue - New value.
-   * @returns {boolean} - true if value has changed.
-   */
-  private hasValueChanged(change: SimpleChange, newValue: any = change?.currentValue): boolean {
-    return change?.firstChange === false && change?.currentValue !== undefined && change?.currentValue === newValue;
   }
 
   /**
@@ -235,7 +218,7 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
    */
   private onMouseScroll(scroll: number): void {
     if (this.parallaxBoundaries && this.image) {
-      const topPx: number = this.getImageTop(scroll, this.parallaxBoundaries);
+      const topPx: number = this.parallaxUtilsHelper.getImageTopPosition(this.parallaxBoundaries, scroll);
       this.setImageTransform(this.image, this.imageLeftPx, topPx);
     }
   }
@@ -258,7 +241,7 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
   public onImageLoaded(event: Event): void {
     this.image = event.target as HTMLImageElement;
 
-    if (this.isBrowser) {
+    if (this.parallaxUtilsHelper.isBrowser) {
       this.setImageProperties(this.image);
     }
 
@@ -272,7 +255,7 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
   private setImageProperties(image: HTMLImageElement): void {
     const scrollTop: number = this.scrollEventService.getMouseScrollValue();
 
-    this.setImageSize(
+    const imageDimensions: ElementDimensionsModel = this.parallaxUtilsHelper.getImageSize(
       image,
       this.htmlElement.nativeElement.clientWidth,
       this.htmlElement.nativeElement.clientHeight,
@@ -281,22 +264,24 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
       this.forceFullWidth
     );
 
-    this.parallaxBoundaries = this.getParallaxBoundaries(
+    this.setImageSize(image, imageDimensions);
+
+    this.parallaxBoundaries = this.parallaxUtilsHelper.getParallaxBoundaries(
       scrollTop,
       this.htmlElement.nativeElement,
       image.height,
       this.parallaxPercentage
     );
 
-    this.imageLeftPx = this.getImageLeft(
+    this.imageLeftPx = this.parallaxUtilsHelper.getImageLeftPositionPx(
       this.htmlElement.nativeElement.clientWidth,
       image.width,
       this.positionPercentage
     );
 
     const topPx: number = this.isDisabled ?
-      this.getDisabledImageTop(this.parallaxBoundaries) :
-      this.getImageTop(scrollTop, this.parallaxBoundaries);
+      this.parallaxUtilsHelper.getImageTopPositionDisabled(this.parallaxBoundaries) :
+      this.parallaxUtilsHelper.getImageTopPosition(this.parallaxBoundaries, scrollTop);
 
     this.setImageTransform(image, this.imageLeftPx, topPx);
   }
@@ -323,90 +308,13 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
   }
 
   /**
-   * Set image size based on container size,
-   * parallax percentage and disabled state.
-   * @param {HTMLImageElement} image - Image element.
-   * @param {number} containerWidth - Container width.
-   * @param {number} containerHeight - Container height.
-   * @param {number} parallaxPercentage - Parallax percentage.
-   * @param {boolean} isDisabled - true to disable parallax effect.
-   * @param {boolean} forceFullWidth - true to force image size to container width.
+   * Set image size based on image and container dimensions.
+   * @param {HTMLImageElement} image - image to be parallaxed.
+   * @param {ElementDimensionsModel} imageDimensions - image dimensions
    */
-  private setImageSize(
-    image: HTMLImageElement,
-    containerWidth: number,
-    containerHeight: number,
-    parallaxPercentage: number,
-    isDisabled: boolean,
-    forceFullWidth: boolean
-  ): void {
-    if (forceFullWidth) {
-      this.renderer.setAttribute(image, 'width', `${containerWidth}px`);
-      this.renderer.setAttribute(image, 'height', `auto`);
-    } else {
-      const minimumHeight: number = (containerHeight * (100 + (isDisabled ? 0 : parallaxPercentage))) / 100;
-      const ratio: number = image.naturalHeight / image.naturalWidth;
-      const minimumRatio: number = minimumHeight / containerWidth;
-
-      if (ratio > minimumRatio) {
-        this.renderer.setAttribute(image, 'width', `${containerWidth}px`);
-        this.renderer.setAttribute(image, 'height', `auto`);
-      } else {
-        this.renderer.setAttribute(image, 'width', `auto`);
-        this.renderer.setAttribute(image, 'height', `${minimumHeight}px`);
-      }
-    }
-  }
-
-  /**
-   * Get parallax boundaries. This data is used
-   * to calculate parallax movement.
-   * @param {number} scrollTop - Scroll top.
-   * @param {HTMLElement} container - Container element.
-   * @param {number} imageHeight - Image height.
-   * @param {number} parallaxPercentage - Parallax percentage.
-   * @return {ParallaxBoundariesModel} - Parallax boundaries.
-   */
-  private getParallaxBoundaries(scrollTop: number, container: HTMLElement, imageHeight: number, parallaxPercentage: number): ParallaxBoundariesModel {
-    const elementTop: number = container.getBoundingClientRect().top + scrollTop;
-    const usablePixels: number = container.clientHeight / 100 * parallaxPercentage;
-    const unusablePixels: number = imageHeight - container.clientHeight - usablePixels;
-    const startPoint: number = elementTop - usablePixels - window.innerHeight;
-    const endPoint = elementTop + container.clientHeight + usablePixels;
-    const totalPixels = endPoint - startPoint;
-    return { startPoint, endPoint, totalPixels, usablePixels, unusablePixels };
-  }
-
-  /**
-   * Get image left position.
-   * @param {number} containerWidth - Container width.
-   * @param {number} imageWidth - Image width.
-   * @param {number} positionPercentage - Position percentage.
-   * @return {number} - Image left position.
-   */
-  private getImageLeft(containerWidth: number, imageWidth: number, positionPercentage: number): number {
-    return (containerWidth - imageWidth) / 100 * positionPercentage;
-  }
-
-  /**
-   * Get image top position.
-   * @param {number} scrollTop - Scroll top.
-   * @param {ParallaxBoundariesModel} boundaries - Parallax boundaries.
-   * @return {number} - Image top position.
-   */
-  private getImageTop(scrollTop: number, boundaries: ParallaxBoundariesModel): number {
-    const area: number = Math.max(0, Math.min(scrollTop - boundaries.startPoint, boundaries.totalPixels));
-    const areaPercentage: number = 100 / boundaries.totalPixels * area;
-    return -boundaries.usablePixels * (1 - areaPercentage / 100) - boundaries.unusablePixels / 2;
-  }
-
-  /**
-   * Get disabled image top position.
-   * @param {number} boundaries - Parallax boundaries.
-   * @return {number} - Image top position.
-   */
-  private getDisabledImageTop(boundaries: ParallaxBoundariesModel): number {
-    return (-boundaries.usablePixels - boundaries.unusablePixels) / 2
+  private setImageSize(image: HTMLImageElement, imageDimensions: ElementDimensionsModel): void {
+    this.renderer.setAttribute(image, 'width', imageDimensions.width);
+    this.renderer.setAttribute(image, 'height', imageDimensions.height);
   }
 
   /**

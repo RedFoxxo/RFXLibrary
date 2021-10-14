@@ -2,7 +2,7 @@
   [alt]="imageAlt ?? ''"
   [@visibility]="isLoaded"
   libWillChange
-  [isDisabled]="isDisabled || !isBrowser"
+  [isDisabled]="isDisabled || !parallaxUtilsHelper.isBrowser"
   class="rfx-image"
   [src]="imageUrl"
   [style.zIndex]="imageZIndex"

@@ -2,6 +2,7 @@ import { Directive, ElementRef, Input, OnChanges, OnDestroy, OnInit, Renderer2, 
 import { ScrollEventService } from '../services';
 import { SectionAreaModel } from '../models';
 import { Subscription } from 'rxjs';
+import { ParallaxUtilsHelper } from '../helpers';
 
 @Directive({
   selector: '[libWillChange]'
@@ -45,9 +46,10 @@ export class WillChangeDirective implements OnInit, OnChanges, OnDestroy {
   constructor(
     private htmlElement: ElementRef,
     private renderer: Renderer2,
-    private scrollEventService: ScrollEventService
+    private scrollEventService: ScrollEventService,
+    private parallaxUtilsHelper: ParallaxUtilsHelper
   ) {
-    this.triggerArea = typeof window !== 'undefined' ? window.innerHeight / 4 * 6 : 0;
+    this.triggerArea = this.parallaxUtilsHelper.isBrowser ? window.innerHeight / 4 * 6 : 0;
     this.isDisabled = false;
     this.willChange = true;
   }
@@ -84,12 +86,12 @@ export class WillChangeDirective implements OnInit, OnChanges, OnDestroy {
    * @param {SimpleChanges} changes - Changes.
    */
   public ngOnChanges(changes: SimpleChanges): void {
-    if (changes?.isDisabled?.currentValue !== undefined && !changes?.isDisabled?.firstChange) {
+    if (this.parallaxUtilsHelper.isValueChanged(changes.isDisabled)) {
       this.destroyListener();
       return;
     }
 
-    if (changes?.triggerArea?.currentValue !== undefined && !changes?.triggerArea?.firstChange && !this.isDisabled) {
+    if (this.parallaxUtilsHelper.isValueChanged(changes.triggerArea) && !this.isDisabled) {
       const scroll: number = this.scrollEventService.getMouseScrollValue();
       this.willChangeArea = this.getWillChangeArea();
       this.checkWillChange(scroll);
