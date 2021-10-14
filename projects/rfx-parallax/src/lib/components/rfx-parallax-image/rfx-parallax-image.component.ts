@@ -6,14 +6,14 @@ import { visibilityAnimation } from '../../animations';
 import { ParallaxUtilsHelper } from '../../helpers';
 
 @Component({
-  selector: '[libRfxParallax]',
-  templateUrl: './rfx-parallax.component.html',
-  styleUrls: ['./rfx-parallax.component.less'],
+  selector: '[libRfxParallaxImage]',
+  templateUrl: './rfx-parallax-image.component.html',
+  styleUrls: ['./rfx-parallax-image.component.less'],
   animations: [
     visibilityAnimation
   ]
 })
-export class RfxParallaxComponent implements OnInit, OnChanges {
+export class RfxParallaxImageComponent implements OnInit, OnChanges {
   /**
    * Image url.
    * Can be http(s) or relative path.
