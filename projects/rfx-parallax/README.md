@@ -102,7 +102,7 @@ just apply `libRfxParallaxImage` to your container and pass the image url
 
 ## Demo
 
-https://demo.redfoxxo.dev/rfx-parallax
+https://demo.foxxo.dev/rfx-parallax
 
 ## License
 
