@@ -86,12 +86,12 @@ export class WillChangeDirective implements OnInit, OnChanges, OnDestroy {
    * @param {SimpleChanges} changes - Changes.
    */
   public ngOnChanges(changes: SimpleChanges): void {
-    if (this.parallaxUtilsHelper.isValueChanged(changes.isDisabled)) {
+    if (this.parallaxUtilsHelper.isValueChanged(changes['isDisabled'])) {
       this.destroyListener();
       return;
     }
 
-    if (this.parallaxUtilsHelper.isValueChanged(changes.triggerArea) && !this.isDisabled) {
+    if (this.parallaxUtilsHelper.isValueChanged(changes['triggerArea']) && !this.isDisabled) {
       const scroll: number = this.scrollEventService.getMouseScrollValue();
       this.willChangeArea = this.getWillChangeArea();
       this.checkWillChange(scroll);

@@ -1,6 +1,6 @@
 {
   "name": "rfx-parallax",
-  "version": "4.0.0-alpha.0",
+  "version": "4.0.0-alpha.1",
   "description": "RfxParallax - parallax made easy",
   "author": {
     "name": "RedFoxxo",
@@ -23,8 +23,8 @@
   ],
   "license": "MIT",
   "peerDependencies": {
-    "@angular/common": ">=8.0.0",
-    "@angular/core": ">=8.0.0",
+    "@angular/common": ">=9.0.0",
+    "@angular/core": ">=9.0.0",
     "rxjs": ">=6.0.0"
   },
   "dependencies": {

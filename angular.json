@@ -12,14 +12,17 @@
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "tsConfig": "projects/rfx-parallax/tsconfig.lib.json",
             "project": "projects/rfx-parallax/ng-package.json"
           },
           "configurations": {
             "production": {
               "tsConfig": "projects/rfx-parallax/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/rfx-parallax/tsconfig.lib.json"
             }
-          }
+          },
+          "defaultConfiguration": "production"
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
@@ -27,18 +30,6 @@
             "main": "projects/rfx-parallax/src/test.ts",
             "tsConfig": "projects/rfx-parallax/tsconfig.spec.json",
             "karmaConfig": "projects/rfx-parallax/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/rfx-parallax/tsconfig.lib.json",
-              "projects/rfx-parallax/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
           }
         }
       }
@@ -52,14 +43,17 @@
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "tsConfig": "projects/rfx-scroll-animation/tsconfig.lib.json",
             "project": "projects/rfx-scroll-animation/ng-package.json"
           },
           "configurations": {
             "production": {
               "tsConfig": "projects/rfx-scroll-animation/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/rfx-scroll-animation/tsconfig.lib.json"
             }
-          }
+          },
+          "defaultConfiguration": "production"
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
@@ -67,18 +61,6 @@
             "main": "projects/rfx-scroll-animation/src/test.ts",
             "tsConfig": "projects/rfx-scroll-animation/tsconfig.spec.json",
             "karmaConfig": "projects/rfx-scroll-animation/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/rfx-scroll-animation/tsconfig.lib.json",
-              "projects/rfx-scroll-animation/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
           }
         }
       }
@@ -92,14 +74,17 @@
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "tsConfig": "projects/rfx-logger/tsconfig.lib.json",
             "project": "projects/rfx-logger/ng-package.json"
           },
           "configurations": {
             "production": {
               "tsConfig": "projects/rfx-logger/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/rfx-logger/tsconfig.lib.json"
             }
-          }
+          },
+          "defaultConfiguration": "production"
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
@@ -108,17 +93,36 @@
             "tsConfig": "projects/rfx-logger/tsconfig.spec.json",
             "karmaConfig": "projects/rfx-logger/karma.conf.js"
           }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+        }
+      }
+    },
+    "rfx-image-loader": {
+      "projectType": "library",
+      "root": "projects/rfx-image-loader",
+      "sourceRoot": "projects/rfx-image-loader/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "tsConfig": [
-              "projects/rfx-logger/tsconfig.lib.json",
-              "projects/rfx-logger/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "project": "projects/rfx-image-loader/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/rfx-image-loader/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/rfx-image-loader/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/rfx-image-loader/src/test.ts",
+            "tsConfig": "projects/rfx-image-loader/tsconfig.spec.json",
+            "karmaConfig": "projects/rfx-image-loader/karma.conf.js"
           }
         }
       }
@@ -128,6 +132,9 @@
       "schematics": {
         "@schematics/angular:component": {
           "style": "less"
+        },
+        "@schematics/angular:application": {
+          "strict": true
         }
       },
       "root": "projects/demo",
@@ -142,6 +149,7 @@
             "main": "projects/demo/src/main.ts",
             "polyfills": "projects/demo/src/polyfills.ts",
             "tsConfig": "projects/demo/tsconfig.app.json",
+            "inlineStyleLanguage": "less",
             "assets": [
               "projects/demo/src/favicon.ico",
               "projects/demo/src/assets"
@@ -149,55 +157,52 @@
             "styles": [
               "projects/demo/src/styles.less"
             ],
-            "scripts": [],
-            "vendorChunk": true,
-            "extractLicenses": false,
-            "buildOptimizer": false,
-            "sourceMap": true,
-            "optimization": false,
-            "namedChunks": true
+            "scripts": []
           },
           "configurations": {
             "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "projects/demo/src/environments/environment.ts",
                   "with": "projects/demo/src/environments/environment.prod.ts"
                 }
               ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
           },
-          "defaultConfiguration": ""
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "demo:build"
-          },
           "configurations": {
             "production": {
               "browserTarget": "demo:build:production"
+            },
+            "development": {
+              "browserTarget": "demo:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -212,6 +217,7 @@
             "polyfills": "projects/demo/src/polyfills.ts",
             "tsConfig": "projects/demo/tsconfig.spec.json",
             "karmaConfig": "projects/demo/karma.conf.js",
+            "inlineStyleLanguage": "less",
             "assets": [
               "projects/demo/src/favicon.ico",
               "projects/demo/src/assets"
@@ -220,71 +226,6 @@
               "projects/demo/src/styles.less"
             ],
             "scripts": []
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/demo/tsconfig.app.json",
-              "projects/demo/tsconfig.spec.json",
-              "projects/demo/e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "projects/demo/e2e/protractor.conf.js",
-            "devServerTarget": "demo:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "demo:serve:production"
-            }
-          }
-        }
-      }
-    },
-    "rfx-image-loader": {
-      "projectType": "library",
-      "root": "projects/rfx-image-loader",
-      "sourceRoot": "projects/rfx-image-loader/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/rfx-image-loader/tsconfig.lib.json",
-            "project": "projects/rfx-image-loader/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/rfx-image-loader/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/rfx-image-loader/src/test.ts",
-            "tsConfig": "projects/rfx-image-loader/tsconfig.spec.json",
-            "karmaConfig": "projects/rfx-image-loader/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/rfx-image-loader/tsconfig.lib.json",
-              "projects/rfx-image-loader/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
           }
         }
       }

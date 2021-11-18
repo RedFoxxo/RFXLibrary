@@ -1,4 +1,5 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Inject, Injectable, OnDestroy, PLATFORM_ID } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable({
@@ -17,9 +18,14 @@ export class ResizeEventService implements OnDestroy {
    */
   private resizeEvent: EventListenerOrEventListenerObject;
 
-  constructor() {
+  private isBrowser: boolean;
+
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
     this.subjectResize = new Subject<undefined>();
     this.resizeEvent = this.onResizeEvent.bind(this);
+    this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
   public ngOnDestroy(): void {
@@ -30,14 +36,18 @@ export class ResizeEventService implements OnDestroy {
    * Create window resize listener.
    */
   public createListener(): void {
-    window.addEventListener('resize', this.resizeEvent, { passive: true });
+    if (this.isBrowser) {
+      window.addEventListener('resize', this.resizeEvent, { passive: true });
+    }
   }
 
   /**
    * Destroy window resize listener.
    */
   public destroyListener(): void {
-    window.removeEventListener('resize', this.resizeEvent);
+    if (this.isBrowser) {
+      window.removeEventListener('resize', this.resizeEvent);
+    }
   }
 
   /**
