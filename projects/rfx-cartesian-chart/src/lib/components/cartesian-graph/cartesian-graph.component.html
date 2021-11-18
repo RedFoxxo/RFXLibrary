@@ -1,0 +1,17 @@
+<div class="container" [style.width.px]="this.canvasWidthPx">
+  <canvas #canvas [ngClass]="{ 'opacity': !cartesianValues?.length || isLoading }"></canvas>
+  <app-legend [fontFamily]="fontFamily" [cartesianValues]="cartesianValues"></app-legend>
+  <div class="overlays"
+    #overlays
+    [style.height.px]="this.canvasHeightPx"
+    appPointerPosition
+    [area]="cache?.drawableRect"
+    (position)="onCursorPositionChange($event)">
+  </div>
+  <div class="overlay" [style.height.px]="this.canvasHeightPx - 58" *ngIf="!cartesianValues?.length && !isLoading">
+    <div class="label" [style.fontFamily]="fontFamily">{{ labelNoData }}</div>
+  </div>
+  <div class="overlay" [style.height.px]="this.canvasHeightPx - 58" *ngIf="isLoading">
+    <div class="label" [style.fontFamily]="fontFamily">{{ labelLoading }}</div>
+  </div>
+</div>

@@ -20,6 +20,11 @@
       "dom"
     ],
     "paths": {
+      "rfx-cartesian-chart": [
+        "projects/rfx-cartesian-chart/src/lib",
+        "dist/rfx-cartesian-chart/rfx-cartesian-chart",
+        "dist/rfx-cartesian-chart"
+      ],
       "rfx-image-loader": [
         "projects/rfx-image-loader/src/lib",
         "dist/rfx-image-loader/rfx-image-loader",

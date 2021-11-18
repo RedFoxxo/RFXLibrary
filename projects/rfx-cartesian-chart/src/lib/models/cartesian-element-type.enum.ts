@@ -1,0 +1,7 @@
+export enum CartesianElementTypeEnum {
+  NO_INTERPOLATION,
+  X_AXIS_LINE,
+  Y_AXIS_LINE,
+  CARDINAL_SPLINE,
+  ORDINARY_LEAST_SQUARES,
+}

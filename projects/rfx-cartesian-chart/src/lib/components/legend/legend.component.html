@@ -1,0 +1,20 @@
+<div class="container">
+  <div class="element" *ngFor="let element of cartesianValues">
+    <div class="element-symbol">
+      <div class="symbol-line"
+        [style.opacity]="element.opacity"
+        [style.borderColor]="element.color"
+        [style.borderStyle]="element.dash ? 'dashed' : 'solid'"
+        *ngIf="!element.isLineHidden">
+      </div>
+
+      <div class="symbol-dot"
+        [style.opacity]="element.opacity"
+        [style.backgroundColor]="element.color"
+        *ngIf="!element.areDotsHidden">
+      </div>
+    </div>
+
+    <span [style.fontFamily]="fontFamily">{{ element.name }}</span>
+  </div>
+</div>

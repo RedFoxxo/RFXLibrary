@@ -2322,6 +2322,11 @@ canonical-path@1.0.0:
   resolved "https://registry.yarnpkg.com/canonical-path/-/canonical-path-1.0.0.tgz#fcb470c23958def85081856be7a86e904f180d1d"
   integrity sha512-feylzsbDxi1gPZ1IjystzIQZagYYLvfKrSuygUCgf7z6x790VEzze5QEkdSV1U58RA7Hi0+v6fv4K54atOzATg==
 
+cardinal-spline-js@^2.3.10:
+  version "2.3.10"
+  resolved "https://registry.yarnpkg.com/cardinal-spline-js/-/cardinal-spline-js-2.3.10.tgz#2279998e3f107e6c0a466e587dbba3310a5ba335"
+  integrity sha512-2lNtnjMzaQHPOUjSct3MjHJSNL+KZeYxz7KX8qVi0rSSYOXn2CngTZg94hPtA/3zifN6JwSQf1KKSXyeoC5UWQ==
+
 caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"

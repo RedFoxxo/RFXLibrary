@@ -288,6 +288,34 @@
           }
         }
       }
+    },
+    "rfx-cartesian-chart": {
+      "projectType": "library",
+      "root": "projects/rfx-cartesian-chart",
+      "sourceRoot": "projects/rfx-cartesian-chart/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/rfx-cartesian-chart/tsconfig.lib.json",
+            "project": "projects/rfx-cartesian-chart/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/rfx-cartesian-chart/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/rfx-cartesian-chart/src/test.ts",
+            "tsConfig": "projects/rfx-cartesian-chart/tsconfig.spec.json",
+            "karmaConfig": "projects/rfx-cartesian-chart/karma.conf.js"
+          }
+        }
+      }
     }
   },
   "defaultProject": "demo"
