@@ -1,6 +1,6 @@
 {
   "name": "rfx-scroll-animation",
-  "version": "3.5.3",
+  "version": "3.5.4",
   "author": {
     "name": "RedFoxxo",
     "url": "https://github.com/RedFoxxo"
@@ -26,7 +26,7 @@
   "peerDependencies": {
     "@angular/common": ">=9.0.0",
     "@angular/core": ">=9.0.0",
-    "rxjs": "^6.0.0"
+    "rxjs": ">=6.0.0"
   },
   "dependencies": {
     "tslib": "^2.0.0"

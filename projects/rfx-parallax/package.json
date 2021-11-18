@@ -1,6 +1,6 @@
 {
   "name": "rfx-parallax",
-  "version": "3.3.4",
+  "version": "3.3.5",
   "description": "RfxParallax - parallax made easy",
   "author": {
     "name": "RedFoxxo",
@@ -25,7 +25,7 @@
   "peerDependencies": {
     "@angular/common": ">=9.0.0",
     "@angular/core": ">=9.0.0",
-    "rxjs": "^6.0.0"
+    "rxjs": ">=6.0.0"
   },
   "dependencies": {
     "tslib": "^2.0.0"

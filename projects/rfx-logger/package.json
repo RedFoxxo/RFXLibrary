@@ -1,6 +1,6 @@
 {
   "name": "rfx-logger",
-  "version": "6.3.1",
+  "version": "6.3.2",
   "description": "RfxLogger - upgrade your browser console messages",
   "author": {
     "name": "RedFoxxo",
@@ -29,7 +29,7 @@
   "peerDependencies": {
     "@angular/common": ">=9.0.0",
     "@angular/core": ">=9.0.0",
-    "rxjs": "^6.0.0"
+    "rxjs": ">=6.0.0"
   },
   "dependencies": {
     "tslib": "^2.0.0"
