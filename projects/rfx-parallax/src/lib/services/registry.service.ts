@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { RfxParallaxComponent } from '../components';
 import { RegistryElementModel } from '../models';
 
@@ -23,6 +23,14 @@ export class RegistryService {
   constructor() {
     this.solidElements = [];
     this.subjectSolidElementsReady = new BehaviorSubject<boolean>(false);
+  }
+
+  /**
+   * Get solid elements ready event.
+   * @return {Observable<boolean>} - Solid elements ready event.
+   */
+  public getSolidElementsReady(): Observable<boolean> {
+    return this.subjectSolidElementsReady.asObservable();
   }
 
   /**
