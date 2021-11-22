@@ -13,6 +13,7 @@ specifiers:
   '@angular/platform-browser': ~13.0.0
   '@angular/platform-browser-dynamic': ~13.0.0
   '@angular/router': ~13.0.0
+  '@schematics/angular': ^13.0.3
   '@types/jasmine': ~3.10.0
   '@types/node': ^12.11.1
   jasmine-core: ~3.10.0
@@ -47,6 +48,7 @@ devDependencies:
   '@angular-devkit/build-angular': 13.0.3_c9901ee758d22e26f17bb34439c62c09
   '@angular/cli': 13.0.3
   '@angular/compiler-cli': 13.0.2_8287cab54374b1dd528c4690bdaed3c9
+  '@schematics/angular': 13.0.3
   '@types/jasmine': 3.10.2
   '@types/node': 12.20.37
   jasmine-core: 3.10.1
