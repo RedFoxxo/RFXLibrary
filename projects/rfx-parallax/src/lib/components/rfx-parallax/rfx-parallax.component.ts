@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { RegistryService } from '../../services';
+import { RegistryService, IntersectionService } from '../../services';
 
 @Component({
   selector: '[libRfxParallax]',
@@ -38,8 +38,9 @@ export class RfxParallaxComponent implements OnInit {
   private registrySubscription: Subscription | undefined;
 
   constructor(
-    private htmlElement: ElementRef,
-    private registryService: RegistryService
+    public htmlElement: ElementRef,
+    private registryService: RegistryService,
+    private intersectionSubscription: IntersectionService
   ) {
     this.parallaxSpeed = 0.5;
     this.isDisabled = false;
@@ -52,8 +53,6 @@ export class RfxParallaxComponent implements OnInit {
   }
 
   private initListeners(): void {
-    // this.intersectionSubscription = this.intersectionService
-
     this.registrySubscription = this.registryService.getSolidElementsReady().subscribe((isReady: boolean) => {
       if (isReady) {
         this.registrySubscription?.unsubscribe();

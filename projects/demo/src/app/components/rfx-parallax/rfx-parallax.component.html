@@ -1,14 +1,103 @@
 <div class="container">
+  <div class="example1" libRfxParallaxImage imageUrl="https://picsum.photos/1920/1080">
+    <div class="info">
+      <div class="info-content">
+        <span>Size: 1920x1080</span>
+        <span>Parallax percentage: 40%</span>
+        <span>Overflow: hidden</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="example2">
+    <div class="element" libRfxParallaxImage imageUrl="https://picsum.photos/400" [isOverflowVisible]="true"
+      [parallaxPercentage]="20" [imageZIndex]="0">
+      <div class="info">
+        <div class="info-content">
+          <span>Size: 400x400</span>
+          <span>Parallax percentage: 20%</span>
+          <span>Overflow: visible</span>
+        </div>
+      </div>
+    </div>
+    <div class="element" libRfxParallaxImage imageUrl="https://picsum.photos/450" [isOverflowVisible]="true"
+      [parallaxPercentage]="35" [imageZIndex]="0">
+      <div class="info">
+        <div class="info-content">
+          <span>Size: 450x450</span>
+          <span>Parallax percentage: 35%</span>
+          <span>Overflow: visible</span>
+        </div>
+      </div>
+    </div>
+    <div class="element" libRfxParallaxImage imageUrl="https://picsum.photos/500" [isOverflowVisible]="true"
+      [parallaxPercentage]="50" [imageZIndex]="0">
+      <div class="info">
+        <div class="info-content">
+          <span>Size: 500x500</span>
+          <span>Parallax percentage: 50%</span>
+          <span>Overflow: visible</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="example3">
+    <div class="element" libRfxParallaxImage imageUrl="https://picsum.photos/300?random=1"
+      [isOverflowVisible]="true" [positionPercentage]="0" [parallaxPercentage]="45">
+      <div class="info">
+        <div class="info-content">
+          <span>Size: 300x300</span>
+          <span>Parallax percentage: 45%</span>
+          <span>Overflow: visible</span>
+          <span>Position percentage: 0%</span>
+        </div>
+      </div>
+    </div>
+    <div class="element" libRfxParallaxImage imageUrl="https://picsum.photos/300?random=2"
+      [isOverflowVisible]="true" [positionPercentage]="50" [parallaxPercentage]="45">
+      <div class="info">
+        <div class="info-content">
+          <span>Size: 300x300</span>
+          <span>Parallax percentage: 45%</span>
+          <span>Overflow: visible</span>
+          <span>Position percentage: 50%</span>
+        </div>
+      </div>
+    </div>
+    <div class="element" libRfxParallaxImage imageUrl="https://picsum.photos/300?random=3"
+      [isOverflowVisible]="true" [positionPercentage]="100" [parallaxPercentage]="45">
+      <div class="info">
+        <div class="info-content">
+          <span>Size: 300x300</span>
+          <span>Parallax percentage: 45%</span>
+          <span>Overflow: visible</span>
+          <span>Position percentage: 100%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="example4" libRfxParallaxImage imageUrl="https://picsum.photos/1600/800" [parallaxPercentage]="85">
+    <div class="info">
+      <div class="info-content">
+        <span>Size: 1600x800</span>
+        <span>Parallax percentage: 85%</span>
+        <span>Overflow: hidden</span>
+      </div>
+    </div>
+  </div>
+
   <div class="examplesolid1">
-    <div class="elementsolid" libRfxParallax>
+    <div class="elementsolid"libRfxParallax>
       Element 1
     </div>
-    <div class="elementsolid" libRfxParallax>
+    <!-- <div class="elementsolid" libRfxParallax>
       Element 2
     </div>
     <div class="elementsolid" libRfxParallax>
       Element 3
-    </div>
+    </div> -->
   </div>
 
   <div class="example1" libRfxParallaxImage imageUrl="https://picsum.photos/1920/1080">

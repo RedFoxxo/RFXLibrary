@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { RfxParallaxComponent } from '../components';
 import { RegistryElementModel } from '../models';
+import { IntersectionService } from '../services';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +21,9 @@ export class RegistryService {
    */
   private subjectSolidElementsReady: BehaviorSubject<boolean>;
 
-  constructor() {
+  constructor(
+    private intersectionService: IntersectionService
+  ) {
     this.solidElements = [];
     this.subjectSolidElementsReady = new BehaviorSubject<boolean>(false);
   }
@@ -62,6 +65,7 @@ export class RegistryService {
 
     if (ready) {
       this.onSolidElementsReady(ready);
+      this.intersectionService.addElements(...this.solidElements);
     }
   }
 

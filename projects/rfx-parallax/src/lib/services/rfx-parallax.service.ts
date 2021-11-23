@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { IntersectionService } from '../services';
 import { ParallaxUtilsHelper } from '../helpers';
 import { ResizeEventService } from './resize-event.service';
 import { ScrollEventService } from './scroll-event.service';
@@ -11,6 +12,7 @@ export class RfxParallaxService {
     private resizeEventService: ResizeEventService,
     private scrollEventService: ScrollEventService,
     private parallaxUtilsHelper: ParallaxUtilsHelper,
+    private intersectionService: IntersectionService
   ) { }
 
   /**
@@ -19,6 +21,7 @@ export class RfxParallaxService {
    */
   public initListeners(element?: HTMLElement | Document): void {
     if (this.parallaxUtilsHelper.isBrowser) {
+      this.intersectionService.createListener(element ?? document);
       this.resizeEventService.createListener();
       this.scrollEventService.createListener(element ?? document);
     }

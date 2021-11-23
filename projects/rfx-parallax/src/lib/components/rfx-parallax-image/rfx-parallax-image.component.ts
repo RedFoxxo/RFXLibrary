@@ -120,7 +120,7 @@ export class RfxParallaxImageComponent implements OnInit, OnChanges {
 
 
   constructor(
-    private htmlElement: ElementRef,
+    public htmlElement: ElementRef,
     private renderer: Renderer2,
     private scrollEventService: ScrollEventService,
     private resizeEventService: ResizeEventService,
