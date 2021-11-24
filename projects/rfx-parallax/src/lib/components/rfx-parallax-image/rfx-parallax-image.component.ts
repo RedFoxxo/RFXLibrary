@@ -187,6 +187,10 @@ export class RfxParallaxImageComponent implements OnInit, OnChanges {
     this.destroyListeners();
   }
 
+  public onIntersection(entry: IntersectionObserverEntry): void {
+    console.warn(entry);
+  }
+
   /**
    * Destroy all listeners.
    */

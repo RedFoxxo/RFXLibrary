@@ -60,5 +60,9 @@ export class RfxParallaxComponent implements OnInit {
       }
     });
   }
+
+  public onIntersection(entry: IntersectionObserverEntry): void {
+    console.warn(entry);
+  }
 }
 

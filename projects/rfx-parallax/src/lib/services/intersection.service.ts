@@ -10,10 +10,10 @@ export class IntersectionService {
   private rootMargin: string;
 
   private components: (RfxParallaxComponent | RfxParallaxImageComponent)[];
-  private componentsElement: HTMLElement[];
+  private componentsElement: Element[];
 
   constructor() {
-    this.rootMargin = '0px'; // TODO
+    this.rootMargin = '500px';
     this.components = [];
     this.componentsElement = [];
   }
@@ -29,7 +29,11 @@ export class IntersectionService {
 
       for (let i = 0; i < entriesLength; i++) {
         const entry: IntersectionObserverEntry = entries[i];
-        console.warn(entry);
+        const indexOfElement: number = this.componentsElement.indexOf(entry.target);
+
+        if (indexOfElement > -1) {
+          this.components[indexOfElement].onIntersection(entry);
+        }
       }
     }, options);
   }
