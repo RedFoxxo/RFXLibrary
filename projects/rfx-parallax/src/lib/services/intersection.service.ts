@@ -24,15 +24,20 @@ export class IntersectionService {
       rootMargin: this.rootMargin
     }
 
-    this.observer = new IntersectionObserver((entries, observer) => {
-      const entriesLength = entries.length;
+    const element: HTMLElement = scrollElement instanceof Document ?
+      scrollElement.documentElement :
+      scrollElement;
+
+    this.observer = new IntersectionObserver((entries) => {
+      const entriesLength: number = entries.length;
+      const scrollTop: number = element.scrollTop;
 
       for (let i = 0; i < entriesLength; i++) {
         const entry: IntersectionObserverEntry = entries[i];
         const indexOfElement: number = this.componentsElement.indexOf(entry.target);
 
         if (indexOfElement > -1) {
-          this.components[indexOfElement].onIntersection(entry);
+          this.components[indexOfElement].onIntersection(entry, scrollTop);
         }
       }
     }, options);
