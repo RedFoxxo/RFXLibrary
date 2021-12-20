@@ -61,10 +61,10 @@ export class RfxImageLoaderComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    if (changes['imageUrls'] && changes['imageUrls'].currentValue) {
+    if (changes?.imageUrls?.currentValue) {
       const containerHeight: number = this.getContainerHeight(this.elementRef.nativeElement.clientWidth);
       this.setContainerHeight(this.elementRef.nativeElement, containerHeight);
-      this.loadImages(changes['imageUrls'].currentValue);
+      this.loadImages(changes.imageUrls.currentValue);
     }
   }
 
@@ -76,7 +76,7 @@ export class RfxImageLoaderComponent implements OnInit, OnChanges, OnDestroy {
       this.imageData.push({
         imageUrl: image.imageUrl,
         priority: image.priority,
-        data: imageData ?? null
+        data: imageData
       });
     }
   }

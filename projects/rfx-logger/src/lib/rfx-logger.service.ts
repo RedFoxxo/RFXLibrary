@@ -197,7 +197,7 @@ export class RfxLoggerService {
    * @returns true if object have LogResponseModel properties
    */
   private isLogResponseModel(data?: any): boolean {
-    return typeof data === 'object' && data !== null && data.response && data.timeMs;
+    return 'timeMs' in data && 'response' in data;
   }
 
   /**

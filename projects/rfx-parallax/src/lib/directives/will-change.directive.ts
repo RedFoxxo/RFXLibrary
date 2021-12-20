@@ -84,12 +84,12 @@ export class WillChangeDirective implements OnInit, OnChanges, OnDestroy {
    * @param {SimpleChanges} changes - Changes.
    */
   public ngOnChanges(changes: SimpleChanges): void {
-    if (changes['isDisabled'] && (changes['isDisabled'].currentValue !== undefined) && !changes['isDisabled'].firstChange) {
+    if (changes?.isDisabled?.currentValue !== undefined && !changes?.isDisabled?.firstChange) {
       this.destroyListener();
       return;
     }
 
-    if (changes['triggerArea'] && (changes['triggerArea'].currentValue !== undefined) && !changes['triggerArea'].firstChange && !this.isDisabled) {
+    if (changes?.triggerArea?.currentValue !== undefined && !changes?.triggerArea?.firstChange && !this.isDisabled) {
       const scroll: number = this.scrollEventService.getMouseScrollValue();
       this.willChangeArea = this.getWillChangeArea();
       this.checkWillChange(scroll);

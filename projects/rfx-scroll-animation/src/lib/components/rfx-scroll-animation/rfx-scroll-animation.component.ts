@@ -228,9 +228,9 @@ export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, On
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (
-      changes['animationType'] && changes['animationType'].currentValue !== undefined ||
-      changes['animationDistancePx'] && changes['animationDistancePx'].currentValue !== undefined ||
-      changes['scaleRatio'] && changes['scaleRatio'].currentValue !== undefined
+      changes?.animationType?.currentValue !== undefined ||
+      changes?.animationDistancePx?.currentValue !== undefined ||
+      changes?.scaleRatio?.currentValue !== undefined
     ) {
       this.currentTransform = this.getCurrentTransform(
         this.animationType,
