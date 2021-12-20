@@ -1,9 +1,9 @@
 {
   "name": "rfx-cartesian-chart",
-  "version": "0.3.0",
+  "version": "0.3.3",
   "peerDependencies": {
-    "@angular/common": "^8.0.0",
-    "@angular/core": "^8.0.0",
+    "@angular/common": ">=8.0.0",
+    "@angular/core": ">=8.0.0",
     "cardinal-spline-js": "^2.3.10"
   },
   "dependencies": {
