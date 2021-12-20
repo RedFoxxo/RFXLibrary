@@ -1,7 +1,6 @@
 {
   "name": "rfx-scroll-animation",
-  "version": "3.5.2",
-  "description": "RfxScrollAnimation - animate your page elements on scroll",
+  "version": "3.5.4",
   "author": {
     "name": "RedFoxxo",
     "url": "https://github.com/RedFoxxo"
@@ -25,8 +24,8 @@
     "javascript"
   ],
   "peerDependencies": {
-    "@angular/common": ">=8.0.0",
-    "@angular/core": ">=8.0.0",
+    "@angular/common": ">=9.0.0",
+    "@angular/core": ">=9.0.0",
     "rxjs": ">=6.0.0"
   },
   "dependencies": {

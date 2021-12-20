@@ -1,6 +1,6 @@
 {
   "name": "rfx-image-loader",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.3",
   "description": "RfxImageLoader - better image loading",
   "author": {
     "name": "RedFoxxo",
@@ -25,8 +25,8 @@
     "javascript"
   ],
   "peerDependencies": {
-    "@angular/common": "^8.0.0",
-    "@angular/core": "^8.0.0",
+    "@angular/common": ">=9.0.0",
+    "@angular/core": ">=9.0.0",
     "rxjs": ">=6.0.0"
   },
   "dependencies": {

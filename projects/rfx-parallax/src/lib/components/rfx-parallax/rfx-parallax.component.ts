@@ -168,22 +168,22 @@ export class RfxParallaxComponent implements OnInit, OnChanges {
    */
   public ngOnChanges(changes: SimpleChanges): void {
     if (this.isBrowser) {
-      if (this.hasValueChanged(changes.isDisabled, true)) {
+      if (this.hasValueChanged(changes['isDisabled'], true)) {
         this.destroyListeners();
-      } else if (this.hasValueChanged(changes.isDisabled, false)) {
+      } else if (this.hasValueChanged(changes['isDisabled'], false)) {
         this.createListeners();
       }
 
-      if (this.hasValueChanged(changes.visibleOverflow)) {
-        this.setContainerOverflow(this.htmlElement.nativeElement, changes.visibleOverflow.currentValue);
+      if (this.hasValueChanged(changes['visibleOverflow'])) {
+        this.setContainerOverflow(this.htmlElement.nativeElement, changes['visibleOverflow'].currentValue);
       }
 
       if (this.image && ((
-        this.hasValueChanged(changes.imageUrl) ||
-        this.hasValueChanged(changes.parallaxPercentage) ||
-        this.hasValueChanged(changes.positionPercentage)) ||
-        this.hasValueChanged(changes.isDisabled) ||
-        this.hasValueChanged(changes.forceFullWidth))) {
+        this.hasValueChanged(changes['imageUrl']) ||
+        this.hasValueChanged(changes['parallaxPercentage']) ||
+        this.hasValueChanged(changes['positionPercentage'])) ||
+        this.hasValueChanged(changes['isDisabled']) ||
+        this.hasValueChanged(changes['forceFullWidth']))) {
         this.setImageProperties(this.image);
       }
     }

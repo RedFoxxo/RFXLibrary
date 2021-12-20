@@ -1,3 +1,4 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
   "compileOnSave": false,
   "compilerOptions": {
@@ -5,6 +6,8 @@
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
@@ -13,12 +16,6 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2015",
-    "module": "es2020",
-    "lib": [
-      "es2018",
-      "dom"
-    ],
     "paths": {
       "rfx-cartesian-chart": [
         "projects/rfx-cartesian-chart/src/lib",
@@ -30,6 +27,11 @@
         "dist/rfx-image-loader/rfx-image-loader",
         "dist/rfx-image-loader"
       ],
+      "rfx-logger": [
+        "projects/rfx-logger/src/lib",
+        "dist/rfx-logger/rfx-logger",
+        "dist/rfx-logger"
+      ],
       "rfx-parallax": [
         "projects/rfx-parallax/src/lib",
         "dist/rfx-parallax/rfx-parallax",
@@ -39,15 +41,17 @@
         "projects/rfx-scroll-animation/src/lib",
         "dist/rfx-scroll-animation/rfx-scroll-animation",
         "dist/rfx-scroll-animation"
-      ],
-      "rfx-logger": [
-        "projects/rfx-logger/src/lib",
-        "dist/rfx-logger/rfx-logger",
-        "dist/rfx-logger"
       ]
-    }
+    },
+    "target": "es2017",
+    "module": "es2020",
+    "lib": [
+      "es2020",
+      "dom"
+    ]
   },
   "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
