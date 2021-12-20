@@ -15,6 +15,7 @@ specifiers:
   '@angular/router': ~13.0.0
   '@types/jasmine': ~3.10.0
   '@types/node': ^12.11.1
+  cardinal-spline-js: ^2.3.10
   jasmine-core: ~3.10.0
   karma: ~6.3.0
   karma-chrome-launcher: ~3.1.0
@@ -38,6 +39,7 @@ dependencies:
   '@angular/platform-browser': 13.0.2_07f6bcaeb5577e3bcae450ce44087d22
   '@angular/platform-browser-dynamic': 13.0.2_f4754e85b40bc1aed7dddc58bbc14fd9
   '@angular/router': 13.0.2_e71324d85a902ac733fd3e0d91e978e1
+  cardinal-spline-js: 2.3.10
   ngx-scrollbar: 8.0.0_0bc649004e2a2bc7639c610201d9b283
   rxjs: 7.4.0
   tslib: 2.3.1
@@ -2446,6 +2448,11 @@ packages:
   /canonical-path/1.0.0:
     resolution: {integrity: sha512-feylzsbDxi1gPZ1IjystzIQZagYYLvfKrSuygUCgf7z6x790VEzze5QEkdSV1U58RA7Hi0+v6fv4K54atOzATg==}
     dev: true
+
+  /cardinal-spline-js/2.3.10:
+    resolution: {integrity: sha512-2lNtnjMzaQHPOUjSct3MjHJSNL+KZeYxz7KX8qVi0rSSYOXn2CngTZg94hPtA/3zifN6JwSQf1KKSXyeoC5UWQ==}
+    deprecated: Package no longer supported. Contact support@npmjs.com for more info.
+    dev: false
 
   /chalk/2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}

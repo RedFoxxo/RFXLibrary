@@ -369,18 +369,20 @@ export class CartesianGraphComponent implements OnInit, OnChanges {
   private getGridLines(xAxisValues: LineModel[], yAxisValues: LineModel[]): LineModel[] {
     const gridLines: LineModel[] = [];
 
-    for (let i = 0; i < xAxisValues.length; i++) {
-      gridLines.push({
-        startPoint: { x: xAxisValues[i].startPoint.x, y: xAxisValues[i].startPoint.y },
-        endPoint: { x: xAxisValues[i].endPoint.x, y: yAxisValues[yAxisValues.length - 1].endPoint.y }
-      });
-    }
+    if (xAxisValues.length && yAxisValues.length) {
+      for (let i = 0; i < xAxisValues.length; i++) {
+        gridLines.push({
+          startPoint: { x: xAxisValues[i].startPoint.x, y: xAxisValues[i].startPoint.y },
+          endPoint: { x: xAxisValues[i].endPoint.x, y: yAxisValues[yAxisValues.length - 1].endPoint.y }
+        });
+      }
 
-    for (let i = 0; i < yAxisValues.length; i++) {
-      gridLines.push({
-        startPoint: { x: yAxisValues[i].endPoint.x, y: yAxisValues[i].endPoint.y },
-        endPoint: { x: xAxisValues[xAxisValues.length - 1].endPoint.x, y: yAxisValues[i].endPoint.y }
-      });
+      for (let i = 0; i < yAxisValues.length; i++) {
+        gridLines.push({
+          startPoint: { x: yAxisValues[i].endPoint.x, y: yAxisValues[i].endPoint.y },
+          endPoint: { x: xAxisValues[xAxisValues.length - 1].endPoint.x, y: yAxisValues[i].endPoint.y }
+        });
+      }
     }
 
     return gridLines;
@@ -617,14 +619,16 @@ export class CartesianGraphComponent implements OnInit, OnChanges {
   }
 
   private drawYAxisLabels(ctx: CanvasRenderingContext2D, axisLabels: string[], xAxisValues: LineModel[], yAxisValues: LineModel[]): void {
-    for (let i = 0; i < axisLabels.length; i++) {
-      const text: string = axisLabels[i];
-      const textDimensions: DimensionModel = this.getTextDimensions(ctx, text);
+    if (xAxisValues.length && yAxisValues.length) {
+      for (let i = 0; i < axisLabels.length; i++) {
+        const text: string = axisLabels[i];
+        const textDimensions: DimensionModel = this.getTextDimensions(ctx, text);
 
-      this.drawText(ctx, {
-        x: xAxisValues[0].startPoint.x - textDimensions.width - 15,
-        y: yAxisValues[i].startPoint.y + textDimensions.height / 2
-      }, text, this.axesColor);
+        this.drawText(ctx, {
+          x: xAxisValues[0].startPoint.x - textDimensions.width - 15,
+          y: yAxisValues[i].startPoint.y + textDimensions.height / 2
+        }, text, this.axesColor);
+      }
     }
   }
 
