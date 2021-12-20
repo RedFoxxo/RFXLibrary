@@ -528,7 +528,7 @@ export class CartesianGraphComponent implements OnInit, OnChanges {
   private getNoInterpolationLines(points: CoordinatesModel[]): LineModel[] {
     const lines: LineModel[] = [];
 
-    for (let i = 1; i < points.length - 1; i++) {
+    for (let i = 1; i < points.length; i++) {
       lines.push({
         startPoint: points[i - 1],
         endPoint: points[i]
