@@ -5,7 +5,8 @@ import {
   HomeComponent,
   RfxParallaxComponent,
   RfxScrollAnimationComponent,
-  RfxImageLoaderComponent
+  RfxImageLoaderComponent,
+  RfxCartesianChartComponent
 } from './components';
 
 const routes: Routes = [
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'rfx-parallax', component: RfxParallaxComponent },
   { path: 'rfx-scroll-animation', component: RfxScrollAnimationComponent },
   { path: 'rfx-image-loader', component: RfxImageLoaderComponent },
+  { path: 'rfx-cartesian-chart', component: RfxCartesianChartComponent },
 
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' }

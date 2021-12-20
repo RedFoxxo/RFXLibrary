@@ -8,13 +8,14 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 
 import {
   HomeComponent, RfxLoggerComponent, RfxParallaxComponent, RfxScrollAnimationComponent,
-  RfxImageLoaderComponent
+  RfxImageLoaderComponent, RfxCartesianChartComponent
 } from './components';
 
 import { RfxImageLoaderModule } from 'rfx-image-loader';
 import { RfxLoggerModule } from 'rfx-logger';
 import { RfxParallaxModule } from 'rfx-parallax';
 import { RfxScrollAnimationModule } from 'rfx-scroll-animation';
+import { RfxCartesianChartModule } from 'rfx-cartesian-chart';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { RfxScrollAnimationModule } from 'rfx-scroll-animation';
     RfxLoggerComponent,
     RfxParallaxComponent,
     RfxScrollAnimationComponent,
-    RfxImageLoaderComponent
+    RfxImageLoaderComponent,
+    RfxCartesianChartComponent
   ],
   imports: [
     BrowserModule,
@@ -33,7 +35,8 @@ import { RfxScrollAnimationModule } from 'rfx-scroll-animation';
     RfxParallaxModule,
     RfxScrollAnimationModule,
     RfxImageLoaderModule,
-    NgScrollbarModule
+    NgScrollbarModule,
+    RfxCartesianChartModule
   ],
   providers: [],
   bootstrap: [AppComponent]
