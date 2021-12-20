@@ -27,6 +27,9 @@ export class CartesianGraphComponent implements OnInit, OnChanges {
   public fontFamily: string;
 
   @Input()
+  public fontSizePx: number;
+
+  @Input()
   public canvasWidthPx: number;
 
   @Input()
@@ -98,6 +101,17 @@ export class CartesianGraphComponent implements OnInit, OnChanges {
   @Input()
   public zeroLineDash: [number, number];
 
+  @Input()
+  public topMarginPx: number;
+
+  @Input()
+  public leftMarginPx: number;
+
+  @Input()
+  public rightMarginPx: number;
+
+  @Input()
+  public bottomMarginPx: number;
 
   @ViewChild('overlays', { static: true })
   public overlays: ElementRef<HTMLCanvasElement> | undefined;
@@ -139,11 +153,16 @@ export class CartesianGraphComponent implements OnInit, OnChanges {
     this.yBottomPaddingPercentage = 0;
     this.pointRadius = 4;
     this.dots = [];
-    this.highlightZeroLine = true;
+    this.highlightZeroLine = false;
     this.zeroLineWidth = 2;
     this.zeroLineColor = '#212121';
     this.zeroLineOpacity = 1;
     this.zeroLineDash = [2, 5];
+    this.fontSizePx = 12;
+    this.topMarginPx = 19.5;
+    this.leftMarginPx = 59.5;
+    this.rightMarginPx = 59.5;
+    this.bottomMarginPx = 39.5;
   }
 
   public ngOnInit(): void {
@@ -260,15 +279,15 @@ export class CartesianGraphComponent implements OnInit, OnChanges {
 
   private getXAxisLine(canvasHeight: number, canvasWidth: number): LineModel {
     return {
-      startPoint: { x: 49.5, y: canvasHeight - 39.5 },
-      endPoint: { x: canvasWidth - 49.5, y: canvasHeight - 39.5 }
+      startPoint: { x: this.leftMarginPx, y: canvasHeight - this.bottomMarginPx },
+      endPoint: { x: canvasWidth - this.rightMarginPx, y: canvasHeight - this.bottomMarginPx }
     };
   }
 
   private getYAxisLine(canvasHeight: number): LineModel {
     return {
-      startPoint: { x: 49.5, y: 19.5 },
-      endPoint: { x: 49.5, y: canvasHeight - 39.5 }
+      startPoint: { x: this.leftMarginPx, y: this.topMarginPx },
+      endPoint: { x: this.leftMarginPx, y: canvasHeight - this.bottomMarginPx }
     };
   }
 
@@ -292,8 +311,8 @@ export class CartesianGraphComponent implements OnInit, OnChanges {
 
     for (const value of values) {
       points.push({
-        startPoint: { x: 45, y: value },
-        endPoint: { x: 50, y: value }
+        startPoint: { x: this.leftMarginPx - 5, y: value },
+        endPoint: { x: this.leftMarginPx, y: value }
       });
     }
 
@@ -645,7 +664,7 @@ export class CartesianGraphComponent implements OnInit, OnChanges {
         this.drawText(ctx, {
           x: xAxisValues[i].startPoint.x - textDimensions.width / 2,
           y: xAxisLine.startPoint.y + textDimensions.height + 15
-        }, text, this.axesColor);
+        }, text, this.axesColor, this.fontSizePx);
       }
     }
   }
@@ -659,15 +678,15 @@ export class CartesianGraphComponent implements OnInit, OnChanges {
         this.drawText(ctx, {
           x: yAxisLine.startPoint.x - textDimensions.width - 15,
           y: yAxisValues[i].startPoint.y + textDimensions.height / 2
-        }, text, this.axesColor);
+        }, text, this.axesColor, this.fontSizePx);
       }
     }
   }
 
-  private drawText(ctx: CanvasRenderingContext2D, coordinates: CoordinatesModel, text: string, color: string, weight: number = 400): void {
+  private drawText(ctx: CanvasRenderingContext2D, coordinates: CoordinatesModel, text: string, color: string, size: number, weight: number = 400): void {
     ctx.beginPath();
     ctx.fillStyle = color;
-    ctx.font = `${weight} 12px Arial`;
+    ctx.font = `${weight} ${size}px Arial`;
     ctx.fillText(text, coordinates.x, coordinates.y);
   }
 
@@ -737,8 +756,8 @@ export class CartesianGraphComponent implements OnInit, OnChanges {
         this.drawContinuousLine(this.ctx, this.crosshairColor, this.crosshairWidth, 1, null, yCrosshair);
         const crosshairTextColor: string = event.isDot ? (event.dotColor ?? '#000000') : this.crosshairColor;
         const crosshairFontWeight: number = event.isDot ? 600 : 400;
-        this.drawText(this.ctx, xCrosshairLabelPosition, xCrosshairLabel, crosshairTextColor, crosshairFontWeight);
-        this.drawText(this.ctx, yCrosshairLabelPosition, yCrosshairLabel, crosshairTextColor, crosshairFontWeight);
+        this.drawText(this.ctx, xCrosshairLabelPosition, xCrosshairLabel, crosshairTextColor, this.fontSizePx, crosshairFontWeight);
+        this.drawText(this.ctx, yCrosshairLabelPosition, yCrosshairLabel, crosshairTextColor, this.fontSizePx, crosshairFontWeight);
       }
     }
   }
