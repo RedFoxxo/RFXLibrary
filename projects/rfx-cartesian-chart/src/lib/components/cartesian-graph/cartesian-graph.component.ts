@@ -184,9 +184,9 @@ export class CartesianGraphComponent implements OnInit, OnChanges {
     const yRangeOffsets: RangeModel = { min: this.yBottomPaddingPercentage, max: this.yTopPaddingPercentage };
     const xAxisLabels: string[] = this.getAxisLabels(this.xAxisPointsCount, this.xAxisLabelPrecision, xRangeValues);
     const yAxisLabels: string[] = this.getAxisLabels(this.yAxisPointsCount, this.yAxisLabelPrecision, yRangeValues, yRangeOffsets);
-    const gridLines: LineModel[] = this.getGridLines(xAxisValues, yAxisValues);
+    const gridLines: LineModel[] = this.getGridLines(xAxisValues, yAxisValues, xAxisLine, yAxisLine);
     const points: CartesianElementModel[] = this.getPoints(this.cartesianValues, xAxisLabels, yAxisLabels, drawableRect);
-    const lines: LineModel[][] | null[] = this.getLines(points);
+    const lines: LineModel[][] | null[] = this.getLines(points, xAxisLine, yAxisLine);
     return { xAxisLine, yAxisLine, drawableRect, xAxisValues, yAxisValues, xAxisLabels, yAxisLabels, gridLines, points, lines, zeroLine };
   }
 
@@ -201,8 +201,8 @@ export class CartesianGraphComponent implements OnInit, OnChanges {
     this.drawContinuousLine(ctx, this.axesColor, this.axesWidth, 1, null, cache.yAxisLine);
     this.drawLineWithBreaks(ctx, this.axesColor, this.axesWidth, 1, null, cache.xAxisValues);
     this.drawLineWithBreaks(ctx, this.axesColor, this.axesWidth, 1, null, cache.yAxisValues);
-    this.drawXAxisLabels(ctx, cache.xAxisLabels, cache.xAxisValues, cache.yAxisValues);
-    this.drawYAxisLabels(ctx, cache.yAxisLabels, cache.xAxisValues, cache.yAxisValues);
+    this.drawXAxisLabels(ctx, cache.xAxisLabels, cache.xAxisValues, cache.xAxisLine);
+    this.drawYAxisLabels(ctx, cache.yAxisLabels, cache.yAxisValues, cache.yAxisLine);
     this.drawLines(ctx, cache.lines, cache.points);
     this.drawPoints(ctx, cache.points);
   }
@@ -302,6 +302,14 @@ export class CartesianGraphComponent implements OnInit, OnChanges {
 
   private getAxisPoints(start: number, end: number, pointsCount: number): number[] {
     const points: number[] = [];
+
+    if (pointsCount === 1) {
+      const point: number = (start + end) / 2;
+      const roundedPoint: number = Math.round(point - 0.5) + 0.5;
+      points.push(roundedPoint);
+      return points;
+    }
+
     const step: number = (end - start) / (pointsCount - 1);
 
     for (let i = 0; i < pointsCount; i++) {
@@ -346,6 +354,13 @@ export class CartesianGraphComponent implements OnInit, OnChanges {
     const labels: string[] = [];
 
     if (rangeValue) {
+      if (pointCount === 1) {
+        const labelValue: number = rangeValue.min;
+        const label: string = this.getRoundedValueString(labelValue, precision);
+        labels.push(label);
+        return labels;
+      }
+
       let minValue: number = rangeValue.min;
       let maxValue: number = rangeValue.max;
 
@@ -366,21 +381,23 @@ export class CartesianGraphComponent implements OnInit, OnChanges {
     return labels;
   }
 
-  private getGridLines(xAxisValues: LineModel[], yAxisValues: LineModel[]): LineModel[] {
+  private getGridLines(xAxisValues: LineModel[], yAxisValues: LineModel[], xAxisLine: LineModel, yAxisLine: LineModel): LineModel[] {
     const gridLines: LineModel[] = [];
 
-    if (xAxisValues.length && yAxisValues.length) {
+    if (xAxisValues.length) {
       for (let i = 0; i < xAxisValues.length; i++) {
         gridLines.push({
           startPoint: { x: xAxisValues[i].startPoint.x, y: xAxisValues[i].startPoint.y },
-          endPoint: { x: xAxisValues[i].endPoint.x, y: yAxisValues[yAxisValues.length - 1].endPoint.y }
+          endPoint: { x: xAxisValues[i].endPoint.x, y: yAxisLine.startPoint.y }
         });
       }
+    }
 
+    if (yAxisValues.length) {
       for (let i = 0; i < yAxisValues.length; i++) {
         gridLines.push({
           startPoint: { x: yAxisValues[i].endPoint.x, y: yAxisValues[i].endPoint.y },
-          endPoint: { x: xAxisValues[xAxisValues.length - 1].endPoint.x, y: yAxisValues[i].endPoint.y }
+          endPoint: { x: xAxisLine.endPoint.x, y: yAxisValues[i].endPoint.y }
         });
       }
     }
@@ -427,10 +444,16 @@ export class CartesianGraphComponent implements OnInit, OnChanges {
   }
 
   private convertXValueToPixels(drawableRect: RectModel, value: number, minValue: number, maxValue: number): number {
+    if (minValue === maxValue) {
+      return drawableRect.left + drawableRect.width / 2;
+    }
     return drawableRect.left + (drawableRect.width * (value - minValue) / (maxValue - minValue));
   }
 
   private convertYValueToPixels(drawableRect: RectModel, value: number, minValue: number, maxValue: number): number {
+    if (minValue === maxValue) {
+      return drawableRect.top + drawableRect.height / 2;
+    }
     return drawableRect.top + drawableRect.height - (drawableRect.height * (value - minValue) / (maxValue - minValue));
   }
 
@@ -450,26 +473,33 @@ export class CartesianGraphComponent implements OnInit, OnChanges {
     ];
   }
 
-  private getLines(values: CartesianElementModel[]): LineModel[][] | null[] {
+  private getLines(values: CartesianElementModel[], xAxisLine: LineModel, yAxisLine: LineModel): LineModel[][] | null[] {
     const lines: LineModel[][] | null[] = new Array(values.length);
 
     for (let i = 0; i < values.length; i++) {
-      switch (values[i].type) {
-        case CartesianElementTypeEnum.X_AXIS_LINE:
-        case CartesianElementTypeEnum.Y_AXIS_LINE:
-          lines[i] = [{ startPoint: values[i].points[0], endPoint: values[i].points[1] }];
-          break;
-        case CartesianElementTypeEnum.NO_INTERPOLATION:
-          lines[i] = this.getNoInterpolationLines(values[i].points);
-          break;
-        case CartesianElementTypeEnum.CARDINAL_SPLINE:
-          lines[i] = this.getCardinalSplineLines(values[i].points);
-          break;
-        case CartesianElementTypeEnum.ORDINARY_LEAST_SQUARES:
-          lines[i] = [this.getOrdinaryLeastSquaresLine(values[i].points)];
-          break;
-        default:
-          lines[i] = null;
+      if (values[i].points.length === 1) {
+        lines[i] = [{
+          startPoint: { x: yAxisLine.startPoint.x, y: values[i].points[0].y },
+          endPoint: { x: xAxisLine.endPoint.x, y: values[i].points[0].y } }
+        ];
+      } else {
+        switch (values[i].type) {
+          case CartesianElementTypeEnum.X_AXIS_LINE:
+          case CartesianElementTypeEnum.Y_AXIS_LINE:
+            lines[i] = [{ startPoint: values[i].points[0], endPoint: values[i].points[1] }];
+            break;
+          case CartesianElementTypeEnum.NO_INTERPOLATION:
+            lines[i] = this.getNoInterpolationLines(values[i].points);
+            break;
+          case CartesianElementTypeEnum.CARDINAL_SPLINE:
+            lines[i] = this.getCardinalSplineLines(values[i].points);
+            break;
+          case CartesianElementTypeEnum.ORDINARY_LEAST_SQUARES:
+            lines[i] = [this.getOrdinaryLeastSquaresLine(values[i].points)];
+            break;
+          default:
+            lines[i] = null;
+        }
       }
     }
 
@@ -606,26 +636,28 @@ export class CartesianGraphComponent implements OnInit, OnChanges {
     }
   }
 
-  private drawXAxisLabels(ctx: CanvasRenderingContext2D, axisLabels: string[], xAxisValues: LineModel[], yAxisValues: LineModel[]): void {
-    for (let i = 0; i < axisLabels.length; i++) {
-      const text: string = axisLabels[i];
-      const textDimensions: DimensionModel = this.getTextDimensions(ctx, text);
-
-      this.drawText(ctx, {
-        x: xAxisValues[i].startPoint.x - textDimensions.width / 2,
-        y: yAxisValues[0].startPoint.y + textDimensions.height + 15
-      }, text, this.axesColor);
-    }
-  }
-
-  private drawYAxisLabels(ctx: CanvasRenderingContext2D, axisLabels: string[], xAxisValues: LineModel[], yAxisValues: LineModel[]): void {
-    if (xAxisValues.length && yAxisValues.length) {
+  private drawXAxisLabels(ctx: CanvasRenderingContext2D, axisLabels: string[], xAxisValues: LineModel[], xAxisLine: LineModel): void {
+    if (xAxisValues) {
       for (let i = 0; i < axisLabels.length; i++) {
         const text: string = axisLabels[i];
         const textDimensions: DimensionModel = this.getTextDimensions(ctx, text);
 
         this.drawText(ctx, {
-          x: xAxisValues[0].startPoint.x - textDimensions.width - 15,
+          x: xAxisValues[i].startPoint.x - textDimensions.width / 2,
+          y: xAxisLine.startPoint.y + textDimensions.height + 15
+        }, text, this.axesColor);
+      }
+    }
+  }
+
+  private drawYAxisLabels(ctx: CanvasRenderingContext2D, axisLabels: string[], yAxisValues: LineModel[], yAxisLine: LineModel): void {
+    if (yAxisValues.length) {
+      for (let i = 0; i < axisLabels.length; i++) {
+        const text: string = axisLabels[i];
+        const textDimensions: DimensionModel = this.getTextDimensions(ctx, text);
+
+        this.drawText(ctx, {
+          x: yAxisLine.startPoint.x - textDimensions.width - 15,
           y: yAxisValues[i].startPoint.y + textDimensions.height / 2
         }, text, this.axesColor);
       }
