@@ -205,7 +205,7 @@ export class CartesianGraphComponent implements OnInit, OnChanges {
     const yAxisLabels: string[] = this.getAxisLabels(this.yAxisPointsCount, this.yAxisLabelPrecision, yRangeValues, yRangeOffsets);
     const gridLines: LineModel[] = this.getGridLines(xAxisValues, yAxisValues, xAxisLine, yAxisLine);
     const points: CartesianElementModel[] = this.getPoints(this.cartesianValues, xAxisLabels, yAxisLabels, drawableRect);
-    const lines: LineModel[][] | null[] = this.getLines(points, xAxisLine, yAxisLine);
+    const lines: LineModel[][] | null[] = this.getLines(points);
     return { xAxisLine, yAxisLine, drawableRect, xAxisValues, yAxisValues, xAxisLabels, yAxisLabels, gridLines, points, lines, zeroLine };
   }
 
@@ -492,15 +492,12 @@ export class CartesianGraphComponent implements OnInit, OnChanges {
     ];
   }
 
-  private getLines(values: CartesianElementModel[], xAxisLine: LineModel, yAxisLine: LineModel): LineModel[][] | null[] {
+  private getLines(values: CartesianElementModel[]): LineModel[][] | null[] {
     const lines: LineModel[][] | null[] = new Array(values.length);
 
     for (let i = 0; i < values.length; i++) {
       if (values[i].points.length === 1) {
-        lines[i] = [{
-          startPoint: { x: yAxisLine.startPoint.x, y: values[i].points[0].y },
-          endPoint: { x: xAxisLine.endPoint.x, y: values[i].points[0].y } }
-        ];
+        lines[i] = null;
       } else {
         switch (values[i].type) {
           case CartesianElementTypeEnum.X_AXIS_LINE:
