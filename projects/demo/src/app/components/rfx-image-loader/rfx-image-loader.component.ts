@@ -3,7 +3,8 @@ import { RfxImageInterface } from 'rfx-image-loader';
 
 @Component({
   templateUrl: './rfx-image-loader.component.html',
-  styleUrls: ['./rfx-image-loader.component.less']
+  styleUrls: ['./rfx-image-loader.component.less'],
+  standalone: false
 })
 export class RfxImageLoaderComponent {
   public images: RfxImageInterface[];

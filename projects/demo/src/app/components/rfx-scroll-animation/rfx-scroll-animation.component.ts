@@ -3,7 +3,8 @@ import { AnimationTypeEnum } from 'rfx-scroll-animation';
 
 @Component({
   templateUrl: './rfx-scroll-animation.component.html',
-  styleUrls: ['./rfx-scroll-animation.component.less']
+  styleUrls: ['./rfx-scroll-animation.component.less'],
+  standalone: false
 })
 export class RfxScrollAnimationComponent implements OnInit {
   test1 = AnimationTypeEnum.BOTTOM;

@@ -12,7 +12,8 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrls: ['./rfx-scroll-animation.component.less'],
   animations: [
     visibilityAnimation
-  ]
+  ],
+  standalone: false
 })
 export class RfxScrollAnimationComponent implements AfterViewInit, OnChanges, OnDestroy {
   /**

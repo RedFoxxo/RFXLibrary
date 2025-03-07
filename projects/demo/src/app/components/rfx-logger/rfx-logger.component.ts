@@ -3,7 +3,8 @@ import { RfxLoggerService } from 'rfx-logger';
 
 @Component({
   templateUrl: './rfx-logger.component.html',
-  styleUrls: ['./rfx-logger.component.less']
+  styleUrls: ['./rfx-logger.component.less'],
+  standalone: false
 })
 export class RfxLoggerComponent {
   public customMessage: string;

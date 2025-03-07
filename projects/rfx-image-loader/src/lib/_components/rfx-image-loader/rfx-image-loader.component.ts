@@ -9,7 +9,8 @@ import { ImageService, RfxLoaderListenersService } from '../../_services';
   selector: '[libRfxImageLoader]',
   templateUrl: './rfx-image-loader.component.html',
   styleUrls: ['./rfx-image-loader.component.less'],
-  animations: [IMAGE_ANIMATION]
+  animations: [IMAGE_ANIMATION],
+  standalone: false
 })
 export class RfxImageLoaderComponent implements OnInit, OnChanges, OnDestroy {
   @Input()

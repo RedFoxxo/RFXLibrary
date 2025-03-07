@@ -11,7 +11,8 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrls: ['./rfx-parallax.component.less'],
   animations: [
     visibilityAnimation
-  ]
+  ],
+  standalone: false
 })
 export class RfxParallaxComponent implements OnInit, OnChanges {
   /**

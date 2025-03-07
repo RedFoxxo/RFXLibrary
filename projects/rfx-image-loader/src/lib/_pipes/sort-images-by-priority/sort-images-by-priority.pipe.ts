@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { RfxImageDataInterface, RfxImageInterface } from '../../_interfaces';
 
 @Pipe({
-  name: 'sortImagesByPriority'
+  name: 'sortImagesByPriority',
+  standalone: false
 })
 export class SortImagesByPriorityPipe implements PipeTransform {
   transform(value: RfxImageInterface[] | RfxImageDataInterface[]): RfxImageInterface[] | RfxImageDataInterface[] {

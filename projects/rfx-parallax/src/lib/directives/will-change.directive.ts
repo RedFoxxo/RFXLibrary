@@ -4,7 +4,8 @@ import { SectionAreaModel } from '../models';
 import { Subscription } from 'rxjs';
 
 @Directive({
-  selector: '[libWillChange]'
+  selector: '[libWillChange]',
+  standalone: false
 })
 export class WillChangeDirective implements OnInit, OnChanges, OnDestroy {
   /**
